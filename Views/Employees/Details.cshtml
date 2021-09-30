@@ -1,0 +1,50 @@
+﻿@model EmployeeDTO
+@{
+    Layout = "_LayoutAdmin";
+}
+<h2 class="m-5">Details Employee</h2>
+<hr />
+
+<div class="row w-75 m-auto">
+
+    <div class="col-6">
+        <div class="form-group ">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" class="form-control" readonly />
+        </div>
+        <div class="form-group ">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" class="form-control" readonly />
+        </div>
+        <div class="form-group ">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" readonly />
+        </div>
+        <div class="form-group ">
+            <label asp-for="Salary"></label>
+            <input asp-for="Salary" class="form-control" readonly />
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="form-group ">
+            <label asp-for="Role"></label>
+            <input asp-for="Role" class="form-control" readonly />
+        </div>
+        <div class="form-group ">
+            <label asp-for="Phone"></label>
+            <input asp-for="Phone" class="form-control" readonly />
+        </div>
+        <div class="form-group ">
+            <label asp-for="BirthDate"></label>
+            <input asp-for="BirthDate" class="form-control" readonly />
+        </div>
+        <div class="form-group ">
+            <label asp-for="Username"></label>
+            <input asp-for="Username" class="form-control" readonly />
+        </div>
+        <div class="form-group mt-5 w-50 text-center d-flex ">
+            <a asp-action="GetAllEmp" class="btn btn-secondary font-weight-bold w-50" style="font-size: 17px;">Back</a>
+        </div>
+    </div>
+        
+    </div>

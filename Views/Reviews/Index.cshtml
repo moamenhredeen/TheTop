@@ -1,0 +1,36 @@
+﻿<!-- ======= Testimonials Section ======= -->
+<section id="testimonials">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <h2>Testimonials</h2>
+            <p>Sed tamen tempor magna labore dolore dolor sint tempor duis magna elit veniam aliqua esse amet veniam enim export quid quid veniam aliqua eram noster malis nulla duis fugiat culpa esse aute nulla ipsum velit export irure minim illum fore</p>
+        </div>
+
+        <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
+            <div class="swiper-wrapper">
+                @foreach (var item in new List<ReviewDTO>())
+                {
+                    <div class="swiper-slide">
+                        <div class="testimonial-item">
+                            <p>
+                                @item.Massage
+                                @*<img src="assets/img/quote-sign-left.png" class="quote-sign-left" alt="">
+                                    Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.
+                                    <img src="assets/img/quote-sign-right.png" class="quote-sign-right" alt="">*@
+                            </p>
+                            <img src="assets/img/testimonial-1.jpg" class="testimonial-img" alt="">
+                            <h3>@item.Name</h3>
+                            <h4>@item.Email</h4>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+    </div>
+</section>
+<!-- End Testimonials Section -->
