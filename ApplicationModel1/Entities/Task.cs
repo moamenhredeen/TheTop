@@ -5,9 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using TheTop.Classs;
 
-namespace TheTop.Models
+namespace ApplicationModel1.Entities
 {
     public class Task : Entity
     {
@@ -22,14 +21,15 @@ namespace TheTop.Models
 
         public DateTime DueDate { get; set; }
 
-        public int AdminId { get; set; }
+        [ForeignKey("User")]
+        public int UserId { get; set; }
 
         public StatusType Status { get; set; }
 
         public PriorityType Priority { get; set; }
 
         //Niv
-        public Admin Admin { get; set; }
+        public User User { get; set; }
 
     }
 }

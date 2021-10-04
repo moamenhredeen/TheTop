@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using TheTop.Classs;
 
-namespace TheTop.Models
+namespace ApplicationModel1.Entities
 {
     public class Image : Entity
     {
@@ -14,6 +13,7 @@ namespace TheTop.Models
         [Column(TypeName = "nvarchar(255)")]
         public string Name { get; set; }
 
+        [ForeignKey("Advertisement")]
         public int AdvertisementId { get; set; }
 
         //Niv

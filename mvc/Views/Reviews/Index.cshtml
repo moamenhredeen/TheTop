@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<ReviewDTO>
 <!-- ======= Testimonials Section ======= -->
 <section id="testimonials">
     <div class="container" data-aos="fade-up">
@@ -9,7 +9,7 @@
 
         <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
             <div class="swiper-wrapper">
-                @foreach (var item in new List<ReviewDTO>())
+                @foreach (var item in Model)
                 {
                     <div class="swiper-slide">
                         <div class="testimonial-item">

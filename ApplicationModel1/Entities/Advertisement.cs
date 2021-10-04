@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using TheTop.Classs;
 
-namespace TheTop.Models
+namespace ApplicationModel1.Entities
 {
     public class Advertisement : Entity
     {
@@ -15,22 +14,27 @@ namespace TheTop.Models
 
         public double Price { get; set; }
 
-        public float Rate { get; set; }
-
+        [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
-        public int CustomerId { get; set; }
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+
+        [ForeignKey("Offer")]
+        public int OfferId { get; set; }
 
         // Niv
         public Category Category { get; set; }
-        public Customer Customer { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public User User { get; set; }
+        public Offer Offer { get; set; }
+
+        //public ICollection<Review> Reviews { get; set; }
         public ICollection<Image> Images { get; set; }
         public ICollection<OrderAdv> OrderAdvs { get; set; }
 
         public Advertisement()
         {
-            Reviews = new HashSet<Review>();
+            //Reviews = new HashSet<Review>();
             Images = new HashSet<Image>();
             OrderAdvs = new HashSet<OrderAdv>();
         }

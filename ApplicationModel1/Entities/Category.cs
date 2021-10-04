@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using TheTop.Classs;
 
-namespace TheTop.Models
+namespace ApplicationModel1.Entities
 {
     public class Category :Entity
     {
@@ -14,7 +13,7 @@ namespace TheTop.Models
         public string Name { get; set; }
 
         //Niv
-       public ICollection<Advertisement> Advertisements { get; set; }
+       public IEnumerable<Advertisement> Advertisements { get; set; }
 
 
        public Category()

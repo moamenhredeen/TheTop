@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using TheTop.Classs;
 
-namespace TheTop.Models
+namespace ApplicationModel1.Entities
 {
     public class Order : Entity
     {
         public float TotalPrice { get; set; }
 
-        public int CustomerId { get; set; }
+        [ForeignKey("User")]
+        public int UserId { get; set; }
 
         //Niv 
-        public Customer Customer { get; set; }
-        public ICollection<OrderAdv> OrderAdvs { get; set; }
+        public User User { get; set; }
+        public IEnumerable<OrderAdv> OrderAdvs { get; set; }
 
 
 

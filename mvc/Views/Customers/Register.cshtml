@@ -1,6 +1,6 @@
-﻿
-@{ 
-    Layout = null;
+﻿@model CustomerDTO
+@{
+Layout = null;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -16,16 +16,16 @@
     <title>SB Admin 2 - Register</title>
 
     <!-- Custom fonts for this template-->
-    <link href="~/dashbord/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="~/dashbordAdmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="~/dashbord/css/sb-admin-2.min.css" rel="stylesheet">
-
+    <link href="~/dashbordAdmin/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="~/dashbordAdmin/css/StyleSheet.css" rel="stylesheet">
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-success">
 
     <div class="container">
 
@@ -33,40 +33,64 @@
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
                 <div class="row">
-                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-5 d-none d-lg-block bg-register-photo"></div>
                     <div class="col-lg-7">
                         <div class="p-5">
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
+                            <form class="user" asp-action="Register" method="post">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
+                                        <input asp-for="FirstName" class="form-control form-control-user" 
                                                placeholder="First Name">
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
+                                        <input asp-for="LastName" class="form-control form-control-user" 
                                                placeholder="Last Name">
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                                    <input asp-for="Email " class="form-control form-control-user" 
                                            placeholder="Email Address">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
-                                               id="exampleInputPassword" placeholder="Password">
+                                        <input asp-for="Password" class="form-control form-control-user"
+                                              placeholder="Password">
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
-                                               id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        <input asp-for="ConfirmPassword" class="form-control form-control-user"
+                                                placeholder="Repeat Password">
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
+                                <div class="form-group">
+                                    <input asp-for="BirthDate" class="form-control form-control-user" 
+                                           placeholder="Birth Date">
+                                </div>
+                                <div class="form-group">
+                                    <input asp-for="Phone" class="form-control form-control-user" 
+                                           placeholder="Phone">
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+
+                                </div>
+                                <div class="form-group">
+                                    <input asp-for="Username" class="form-control form-control-user" 
+                                           placeholder="Username">
+                                    <span asp-validation-for="Username" class="text-danger"></span>
+
+                                </div>
+                                @*<a href="login.html" class="btn btn-primary btn-user btn-block">
                                     Register Account
-                                </a>
+                                </a>*@
+                            <button type="submit" class="btn btn-primary btn-user btn-block">Register Account</button>
                                 <hr>
                                 <a href="index.html" class="btn btn-google btn-user btn-block">
                                     <i class="fab fa-google fa-fw"></i> Register with Google
@@ -91,15 +115,20 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="~/dashbord/vendor/jquery/jquery.min.js"></script>
-    <script src="~/dashbord/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/dashbordAdmin/vendor/jquery/jquery.min.js"></script>
+    <script src="~/dashbordAdmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="~/dashbord/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/dashbordAdmin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="~/dashbord/js/sb-admin-2.min.js"></script>
+    <script src="~/dashbordAdmin/js/sb-admin-2.min.js"></script>
 
 </body>
 
 </html>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

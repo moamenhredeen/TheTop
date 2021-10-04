@@ -18,13 +18,13 @@ namespace TheTop.Controllers
                 new ReviewDTO{Name="kenan",Email="kenan@gmail.com",
                               Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
                               " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Noor",Email="kenan@gmail.com",Flag = true,
+                new ReviewDTO{Name="Noor",Email="kenan@gmail.com",
                               Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
                               " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Moamen",Email="kenan@gmail.com",Flag = true,
+                new ReviewDTO{Name="Moamen",Email="kenan@gmail.com",
                               Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
                               " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Wael",Email="kenan@gmail.com",Flag = false,
+                new ReviewDTO{Name="Wael",Email="kenan@gmail.com",
                               Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
                               " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
 
@@ -47,11 +47,16 @@ namespace TheTop.Controllers
         // POST: ReviewDTOsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public string Create(string name, string email, string subject, string message)
+        public ActionResult Create(ReviewDTO model)
         {
-            ReviewDTO model = new ReviewDTO { Name = name, Email = email, Subject = subject, Massage = message };
-            Console.WriteLine(model.Email);
-            return null;
+              model.ID = 1;
+            if (ModelState.IsValid)
+            { 
+                
+                Console.WriteLine(model);
+                return RedirectToAction("HomePage", "Home");
+            }
+            return RedirectToAction("HomePage", "Home");
         }
 
         // GET: ReviewDTOsController/Edit/5

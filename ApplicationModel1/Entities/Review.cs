@@ -3,24 +3,30 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-using TheTop.Classs;
 
-namespace TheTop.Models
+namespace ApplicationModel1.Entities
 {
     public class Review : Entity
     {
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+
+        [Column(TypeName = "nvarchar(55)")]
+        public string Name { get; set; }
+        public string Email { get; set; }
         [Column(TypeName = "nvarchar(255)")]
-        public string Content { get; set; }
+        public string Subject { get; set; }
 
-        public int AdvertisementId { get; set; }
+        [Column(TypeName = "nvarchar(255)")]
+        public string Massage { get; set; }
 
-        public int CustomerId { get; set; }
+        public bool IsActiv { get; set; }
+        
+
 
 
         //Niv
-        public Advertisement Advertisement { get; set; }
-
-        public Customer Customer { get; set; }
+        public User User { get; set; }
 
     }
 }

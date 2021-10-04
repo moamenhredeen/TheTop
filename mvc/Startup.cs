@@ -15,7 +15,7 @@ using TheTop.Data;
 
 namespace TheTop
 {
-    public class Startup
+    public class Startup 
     {
         public Startup(IConfiguration configuration)
         {
@@ -63,7 +63,7 @@ namespace TheTop
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Advertisements}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=HomePage}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
