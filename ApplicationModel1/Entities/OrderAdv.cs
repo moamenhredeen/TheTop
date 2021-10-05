@@ -9,8 +9,10 @@ namespace ApplicationModel1.Entities
     [Table("order_advertisement")]
     public class OrderAdv : Entity
     {
-
+        [ForeignKey("Order")]
         public int OrderId { get; set; }
+
+        [ForeignKey("Advertisement")]
         public int AdvertisementId { get; set; }
 
         //Niv 

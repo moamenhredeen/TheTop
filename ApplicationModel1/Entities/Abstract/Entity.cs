@@ -13,9 +13,9 @@ namespace ApplicationModel1.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        public DateTime createDate { get; set; } = DateTime.Now;
+        public DateTime CreateAt { get; set; } = DateTime.Now;
 
         //move update
-        public DateTime updateDate { get; set; }
+        public DateTime UpdateAt { get; set; }
     }
 }

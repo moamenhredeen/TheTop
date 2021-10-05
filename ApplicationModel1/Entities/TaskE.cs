@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationModel1.Entities
 {
-    public class Task : Entity
+    public class TaskE : Entity
     {
 
         [Column(TypeName = "nvarchar(55)")]

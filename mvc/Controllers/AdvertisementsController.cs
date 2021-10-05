@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TheTop.Models;
@@ -134,13 +135,28 @@ namespace TheTop.Controllers
         // POST: AdvertisementDTOsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(AdvertisementDTO model)
+        public async Task<ActionResult> Create(AdvertisementDTO model)
         {
+            var uploads = "C:\\ImageTheTop";
             try
             {
                 if (ModelState.IsValid)
                 {
-                    
+                    var imagesNames = new List<string>();
+                    foreach(var file in model.PhotosNames)
+                    {
+                        if (file.Length > 0)
+                        {
+                            string filePath = Path.Combine(uploads, file.FileName);
+                            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(fileStream);
+                            }
+                            imagesNames.Add(file.FileName);
+                        }
+
+                    }
+
                     list.Add(model);
                     return RedirectToAction(nameof(Index));
                 }

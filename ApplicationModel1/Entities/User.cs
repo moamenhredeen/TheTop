@@ -33,6 +33,10 @@ namespace ApplicationModel1.Entities
         [Column(TypeName = "nvarchar(15)")]
         public string Phone { get; set; }
 
+        [Column(TypeName = "nvarchar(255)")]
+        public string City { get; set; }
+        [Column(TypeName = "nvarchar(255)")]
+        public string Country { get; set; }
         public string ImagName { get; set; }
 
         public RoleAdmin Role { get; set; }
@@ -42,14 +46,14 @@ namespace ApplicationModel1.Entities
         public IEnumerable<Review> Reviews { get; set; }
         public IEnumerable<Advertisement> Advertisements { get; set; }
         public IEnumerable<Order> Orders { get; set; }
-
+        public IEnumerable<TaskE> Tasks { get; set; }
         public IEnumerable<BankAccount> BankAccounts { get; set; }
         public User()
         {
             Reviews = new HashSet<Review>();
             Advertisements = new HashSet<Advertisement>();
             Orders = new HashSet<Order>();
-          
+            Tasks = new HashSet<TaskE>();
         }
 
     }
