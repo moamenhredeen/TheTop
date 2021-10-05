@@ -48,6 +48,7 @@
                     <li><a class="nav-link scrollto " href="#portfolio">Advertisements</a></li>
                     <li><a class="nav-link scrollto" asp-controller="Advertisements" asp-action="GetById">Dashboard</a></li>
                     <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+                    <partial name="_LoginPartial"/>
                     <li><a class="ml-4" asp-controller="Home" asp-action="Cart"><i class="bi bi-cart3" style="font-size:35px"></i>@numC</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
@@ -98,7 +99,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <partial name="_ValidationScriptsPartial" />
-    <partial name="_LoginPartial"/>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>
