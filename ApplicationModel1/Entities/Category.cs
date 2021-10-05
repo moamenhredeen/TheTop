@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApplicationModel1.Entities
 {
-    public class Category :Entity
+    public class Category 
     {
+        public int CategoryId { get; set; }
         [Column(TypeName = "nvarchar(255)")]
         public string Name { get; set; }
 
-        //Niv
-       public IEnumerable<Advertisement> Advertisements { get; set; }
+       public ICollection<Advertisement> Advertisements { get; set; }
 
+        public DateTime CreatedAt = DateTime.Now; 
+        public DateTime? UpdatedAt { get; set; } 
 
        public Category()
         {

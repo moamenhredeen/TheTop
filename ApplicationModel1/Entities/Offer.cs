@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 
 namespace ApplicationModel1.Entities
 {
-    public class Offer :Entity
+    public class Offer 
     {
+        public int OfferId { get; set; }
         public float Ratio { get; set; }
-
         public DateTime StartDate { get; set; }
-
         public DateTime EndDate { get; set; }
 
-       
-
-        //Niv
-        public IEnumerable<Advertisement> Advertisements { get; set; }
+        public ICollection<Advertisement> Advertisements { get; set; }
+        
+        public DateTime CreatedAt = DateTime.Now; 
+        public DateTime? UpdatedAt { get; set; } 
     }
 }

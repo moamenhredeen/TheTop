@@ -10,12 +10,12 @@ namespace ApplicationModel1.Services.DTOs
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public int UserId { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
-        public DateTime CreateAt { get; set; }
-        public DateTime UpdateAt { get; set; }
-        public ICollection<string> ImagesNames { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public IEnumerable<string> ImagesNames { get; set; }
     }
 }

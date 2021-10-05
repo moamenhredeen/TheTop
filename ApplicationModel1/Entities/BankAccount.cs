@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace ApplicationModel1.Entities
 {
-  public  class BankAccount : Entity
+  public  class BankAccount 
     {
+        public int BankAccountId { get; set; }
         public string CardNum { get; set; }
-
         public float Balance { get; set; }
+        
+        public int ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
-        [ForeignKey("User")]
-        public int UserId { get; set; }
+        public DateTime CreatedAt = DateTime.Now; 
+        public DateTime? UpdatedAt { get; set; } 
 
-        public User User { get; set; }
     }
 }

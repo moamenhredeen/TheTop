@@ -6,22 +6,23 @@ using System.Threading.Tasks;
 
 namespace ApplicationModel1.Entities
 {
-    public class Order : Entity
+    public class Order 
     {
+        public int OrderId { get; set; }
         public float TotalPrice { get; set; }
 
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-
-        //Niv 
-        public User User { get; set; }
-        public IEnumerable<OrderAdv> OrderAdvs { get; set; }
+        public int ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
+        
+        public ICollection<Advertisement> Advertisements { get; set; }
 
 
+        public DateTime CreatedAt = DateTime.Now; 
+        public DateTime? UpdatedAt { get; set; } 
 
         public Order()
         {
-            OrderAdvs = new HashSet<OrderAdv>();
+            Advertisements = new HashSet<Advertisement>();
         }
 
     }

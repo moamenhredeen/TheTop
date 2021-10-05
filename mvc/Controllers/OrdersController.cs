@@ -12,19 +12,19 @@ namespace TheTop.Controllers
         // GET: OrderDTOsController
         public ActionResult Index()
         {
-            return View();
+            return View("Error");
         }
 
         // GET: OrderDTOsController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View("Error");
         }
 
         // GET: OrderDTOsController/Create
         public ActionResult Create()
         {
-            return View();
+            return View("Error");
         }
 
         // POST: OrderDTOsController/Create
@@ -32,20 +32,14 @@ namespace TheTop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View("Error");
         }
+        
 
         // GET: OrderDTOsController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View("Error");
         }
 
         // POST: OrderDTOsController/Edit/5
@@ -53,20 +47,13 @@ namespace TheTop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View("Error");
         }
 
         // GET: OrderDTOsController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View("Error");
         }
 
         // POST: OrderDTOsController/Delete/5
@@ -74,14 +61,7 @@ namespace TheTop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View("Error");
         }
     }
 }

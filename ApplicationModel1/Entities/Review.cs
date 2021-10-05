@@ -6,27 +6,28 @@ using System.Threading.Tasks;
 
 namespace ApplicationModel1.Entities
 {
-    public class Review : Entity
+    public class Review 
     {
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-
+        public int ReviewId { get; set; }
+        public string Email { get; set; }
+        
+        // TODO : delete name and subject properties 
         [Column(TypeName = "nvarchar(55)")]
         public string Name { get; set; }
-        public string Email { get; set; }
+        
         [Column(TypeName = "nvarchar(255)")]
         public string Subject { get; set; }
-
+        
         [Column(TypeName = "nvarchar(255)")]
         public string Massage { get; set; }
-
-        public bool IsActiv { get; set; }
         
+        // TODO : change approved usages ( IsActive to Approved ) 
+        public bool Approved { get; set; }
+        
+        public int ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
-
-
-        //Niv
-        public User User { get; set; }
-
+        public DateTime CreatedAt = DateTime.Now; 
+        public DateTime? UpdatedAt { get; set; } 
     }
 }

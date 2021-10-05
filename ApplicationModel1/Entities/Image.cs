@@ -7,18 +7,12 @@ using System.Threading.Tasks;
 
 namespace ApplicationModel1.Entities
 {
-    public class Image : Entity
+    public class Image 
     {
-        
+        public int ImageId { get; set; }
         [Column(TypeName = "nvarchar(255)")]
         public string Name { get; set; }
-
-        [ForeignKey("Advertisement")]
+        
         public int AdvertisementId { get; set; }
-
-        //Niv
-
-        public Advertisement Advertisement { get; set; }
-
     }
 }

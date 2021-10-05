@@ -40,44 +40,44 @@ namespace TheTop.Controllers
         }
 
         // GET: CustomerDTOController1/Create
-        public ActionResult Register()
-        {
-            return View(new CustomerDTO());
-        }
+        // public ActionResult Register()
+        // {
+        //     return View(new CustomerDTO());
+        // }
 
         // POST: CustomerDTOController1/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Register(CustomerDTO model)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        public ActionResult Login()
-        {
-            return View(new CustomerDTO());
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Login(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public ActionResult Register(CustomerDTO model)
+        // {
+        //     try
+        //     {
+        //         return RedirectToAction(nameof(Index));
+        //     }
+        //     catch
+        //     {
+        //         return View();
+        //     }
+        // }
+        //
+        // public ActionResult Login()
+        // {
+        //     return View(new CustomerDTO());
+        // }
+        //
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public ActionResult Login(IFormCollection collection)
+        // {
+        //     try
+        //     {
+        //         return RedirectToAction(nameof(Index));
+        //     }
+        //     catch
+        //     {
+        //         return View();
+        //     }
+        // }
 
 
        
@@ -86,7 +86,7 @@ namespace TheTop.Controllers
         // GET: CustomerDTOController1/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View("Error");
         }
 
         // POST: CustomerDTOController1/Edit/5
@@ -94,20 +94,13 @@ namespace TheTop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View("Error");
         }
 
         // GET: CustomerDTOController1/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View("Error");
         }
 
         // POST: CustomerDTOController1/Delete/5
@@ -115,14 +108,7 @@ namespace TheTop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View("Error");
         }
     }
 }
