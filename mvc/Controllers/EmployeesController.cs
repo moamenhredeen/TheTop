@@ -13,7 +13,7 @@ namespace TheTop.Controllers
         // GET: EmployeeDTOsController
         public ActionResult Index()
         {
-            return View();
+            return View("Error");
         }
 
         public ActionResult GetAllEmp()
@@ -180,12 +180,12 @@ namespace TheTop.Controllers
         //Accountant
         public ActionResult ReportMonthlyAccountant()
         {
-            return View();
+            return View("Error");
         }
 
         public ActionResult ReportAnnualAccountant()
         {
-            return View();
+            return View("Error");
         }
 
         public ActionResult GetInformationCustomer()
@@ -202,22 +202,22 @@ namespace TheTop.Controllers
         //Programmer
         public ActionResult RecordsAttendance()
         {
-            return View();
+            return View("Error");
         }
 
         public ActionResult RecordsExit()
         {
-            return View();
+            return View("Error");
         }
 
         public ActionResult GetTasks()
         {
-            return View();
+            return View("Error");
         }
 
         public ActionResult GetSalarySlip()
         {
-            return View();
+            return View("Error");
         }
     }
 }

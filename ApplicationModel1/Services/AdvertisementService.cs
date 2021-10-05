@@ -1,263 +1,198 @@
-﻿using ApplicationModel1.Dao;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ApplicationModel1.Dao;
 using ApplicationModel1.Entities;
 using ApplicationModel1.Services.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApplicationModel1.Services
 {
     class AdvertisementService
     {
-        private ApplicationContext db;
+        private AppDbContext _appDbContext;
 
-        public AdvertisementService(ApplicationContext db)
+        public AdvertisementService(AppDbContext appDbContext) => _appDbContext = appDbContext;
+
+        public void CreateNewAdvertisement(AdvertisementsDTO advertisementsDto)
         {
-            this.db = db;
-        }
-
-        public void AddAdvertisement(AdvertisementsDTO dto)
-        {
-
-            Advertisement model = new Advertisement()
+            Advertisement advertisementModel = new Advertisement()
             {
-                Name = dto.Name,
-                Price = dto.Price,
-                CategoryId = dto.CategoryId,
-                UserId = dto.UserId,
-                CreateAt = DateTime.Now
+                Name = advertisementsDto.Name,
+                Price = advertisementsDto.Price,
+                CategoryId = advertisementsDto.CategoryId,
+                ApplicationUserId = advertisementsDto.UserId,
             };
-            db.Add(model);
-            db.SaveChanges();
-            foreach (var item in dto.ImagesNames)
+            foreach (var imageName in advertisementsDto.ImagesNames)
             {
-                Image modelImage = new Image();
-
-                modelImage.Name = item +""+new Random().Next();
-                modelImage.AdvertisementId = model.ID;
-                db.Add(modelImage);
-                db.SaveChanges();
-            }
-        }
-
-        public void UpdateAdvertisement(AdvertisementsDTO dto)
-        { 
-
-            Advertisement model = new Advertisement()
-            {   
-                ID = dto.ID,
-                Name = dto.Name,
-                Price = dto.Price,
-                CategoryId = dto.CategoryId,
-                UserId = dto.UserId,
-                UpdateAt = DateTime.Now
-            };
-            db.Update(model);
-            db.SaveChanges();
-
-            foreach (var item in dto.ImagesNames)
-            {
-                Image modelImage = new Image();
-
-                modelImage.Name = item + "" + new Random().Next();
-                modelImage.AdvertisementId = model.ID;
-                db.Update(modelImage);
-                db.SaveChanges();
-            }
-        }
-
-        public AdvertisementsDTO GetAdvertisementById(int id)
-        {
-            var model = db.Advertisements.Where(a => a.ID == id).SingleOrDefault();
-
-            AdvertisementsDTO dto = new AdvertisementsDTO
-            {
-                ID = model.ID,
-                Name = model.Name,
-                Price = model.Price,
-                CreateAt = model.CreateAt,
-                CategoryName = model.Category.Name,
-            };
-
-            //var modelIm = db.Images.Where(i => i.AdvertisementId == id).ToList();
-                foreach(var img in model.Images)
-            {
-                dto.ImagesNames.Add(img.Name);
+                advertisementModel.Images.Add(new Image() {Name = imageName});
             }
 
-            return dto;
+            _appDbContext.Advertisements.Add(advertisementModel);
+            _appDbContext.SaveChanges();
         }
 
-        public void RemoveAdvertisement(int id)
+        public void UpdateAdvertisement(AdvertisementsDTO advertisementsDto)
         {
-            var modelA = db.Advertisements.Where(a => a.ID == id).SingleOrDefault();
+            Advertisement advertisementModel = new Advertisement()
+            {
+                AdvertisementId = advertisementsDto.ID,
+                Name = advertisementsDto.Name,
+                Price = advertisementsDto.Price,
+                CategoryId = advertisementsDto.CategoryId,
+                ApplicationUserId = advertisementsDto.UserId,
+                UpdatedAt = DateTime.Now
+            };
+            foreach (var imageName in advertisementsDto.ImagesNames)
+            {
+                advertisementModel.Images.Add(new Image() {Name = imageName});
+            }
 
-            db.Remove(modelA);
-            db.SaveChanges();
+            _appDbContext.Update(advertisementModel);
+            _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<AdvertisementsDTO> GetAdvertisemenstsByCustomerId(int cusId)
+        public AdvertisementsDTO GetAdvertisementById(int advertisementId)
         {
-            var listModelAdv = db.Advertisements.Where(a => a.UserId == cusId).ToList();
+            var advertisement = _appDbContext.Advertisements
+                .AsNoTracking()
+                .SingleOrDefault(el => el.AdvertisementId == advertisementId);
 
-            var listDTOAdv = new List<AdvertisementsDTO>();
 
-                foreach(var obj in listModelAdv)
+            var advertisementDTO = new AdvertisementsDTO()
+            {
+                ID = advertisement.AdvertisementId,
+                Name = advertisement.Name,
+                Price = advertisement.Price,
+                CreatedAt = advertisement.CreatedAt,
+                CategoryName = advertisement.Category.Name,
+                ImagesNames = advertisement.Images.Select(el => el.Name).ToList()
+            };
+            return advertisementDTO;
+        }
+
+        public void RemoveAdvertisement(int advertisementId)
+        {
+            _appDbContext.Remove(new Advertisement() {AdvertisementId = advertisementId});
+            _appDbContext.SaveChanges();
+        }
+
+        public IEnumerable<AdvertisementsDTO> GetCustomerAdvertisements(string customerId)
+        {
+            var advertisementsList = _appDbContext.ApplicationUsers.AsNoTracking()
+                .Include(applicationUser => applicationUser.Advertisements)
+                .FirstOrDefault(applicationUser => applicationUser.Id == customerId)
+                ?.Advertisements;
+            var advertisementsListDto = new List<AdvertisementsDTO>();
+            foreach (var advertisement in advertisementsList)
+            {
+                AdvertisementsDTO advertisementsDto = new AdvertisementsDTO
                 {
-                   AdvertisementsDTO dto = new AdvertisementsDTO
-                    {
-                          ID = obj.ID,
-                          Name = obj.Name,
-                          Price = obj.Price,
-                          CreateAt = obj.CreateAt,
-                          CategoryName = obj.Category.Name,
-                    };
+                    ID = advertisement.AdvertisementId,
+                    Name = advertisement.Name,
+                    Price = advertisement.Price,
+                    CreatedAt = advertisement.CreatedAt,
+                    CategoryName = advertisement.Category.Name,
+                    ImagesNames = advertisement.Images.Select(el => el.Name)
+                };
+            }
 
-                   foreach(var img in obj.Images)
-                     {
-                         dto.ImagesNames.Add(img.Name);
-                     }
-
-
-                   listDTOAdv.Add(dto);
-                }
-            return listDTOAdv;
+            return advertisementsListDto;
         }
 
         public IEnumerable<AdvertisementsDTO> GetAllAdvertisemensts()
         {
-            var listModelAdv = db.Advertisements.AsNoTracking().ToList();
-
-            var listDTOAdv = new List<AdvertisementsDTO>();
-
-            foreach (var obj in listModelAdv)
+            var advertisementsList = _appDbContext.Advertisements.AsNoTracking().ToList();
+            var advertisementsListDto = new List<AdvertisementsDTO>();
+            foreach (var advertisement in advertisementsList)
             {
-                AdvertisementsDTO dto = new AdvertisementsDTO
+                AdvertisementsDTO advertisementsDto = new AdvertisementsDTO
                 {
-                    ID = obj.ID,
-                    Name = obj.Name,
-                    Price = obj.Price,
-                    CreateAt = obj.CreateAt,
-                    CategoryName = obj.Category.Name,
+                    ID = advertisement.AdvertisementId,
+                    Name = advertisement.Name,
+                    Price = advertisement.Price,
+                    CreatedAt = advertisement.CreatedAt,
+                    CategoryName = advertisement.Category.Name,
+                    ImagesNames = advertisement.Images.Select(el => el.Name)
                 };
-
-                foreach (var img in obj.Images)
-                {
-                    dto.ImagesNames.Add(img.Name);
-                }
-
-
-                listDTOAdv.Add(dto);
             }
-            return listDTOAdv;
+
+            return advertisementsListDto;
         }
 
-        public IEnumerable<AdvertisementsDTO> SearchAdvertisemenst(SearchDTO dto)
+        public IEnumerable<AdvertisementsDTO> SearchAdvertisemenst(SearchDTO searchDto)
         {
+            var advertisementList = _appDbContext.Advertisements.AsNoTracking()
+                .Include(advertisement => advertisement.Category)
+                .Where(Advertisement => Advertisement.CategoryId == searchDto.CategoryId)
+                .ToList();
 
-            var data = db.Advertisements.Where(a => a.CategoryId == dto.CategoryId).Include(c => c.Category).ToList();
+            advertisementList = advertisementList
+                .Where(advertisement => searchDto.FromDate >= advertisement.CreatedAt.Date &&
+                                        advertisement.CreatedAt.Date <= searchDto.ToDate).ToList();
 
-            data = data.Where(a => a.CreateAt.Date <= dto.FromDate &&
-                            a.CreateAt.Date >= dto.ToDate).ToList();
-                 if ( dto.Name != null)
-                   {
-                      data = data.Where(a => a.Name.Contains(dto.Name)).ToList();
-                   }
-                 if(dto.FromPrice != 0)
-                  {
-                      data = data.Where(a => a.Price >= dto.FromPrice).ToList();
-                  }
-                 if (dto.ToPrice != 0)
-                  {
-                     data = data.Where(a => a.Price <= dto.ToPrice).ToList();
-                  }
-
-          
-
-            var listDTOAdv = new List<AdvertisementsDTO>();
-
-            foreach (var obj in data)
+            // TODO : refactoring 
+            if (searchDto.Name != null)
             {
-                AdvertisementsDTO dtoAdv = new AdvertisementsDTO
-                {
-                    ID = obj.ID,
-                    Name = obj.Name,
-                    Price = obj.Price,
-                    CreateAt = obj.CreateAt,
-                    CategoryName = obj.Category.Name,
-                };
-
-                foreach (var img in obj.Images)
-                {
-                    dtoAdv.ImagesNames.Add(img.Name);
-                }
-
-
-                listDTOAdv.Add(dtoAdv);
+                advertisementList = advertisementList
+                    .Where(a => a.Name.Contains(searchDto.Name))
+                    .ToList();
             }
-            return listDTOAdv;
+
+            if (searchDto.FromPrice != 0)
+            {
+                advertisementList = advertisementList
+                    .Where(advertisement => advertisement.Price >= searchDto.FromPrice)
+                    .ToList();
+            }
+
+            if (searchDto.ToPrice != 0)
+            {
+                advertisementList = advertisementList
+                    .Where(advertisement => advertisement.Price <= searchDto.ToPrice)
+                    .ToList();
+            }
+
+            return advertisementList
+                .Select(advertisement => new AdvertisementsDTO()
+                {
+                    ID = advertisement.AdvertisementId,
+                    Name = advertisement.Name,
+                    Price = advertisement.Price,
+                    CreatedAt = advertisement.CreatedAt,
+                    CategoryName = advertisement.Category.Name,
+                    ImagesNames = advertisement.Images.Select(image => image.Name)
+                });
         }
 
 
-        // Service Category
-
-        public void AddCategory(CategoryDTO dto)
+        public void AddCategory(CategoryDTO categoryDto)
         {
-            Category model = new Category
-            {
-                ID = dto.ID,
-                Name = dto.Name,
-                CreateAt = DateTime.Now
-            };
-
-            db.Add(model);
-            db.SaveChanges();
+            _appDbContext.Categories.Add(new Category() {Name = categoryDto.Name});
+            _appDbContext.SaveChanges();
         }
 
-        public void UpdateCategory(CategoryDTO dto)
+        public void UpdateCategory(CategoryDTO categoryDto)
         {
-            Category model = new Category
-            {
-                ID = dto.ID,
-                Name = dto.Name,
-                CreateAt = DateTime.Now
-            };
-
-            db.Update(model);
-            db.SaveChanges();
+            _appDbContext.Categories.Add(new Category() {Name = categoryDto.Name, CategoryId = categoryDto.ID});
+            _appDbContext.SaveChanges();
         }
 
         public void RemoveCategory(int id)
         {
-           var model = db.Categories.Where(c => c.ID == id).SingleOrDefault();
-
-            db.Remove(model);
-            db.SaveChanges();
+            _appDbContext.Categories.Remove(new Category() {CategoryId = id});
+            _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<CategoryDTO> GetAllCategory()
+        public IEnumerable<CategoryDTO> GetAllCategories()
         {
-            var listModelCateg = db.Categories.ToList();
-
-            var listDTOCateg = new List<CategoryDTO>();
-
-            foreach(var item in listModelCateg)
+            var categoryList = _appDbContext.Categories.AsNoTracking().ToList();
+            return categoryList.Select(category => new CategoryDTO()
             {
-                CategoryDTO dto = new CategoryDTO
-                {
-                    ID = item.ID,
-                    Name = item.Name,
-                    CreateAt = item.CreateAt
-                };
-                listDTOCateg.Add(dto);
-            }
-
-            return listDTOCateg;
+                ID = category.CategoryId,
+                Name = category.Name,
+                CreateAt = category.CreatedAt
+            });
         }
-
     }
 }

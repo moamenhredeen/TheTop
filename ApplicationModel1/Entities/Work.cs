@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApplicationModel1.Entities
 {
     public class Work
     {
-        [Key]
-        public int ID { get; set; }
+        public int WorkId { get; set; }
 
-        public double Workhours { get; set; }
-
-        public DateTime Date { get; set; }
-
+        [DataType(DataType.Time)]
         public DateTime StartDate { get; set; }
 
+        [DataType(DataType.Time)]
         public DateTime EndDate { get; set; }
+        
+        public int ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

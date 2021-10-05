@@ -12,7 +12,7 @@ namespace ApplicationModel1.Services.DTOs
         public int CategoryId { get; set; }       
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }      
-        public double FromPrice { get; set; }
-        public double ToPrice { get; set; }
+        public decimal FromPrice { get; set; }
+        public decimal ToPrice { get; set; }
     }
 }

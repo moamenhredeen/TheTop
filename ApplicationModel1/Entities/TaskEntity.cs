@@ -8,28 +8,21 @@ using System.Threading.Tasks;
 
 namespace ApplicationModel1.Entities
 {
-    public class TaskE : Entity
+    public class TaskEntity 
     {
-
-        [Column(TypeName = "nvarchar(55)")]
-        public string Title { get; set; }
-
-        [Column(TypeName = "nvarchar(255)")]
-        public string Description { get; set; }
-
+        public int TaskEntityId { get; set; }
         public int Duration { get; set; }
-
         public DateTime DueDate { get; set; }
-
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-
+        public string Title { get; set; }
+        public string Description { get; set; }
+        
         public StatusType Status { get; set; }
-
         public PriorityType Priority { get; set; }
 
-        //Niv
-        public User User { get; set; }
+        public int  ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
+        public DateTime CreatedAt = DateTime.Now; 
+        public DateTime? UpdatedAt { get; set; } 
     }
 }
