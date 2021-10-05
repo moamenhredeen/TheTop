@@ -45,9 +45,11 @@ namespace ApplicationModel1.Services
         }
 
         public void UpdateAdvertisement(AdvertisementsDTO dto)
-        {
+        { 
+
             Advertisement model = new Advertisement()
-            {
+            {   
+                ID = dto.ID,
                 Name = dto.Name,
                 Price = dto.Price,
                 CategoryId = dto.CategoryId,
@@ -128,7 +130,7 @@ namespace ApplicationModel1.Services
 
         public IEnumerable<AdvertisementsDTO> GetAllAdvertisemensts()
         {
-            var listModelAdv = db.Advertisements.ToList();
+            var listModelAdv = db.Advertisements.AsNoTracking().ToList();
 
             var listDTOAdv = new List<AdvertisementsDTO>();
 
