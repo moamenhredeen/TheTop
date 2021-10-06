@@ -1,0 +1,64 @@
+﻿@model IEnumerable<TaskDTO>
+
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_LayoutAdmin";
+}
+
+<h2 class="m-5">Tasks</h2>
+<hr />
+<p class="ml-5">
+    <a asp-action="create" class="btn btn-outline-primary">Add Task</a>
+</p>
+<table class="table m-auto  p-5" style="width:91%">
+    <thead>
+        <tr class="table-primary">
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Title"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).EmployeeId"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Duration"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).DueDate"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Status"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Priority"></label></th>
+            <th colspan="3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is null || Model.ToList().Count == 0)
+        {
+            <tr>
+                <td colspan="9"> There is no data here</td>
+            </tr>
+        }
+        else
+        {
+            foreach (TaskDTO t in Model)
+            {
+    <tr>
+        <td>@t.Title</td>
+        <td>@t.EmployeeId</td>
+        <td>@t.Duration</td>
+        <td>@t.DueDate</td>
+        <td>@t.Status</td>
+        <td>@t.Priority</td>
+        <td>
+            <a asp-action="edit" asp-route-id="@t.ID" class="text-success"><i class="fas fa-edit"></i></a>
+        </td>
+        <td>
+            <a asp-action="details" asp-route-id="@t.ID" class="text-primary"><i class="fas fa-info"></i></a>
+        </td>
+        <td>
+            <a asp-action="delete" asp-route-id="@t.ID" class="text-danger"><i class="fas fa-trash"></i></a>
+        </td>
+    </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr class="table-info">
+            <td colspan="9"></td>
+        </tr>
+    </tfoot>
+</table>
+
