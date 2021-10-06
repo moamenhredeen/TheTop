@@ -1,0 +1,62 @@
+﻿@model IEnumerable<EmployeeDTO>
+
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_LayoutAdmin";
+}
+
+<h2 class="m-5">Employees</h2>
+<hr />
+<p class="ml-5">
+    <a asp-action="create" class="btn btn-outline-primary">Add Employee</a>
+</p>
+<table class="table m-auto  p-5" style="width:91%">
+    <thead>
+        <tr class="table-primary">
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).FirstName"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).LastName"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).Email"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).Salary"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).Role"></label></th>
+            <th colspan="3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is null || Model.ToList().Count == 0)
+        {
+            <tr>
+                <td colspan="5"> There is no data here</td>
+            </tr>
+        }
+        else
+        {
+            foreach (EmployeeDTO c in Model)
+            {
+    <tr>
+        <td>@c.FirstName</td>
+        <td>@c.LastName</td>
+        <td>@c.Email</td>
+        <td>@c.Salary.ToString("c")</td>
+        <td>@c.Role</td>
+        <td>
+            <a asp-action="edit" asp-route-id="@c.ID" class="text-success"><i class="fas fa-edit"></i></a>
+        </td>
+        <td>
+            <a asp-action="details" asp-route-id="@c.ID" class="text-primary"><i class="fas fa-info"></i></a>
+        </td>
+        <td>
+            <a asp-action="delete" asp-route-id="@c.ID" class="text-danger"><i class="fas fa-trash"></i></a>
+        </td>
+    </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr class="table-info">
+            <td colspan="8"></td>
+        </tr>
+    </tfoot>
+</table>
+
