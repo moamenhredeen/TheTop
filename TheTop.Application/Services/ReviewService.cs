@@ -1,14 +1,13 @@
-﻿using ApplicationModel1.Dao;
-using ApplicationModel1.Entities;
-using ApplicationModel1.Services.DTOs;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using TheTop.Application.Dao;
+using TheTop.Application.Entities;
+using TheTop.Application.Services.DTOs;
 
-namespace ApplicationModel1.Services
+namespace TheTop.Application.Services
 {
     class ReviewService
     {
@@ -16,7 +15,6 @@ namespace ApplicationModel1.Services
         //Review Service
         private AppDbContext _appDbContext;
         public ReviewService(AppDbContext appDbContext) => _appDbContext = appDbContext;
-
         public void CreateNewReview(ReviewsDTO reviewDto)
          {
             _appDbContext.Add(new Review()
@@ -30,7 +28,6 @@ namespace ApplicationModel1.Services
             });
             _appDbContext.SaveChanges();
         }
-
         public void UpdateReview(ReviewsDTO reviewDto)
         {
             Review reviewModel = new Review()
@@ -51,13 +48,11 @@ namespace ApplicationModel1.Services
             _appDbContext.SaveChanges();
 
         }
-
         public void RemoveReview(int id)
         {
             _appDbContext.Remove(new Review { ReviewId = id });
             _appDbContext.SaveChanges();
         }
-
         public ReviewsDTO GetReviewById(int reviewId)
         {
             var review = _appDbContext.Reviews
@@ -104,7 +99,6 @@ namespace ApplicationModel1.Services
                 }
             });        
         }
-
         public IEnumerable<ReviewsDTO> GetApprovedReviews()
         {
             var reviewsList = _appDbContext.Reviews
@@ -131,7 +125,6 @@ namespace ApplicationModel1.Services
         }
 
         // Task Service
-
         public void CreateNewTask(TaskDTO taskTdo)
         {
             _appDbContext.Add(new TaskEntity
@@ -192,5 +185,96 @@ namespace ApplicationModel1.Services
                 }
             };
         }
+        public IEnumerable<TaskDTO> GetEmployeeTasks(int employeeId)
+        {
+            var tasksList = _appDbContext.TaskEntities
+                           .Where(task => task.ApplicationUserId == employeeId)
+                           .ToList();
+
+            return tasksList.Select(task => new TaskDTO { 
+               ID = task.TaskEntityId,
+               Title = task.Title,
+               Description = task.Description,
+               DueDate = task.DueDate,
+               Duration = task.Duration,
+               Priority  = task.Priority,
+               Status = task.Status,
+               CreatedAt = task.CreatedAt
+            });
+        }
+        public IEnumerable<TaskDTO> GetAllTasks(int employeeId)
+        {
+            var tasksList = _appDbContext.TaskEntities.AsNoTracking().ToList();
+
+            return tasksList.Select(task => new TaskDTO
+            {
+                ID = task.TaskEntityId,
+                Title = task.Title,
+                Description = task.Description,
+                DueDate = task.DueDate,
+                Duration = task.Duration,
+                Priority = task.Priority,
+                Status = task.Status,
+                CreatedAt = task.CreatedAt,
+                User = new UserDTO
+                {
+                    FirstName = task.ApplicationUser.FirstName,
+                    LastName = task.ApplicationUser.LastName,
+                    Email = task.ApplicationUser.Email,
+                    ImagName = task.ApplicationUser.ImagName,
+                    Country = task.ApplicationUser.Country,
+                    Username = task.ApplicationUser.UserName
+                }
+            });
+        }
+
+        // Contract Service
+        public void CreateNewContract(ContractDTO contractDto)
+        {
+            _appDbContext.Add(new Contract {
+             HourSalary = contractDto.HourSalary,
+             MonthlyWorkingHours = contractDto.MonthlyWorkingHours,
+              //UserID           
+            });
+
+            _appDbContext.SaveChanges();
+        }
+        public void UpdateContract(ContractDTO contractDto)
+        {
+            _appDbContext.Update(new Contract
+            {
+                UpdatedAt = DateTime.Now,
+                HourSalary = contractDto.HourSalary,
+                MonthlyWorkingHours = contractDto.MonthlyWorkingHours,
+                //UserID           
+            });
+
+            _appDbContext.SaveChanges();
+        }
+        public IEnumerable<ContractDTO> GetAllContract()
+        {
+            var contractsList = _appDbContext.Contracts.AsNoTracking().ToList();
+
+            return contractsList.Select(contract => new ContractDTO
+            {
+                HourSalary = contract.HourSalary,
+                MonthlyWorkingHours = contract.MonthlyWorkingHours,
+                CreateAt = contract.CreateAt
+                //User
+            });
+        } 
+
+        // Work Service
+
+        public void CreateNewWork(WorkDTO workDto)
+        {
+            _appDbContext.Add(new Work
+            {
+                ApplicationUserId = workDto.ApplicationUserId,
+                StartDate = workDto.StartDate
+            });
+            _appDbContext.SaveChanges();
+        }
+       
     }
 }

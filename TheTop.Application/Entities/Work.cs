@@ -15,5 +15,7 @@ namespace TheTop.Application.Entities
         
         public int ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+
+        //CreatedAt ?
     }
 }

@@ -15,11 +15,8 @@ namespace TheTop.Application.Services.DTOs
         public string Massage { get; set; }
         public bool Approved { get; set; }
         public int UserId { get; set; }
-<<<<<<< HEAD:ApplicationModel1/Services/DTOs/ReviewsDTO.cs
         public UserDTO User { get; set; }
 
         public DateTime CreatedAt { get; set; }
-=======
->>>>>>> 8af398e5de6034043dbd40b97550e623d8766657:TheTop.Application/Services/DTOs/ReviewsDTO.cs
     }
 }

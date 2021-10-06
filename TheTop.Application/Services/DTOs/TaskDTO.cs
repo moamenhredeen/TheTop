@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApplicationModel1.Services.DTOs
+namespace TheTop.Application.Services.DTOs
 {
     class TaskDTO
     {
