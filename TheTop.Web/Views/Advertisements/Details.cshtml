@@ -1,0 +1,57 @@
+﻿@model AdvertisementDTO
+@{
+Layout = "_LayoutCustomer";
+}
+
+<!-- ======= Portfolio Details Section ======= -->
+<section id="portfolio-details" class="portfolio-details">
+    <div class="container">
+
+        <div class="row gy-4">
+
+            <div class="col-lg-8">
+                <div class="portfolio-details-slider swiper">
+                    <div class="swiper-wrapper align-items-center">
+
+                        <div class="swiper-slide">
+                            <img src="~/assets/img/portfolio/portfolio-details-1.jpg" alt="">
+                        </div>
+
+                        <div class="swiper-slide">
+                            <img src="~/assets/img/portfolio/portfolio-details-2.jpg" alt="">
+                        </div>
+
+                        <div class="swiper-slide">
+                            <img src="~/assets/img/portfolio/portfolio-details-3.jpg" alt="">
+                        </div>
+
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="portfolio-info pb-md-4">
+                    <h3>Details Advertisement</h3>
+                    <ul>
+                        <li><strong>Category</strong>: @Model.CategoryId</li>
+                        <li><strong>Name</strong>: @Model.Name</li>
+                        <li><strong>Price</strong>: @Model.Price.ToString("c")</li>
+                        <li><strong>Create Date</strong>: @Model.createDate</li>
+                    </ul>
+                </div>
+                <div class="portfolio-description  mt-md-5">
+                    <p>Contact me to get information <a asp-action="Index" class="text-info">Massage</a></p>
+
+
+                    <a asp-action="Index" class="btn btn-primary">Add to Cart</a>
+                    <a asp-action="Index" class="btn btn-success ml-md-3">Back</a>
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section><!-- End Portfolio Details Section -->
