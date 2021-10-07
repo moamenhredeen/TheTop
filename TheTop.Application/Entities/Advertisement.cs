@@ -20,7 +20,7 @@ namespace TheTop.Application.Entities
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         
-        public int OfferId { get; set; }
+        public int? OfferId { get; set; }
         public Offer Offer { get; set; }
 
         public ICollection<Image> Images { get; set; }

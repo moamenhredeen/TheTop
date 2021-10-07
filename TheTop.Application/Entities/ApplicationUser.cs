@@ -22,13 +22,15 @@ namespace TheTop.Application.Entities
         public string ImagName { get; set; }
         public DateTime BirthDate { get; set; }
        
-        public int ContractId { get; set; }
+        public int? ContractId { get; set; }
         public Contract Contract { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Advertisement> Advertisements { get; set; }
         public ICollection<Order> Orders { get; set; }
         public ICollection<TaskEntity> TaskEntities { get; set; }
         public ICollection<BankAccount> BankAccounts { get; set; }
+
+        public ICollection<IdentityUserRole<string>> Roles { get; set; }
         public ApplicationUser()
         {
             Reviews = new HashSet<Review>();

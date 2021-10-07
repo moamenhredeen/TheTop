@@ -22,10 +22,10 @@ namespace TheTop.Models
         public DateTime ToDate { get; set; }
 
         [Display(Name = "From Price")]
-        public double FromPrice { get; set; }
+        public decimal FromPrice { get; set; }
 
         [Display(Name = "To Price")]
-        public double ToPrice { get; set; }
+        public decimal ToPrice { get; set; }
 
         public IEnumerable<CategoryVM> Categorys { get; set; }
         public IEnumerable<AdvertisementVM> Advertisements { get; set; }

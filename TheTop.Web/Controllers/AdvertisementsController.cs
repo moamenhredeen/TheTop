@@ -84,59 +84,55 @@ namespace TheTop.Controllers
 
         public ActionResult Search()
         {
-            SearchVM model = new SearchVM();
-            model.Categorys = new List<CategoryVM>{
-                new CategoryVM{ID = 1, Name = "Car1"},
-                new CategoryVM{ID = 2, Name = "Car2"},
-                new CategoryVM{ID = 3, Name = "Car3"},
-            };
-           // ViewBag.listC = new List<string> { "Car1", "Car2", "Car3" };
+            SearchVM modelVM = new SearchVM();
+            List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
 
-            model.Advertisements =  new List<AdvertisementVM>()
+            List<CategoryVM> categorylist = categoryList.Select(category => new CategoryVM
             {
-                new AdvertisementVM{Name="Car1",Price=70,CategoryId = 1,
-                Categorys = new List<CategoryVM>{
-                new CategoryVM{ID = 1, Name = "Car1"},
-                new CategoryVM{ID = 2, Name = "Car2"},
-                new CategoryVM{ID = 3, Name = "Car3"},
-                 } },
-                new AdvertisementVM{Name="Car1",Price=60,CategoryId = 2,
-                  Categorys = new List<CategoryVM>{
-                new CategoryVM{ID = 1, Name = "Car1"},
-                new CategoryVM{ID = 2, Name = "Car2"},
-                new CategoryVM{ID = 3, Name = "Car3"},
-                 } },
-                new AdvertisementVM{Name="Car2",Price=30,CategoryId = 3,
-                    Categorys = new List<CategoryVM>{
-                new CategoryVM{ID = 1, Name = "Car1"},
-                new CategoryVM{ID = 2, Name = "Car2"},
-                new CategoryVM{ID = 3, Name = "Car3"},
-                 }},
-                 new AdvertisementVM{Name="Car2",Price=50,CategoryId = 2,
-                    Categorys = new List<CategoryVM>{
-                new CategoryVM{ID = 1, Name = "Car1"},
-                new CategoryVM{ID = 2, Name = "Car2"},
-                new CategoryVM{ID = 3, Name = "Car3"},
-                 }},
-                new AdvertisementVM{Name="Car3",Price=40,CategoryId = 3,
-                    Categorys = new List<CategoryVM>{
-                new CategoryVM{ID = 1, Name = "Car1"},
-                new CategoryVM{ID = 2, Name = "Car2"},
-                new CategoryVM{ID = 3, Name = "Car3"},
-                 }}
-            };
+                Name = category.Name,
+                ID = category.ID
+            }).ToList();
 
-            //model.Categorys = new SelectList(list,"ID","Name");
-
-            return View(model);
+            modelVM.Categorys = categorylist;
+            return View(modelVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Search(SearchVM model)
+        public  ActionResult Search(SearchVM modelVM)
         {
-            Console.WriteLine(model);
-            return View(model);
+            List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
+
+            List<CategoryVM> categorylist = categoryList.Select(category => new CategoryVM
+            {
+                Name = category.Name,
+                ID = category.ID
+            }).ToList();
+
+            modelVM.Categorys = categorylist;
+            List<AdvertisementDTO> searchAdvertisementsDtoList = _service.SearchAdvertisemenst(new SearchDTO {
+                Name = modelVM.Name,
+                CategoryId =modelVM.CategoryId,
+                FromDate =modelVM.FromDate,
+                ToDate = modelVM.ToDate,
+                FromPrice = modelVM.FromPrice,
+                ToPrice =modelVM.ToPrice,
+                
+            }).ToList();
+
+            List<AdvertisementVM> advertisementsVMList = searchAdvertisementsDtoList
+                                  .Select(advertisement => new AdvertisementVM
+                                  {
+                                      Name = advertisement.Name,
+                                      Price = advertisement.Price,
+                                      Category = advertisement.CategoryName,
+                                      CreatedAT = advertisement.CreatedAt,
+                                      PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+                                  }).ToList();
+
+            modelVM.Advertisements = advertisementsVMList;
+
+            return View(modelVM);
         }
 
         
@@ -233,16 +229,16 @@ namespace TheTop.Controllers
                 Name = advertisement.Name,
                 Price = advertisement.Price,
                 Categorys = list,
-                PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+                PhotosNames = advertisement.ImagesNames.ToList()
             };
 
             return View(advertisementVM);
         }//
 
-        // POST: AdvertisementDTOsController/Edit/5
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, AdvertisementVM viewModel)
+        public async Task<ActionResult> Edit(AdvertisementVM viewModel)
         {
             var user = await _userManager.GetUserAsync(User);
             AdvertisementDTO modelDto = new AdvertisementDTO()
@@ -283,9 +279,9 @@ namespace TheTop.Controllers
                 return View();
             }
 
-        }
+        }//
 
-        // GET: AdvertisementDTOsController/Delete/5
+        
         public ActionResult Delete(int id)
         {
             AdvertisementDTO advertisement = _service.GetAdvertisementById(id);
@@ -300,11 +296,9 @@ namespace TheTop.Controllers
             };
 
             return View(advertisementVM);
-        }
+        }//
 
-        // POST: AdvertisementDTOsController/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
+        
         public ActionResult DeleteAdv(int id)
         {
             try
@@ -316,22 +310,10 @@ namespace TheTop.Controllers
             {
                 return View();
             }
-        }
+        }//
 
 
 
-        //foreach(var file in viewModel.PhotosNames)
-        //{
-        //    if (file.Length > 0)
-        //    {
-        //        string filePath = Path.Combine(uploads, file.FileName);
-        //        using (Stream fileStream = new FileStream(filePath, FileMode.Create))
-        //        {
-        //            await file.CopyToAsync(fileStream);
-        //        }
-        //        imagesNames.Add(file.FileName);
-        //    }
-
-        //}
+        
     }
 }

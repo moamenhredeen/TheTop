@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TheTop.Application.Dao;
 using TheTop.Application.Entities;
@@ -34,19 +35,28 @@ namespace TheTop.Application.Services
 
         public void UpdateAdvertisement(AdvertisementDTO advertisementsDto)
         {
-            Advertisement advertisementModel = new Advertisement()
-            {
-                AdvertisementId = advertisementsDto.ID,
-                Name = advertisementsDto.Name,
-                Price = advertisementsDto.Price,
-                CategoryId = advertisementsDto.CategoryId,
-                ApplicationUserId = advertisementsDto.UserId,
-                UpdatedAt = DateTime.Now
-            };
-            foreach (var imageName in advertisementsDto.ImagesNames)
-            {
-                advertisementModel.Images.Add(new Image() {Name = imageName});
+            Advertisement advertisementModel = _appDbContext.Advertisements.Where(a => a.AdvertisementId == advertisementsDto.ID)
+                                              .Include(a => a.Images).Single();
+
+            advertisementModel.AdvertisementId = advertisementsDto.ID;
+            advertisementModel.Name = advertisementsDto.Name;
+            advertisementModel.Price = advertisementsDto.Price;
+            advertisementModel.CategoryId = advertisementsDto.CategoryId;
+            advertisementModel.ApplicationUserId = advertisementsDto.UserId;
+            advertisementModel.UpdatedAt = DateTime.Now;
+
+           
+            if(advertisementsDto.ImagesNames.ToList().Count > 0) {
+                //foreach(var item in advertisementModel.Images)
+                //{
+                //    advertisementModel.Images.Remove(item);
+                //}
+                advertisementModel.Images.Clear();
             }
+            advertisementModel.Images = advertisementsDto.ImagesNames.Select(imgName => new Image
+            {
+                Name = imgName
+            }).ToList();
 
             _appDbContext.Update(advertisementModel);
             _appDbContext.SaveChanges();
@@ -92,7 +102,8 @@ namespace TheTop.Application.Services
                     Price = advertisement.Price,
                     CreatedAt = advertisement.CreatedAt,
                     CategoryName = advertisement.Category.Name,
-                    ImagesNames = advertisement.Images.Select(el => el.Name)
+                    ImagesNames = advertisement.Images.Select(el => el.Name),
+                    CategoryId =advertisement.CategoryId
                 };
                 advertisementsListDto.Add(advertisementsDto);
             }
@@ -123,10 +134,9 @@ namespace TheTop.Application.Services
 
         public IEnumerable<AdvertisementDTO> SearchAdvertisemenst(SearchDTO searchDto)
         {
-            var advertisementList = _appDbContext.Advertisements.AsNoTracking()
-                .Include(advertisement => advertisement.Category)
-                .Where(Advertisement => Advertisement.CategoryId == searchDto.CategoryId)
-                .ToList();
+            var advertisementList = _appDbContext.Advertisements.Include(a => a.Images).Include(a => a.Category).AsNoTracking().ToList();
+            //Where(a => a.CategoryId == searchDto.CategoryId)
+            //                     .Include(a => a.Category).AsNoTracking().ToList();
 
             advertisementList = advertisementList
                 .Where(advertisement => searchDto.FromDate >= advertisement.CreatedAt.Date &&
@@ -163,7 +173,7 @@ namespace TheTop.Application.Services
                     CreatedAt = advertisement.CreatedAt,
                     CategoryName = advertisement.Category.Name,
                     ImagesNames = advertisement.Images.Select(image => image.Name)
-                });
+                }).ToList();
         }
 
 
@@ -175,13 +185,18 @@ namespace TheTop.Application.Services
 
         public void UpdateCategory(CategoryDTO categoryDto)
         {
-            _appDbContext.Categories.Add(new Category() {Name = categoryDto.Name, CategoryId = categoryDto.ID});
+            _appDbContext.Categories.Update(new Category() {Name = categoryDto.Name, CategoryId = categoryDto.ID});
             _appDbContext.SaveChanges();
         }
 
-        public void RemoveCategory(int id)
+        public CategoryDTO GetCategoryById(int categoryId)
         {
-            _appDbContext.Categories.Remove(new Category() {CategoryId = id});
+            var category = _appDbContext.Categories.Where(c => c.CategoryId == categoryId).SingleOrDefault();
+            return new CategoryDTO { Name = category.Name, CreateAt = category.CreatedAt, ID = category.CategoryId };
+        }
+        public void RemoveCategory(int categoryId)
+        {
+            _appDbContext.Categories.Remove(new Category() {CategoryId = categoryId });
             _appDbContext.SaveChanges();
         }
 
@@ -194,6 +209,14 @@ namespace TheTop.Application.Services
                 Name = category.Name,
                 CreateAt = category.CreatedAt
             });
+        }
+
+
+        //Order Service 
+
+        public void AddOrder(OrderDTO orderDto)
+        {
+           
         }
     }
 }

@@ -12,7 +12,7 @@ namespace TheTop.Controllers
 {
     
     // [Authorize] // -> authenticated 
-    [Authorize(Roles="Admin")] // -> authenticated 
+    /*[Authorize(Roles="Admin")]*/ // -> authenticated 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

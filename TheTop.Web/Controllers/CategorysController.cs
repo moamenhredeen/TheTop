@@ -18,44 +18,41 @@ namespace TheTop.Controllers
         {
             this._service = service;
         }
-        // GET: CategoryDTOsController
+       
         public ActionResult Index()
         {
             List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
 
             List<CategoryVM> list = categoryList.Select(category => new CategoryVM
             {
-                Name = category.Name
+                Name = category.Name,
+                ID = category.ID
             }).ToList();
              
            
             return View(list);
         }
 
-        
-
-        // GET: CategoryDTOsController/Create
         public ActionResult Create()
         {
             return View(new CategoryVM());
         }
 
-        // POST: CategoryDTOsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CategoryVM model)
+        public ActionResult Create(CategoryVM viewModel)
         {
            
             try
             {
                 if (ModelState.IsValid)
                 {
-                    _service.AddCategory(new CategoryDTO() { Name = model.Name});
+                    _service.AddCategory(new CategoryDTO() { Name = viewModel.Name});
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    return View(model);
+                    return View(viewModel);
                 }
             }
             catch
@@ -65,40 +62,47 @@ namespace TheTop.Controllers
 
         }
 
-        // GET: CategoryDTOsController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(new CategoryVM { Name = "Rawashdeh"});
+            CategoryDTO category = _service.GetCategoryById(id);
+
+            return View(new CategoryVM { Name = category.Name});
         }
 
-        // POST: CategoryDTOsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, CategoryVM viewModel)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _service.UpdateCategory(new CategoryDTO() { Name = viewModel.Name ,ID = viewModel.ID });
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return View(viewModel);
+                }
             }
             catch
             {
                 return View();
             }
-        }
+        }    
 
-        // GET: CategoryDTOsController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
-        }
+            CategoryDTO category = _service.GetCategoryById(id);
 
-        // POST: CategoryDTOsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+            return View(new CategoryVM { Name = category.Name,ID= category.ID });
+        }       
+
+        public ActionResult DeleteCat(int id)
         {
             try
             {
+                _service.RemoveCategory(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

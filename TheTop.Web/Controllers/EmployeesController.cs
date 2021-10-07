@@ -1,32 +1,44 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheTop.Application.Entities;
 using TheTop.Models;
 
 namespace TheTop.Controllers
 {
     public class EmployeesController : Controller
     {
+        private UserManager<ApplicationUser> _userManager;
+        public EmployeesController(UserManager<ApplicationUser> userManager)
+        {
+            this._userManager = userManager;
+        }
         // GET: EmployeeDTOsController
         public ActionResult Index()
+
         {
+          
             return View("Error");
         }
 
-        public ActionResult GetAllEmp()
+        public async Task<ActionResult> GetAllEmp()
         {
-            List<EmployeeDTO> list = new List<EmployeeDTO>() {
-             new EmployeeDTO{FirstName= "Moamen",LastName="Hraden",Email="kenan@gmi.com",Password="12345678" ,
-                             Phone = "0789555" ,Role=RoleAdmin.SuperAdmin,Salary=1500,Username="ken",BirthDate = DateTime.Now},
-             new EmployeeDTO{FirstName= "kenan",LastName="Hassan",Email="kenan@gmi.com",Password="12345678" ,
-                             Phone = "0789555" ,Role=RoleAdmin.Programmer,Salary=1000,Username="ken",BirthDate = DateTime.Now},
-             new EmployeeDTO{FirstName= "Bahaa",LastName="Rawashdeh",Email="kenan@gmi.com",Password="12345678" ,
-                             Phone = "0789555" ,Role=RoleAdmin.Accountant,Salary=800,Username="ken",BirthDate = DateTime.Now}
-            };
-            return View(list);
+
+
+            var data =await _userManager.GetUsersInRoleAsync("Admin");
+            //List<EmployeeDTO> list = new List<EmployeeDTO>() {
+            // new EmployeeDTO{FirstName= "Moamen",LastName="Hraden",Email="kenan@gmi.com",Password="12345678" ,
+            //                 Phone = "0789555" ,Role=RoleAdmin.SuperAdmin,Salary=1500,Username="ken",BirthDate = DateTime.Now},
+            // new EmployeeDTO{FirstName= "kenan",LastName="Hassan",Email="kenan@gmi.com",Password="12345678" ,
+            //                 Phone = "0789555" ,Role=RoleAdmin.Programmer,Salary=1000,Username="ken",BirthDate = DateTime.Now},
+            // new EmployeeDTO{FirstName= "Bahaa",LastName="Rawashdeh",Email="kenan@gmi.com",Password="12345678" ,
+            //                 Phone = "0789555" ,Role=RoleAdmin.Accountant,Salary=800,Username="ken",BirthDate = DateTime.Now}
+            //};
+            return View();
         }
         // GET: EmployeeDTOsController/Details/5
         public ActionResult Details(int id)

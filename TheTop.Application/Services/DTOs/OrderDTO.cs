@@ -12,5 +12,6 @@ namespace TheTop.Application.Services.DTOs
         public float TotalPrice { get; set; }
         public string ApplicationUserId { get; set; }
 
+        public ICollection<AdvertisementDTO> Advertisements { get; set; }
     }
 }

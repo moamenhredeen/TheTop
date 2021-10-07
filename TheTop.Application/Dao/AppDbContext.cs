@@ -21,5 +21,7 @@ namespace TheTop.Application.Dao
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<CompanyInformation> CompanyInformations { get; set; }
+
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     }
 }

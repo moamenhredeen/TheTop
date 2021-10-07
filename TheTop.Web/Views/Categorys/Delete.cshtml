@@ -1,1 +1,14 @@
-﻿<h1>Delete Catogre</h1>
+﻿@model CategoryVM
+
+@{ Layout = "_LayoutCustomer"; }
+<div class="container mb-5">
+    <div class="w-50 d-flex flex-column m-auto">
+        <p>Are you sure to delete this Category <span class="text-danger">" @Model.Name" </span>?</p>
+
+        <div>
+            <a asp-action="DeleteCat" asp-route-id="@Model.ID" class="btn btn-danger">Delete</a>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </div>
+
+</div>
