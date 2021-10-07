@@ -24,7 +24,7 @@ namespace TheTop.Application.Entities
         // TODO : change approved usages ( IsActive to Approved ) 
         public bool Approved { get; set; }
         
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         public DateTime CreatedAt = DateTime.Now; 

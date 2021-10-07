@@ -8,7 +8,7 @@ using TheTop.Classs;
 
 namespace TheTop.Models
 {
-    public class AdvertisementDTO : BASEEntity
+    public class AdvertisementVM : BASEEntity
     {
         [Display(Name = "Name")]
         [MaxLength(255, ErrorMessage = "Name shoald not exced 255 char!")]
@@ -17,19 +17,21 @@ namespace TheTop.Models
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Price is required")]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
-        //public float Rate { get; set; }
+        
 
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
+        public string Category { get; set; }
+        public List<CategoryVM> Categorys { get; set; }
 
-        public List<CategoryDTO> Categorys { get; set; }
+
         public int CustomerId { get; set; }
 
         [Display(Name = "Photos")]
-        public ICollection<IFormFile> PhotosNames { get; set; }
+        public ICollection<IFormFile> PhotosFiles { get; set; }
+        public ICollection<string> PhotosNames{ get; set; }
 
-     
     }
 }

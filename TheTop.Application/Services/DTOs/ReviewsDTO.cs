@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TheTop.Application.Services.DTOs
 {
-    class ReviewsDTO
+    public class ReviewsDTO
     {
         public int ID { get; set; }
         public string Name { get; set; }
@@ -14,7 +14,7 @@ namespace TheTop.Application.Services.DTOs
         public string Subject { get; set; }
         public string Massage { get; set; }
         public bool Approved { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public UserDTO User { get; set; }
 
         public DateTime CreatedAt { get; set; }

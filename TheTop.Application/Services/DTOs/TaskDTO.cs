@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TheTop.Application.Services.DTOs
 {
-    class TaskDTO
+  public  class TaskDTO
     {
         public int ID { get; set; }
         public int Duration { get; set; }
@@ -18,7 +18,7 @@ namespace TheTop.Application.Services.DTOs
         public StatusType Status { get; set; }
         public PriorityType Priority { get; set; }
 
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public UserDTO User { get; set; }
 
         public DateTime CreatedAt { get; set; }

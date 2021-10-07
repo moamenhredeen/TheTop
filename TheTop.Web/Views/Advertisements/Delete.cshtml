@@ -1,4 +1,16 @@
-﻿@{ 
-    Layout = "_LayoutCustomer";
-}
-<h1>Delete Adv</h1>
+﻿@model AdvertisementVM
+
+@{ Layout = "_LayoutCustomer"; }
+<div class="container mb-5">
+    <div class="w-50 d-flex flex-column m-auto">
+        <p>Are you sure to delete this Advertisement <span class="text-danger">" @Model.Name" </span>?</p>
+
+        <br />
+        <img src="@Model.PhotosNames.First()" width="400" height="300" />
+        <div>
+            <a asp-action="DeleteAdv" asp-route-id="@Model.ID" class="btn btn-danger">Delete</a>
+            <a asp-action="GetById" class="btn btn-secondary">Cancel</a>
+        </div>
+    </div>
+    
+</div>

@@ -8,13 +8,13 @@ using TheTop.Application.Services.DTOs;
 
 namespace TheTop.Application.Services
 {
-    class AdvertisementService
+   public class AdvertisementService
     {
         private AppDbContext _appDbContext;
 
         public AdvertisementService(AppDbContext appDbContext) => _appDbContext = appDbContext;
 
-        public void CreateNewAdvertisement(AdvertisementsDTO advertisementsDto)
+        public void CreateNewAdvertisement(AdvertisementDTO advertisementsDto)
         {
             Advertisement advertisementModel = new Advertisement()
             {
@@ -32,7 +32,7 @@ namespace TheTop.Application.Services
             _appDbContext.SaveChanges();
         }
 
-        public void UpdateAdvertisement(AdvertisementsDTO advertisementsDto)
+        public void UpdateAdvertisement(AdvertisementDTO advertisementsDto)
         {
             Advertisement advertisementModel = new Advertisement()
             {
@@ -52,14 +52,13 @@ namespace TheTop.Application.Services
             _appDbContext.SaveChanges();
         }
 
-        public AdvertisementsDTO GetAdvertisementById(int advertisementId)
+        public AdvertisementDTO GetAdvertisementById(int advertisementId)
         {
-            var advertisement = _appDbContext.Advertisements
-                .AsNoTracking()
-                .SingleOrDefault(el => el.AdvertisementId == advertisementId);
+            var advertisement = _appDbContext.Advertisements.Where(el => el.AdvertisementId == advertisementId)
+                               .Include(a => a.Images).Include(a => a.Category).SingleOrDefault();
 
 
-            var advertisementDTO = new AdvertisementsDTO()
+            var advertisementDTO = new AdvertisementDTO()
             {
                 ID = advertisement.AdvertisementId,
                 Name = advertisement.Name,
@@ -77,16 +76,16 @@ namespace TheTop.Application.Services
             _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<AdvertisementsDTO> GetCustomerAdvertisements(string customerId)
+        public IEnumerable<AdvertisementDTO> GetCustomerAdvertisements(string customerId)
         {
-            var advertisementsList = _appDbContext.ApplicationUsers.AsNoTracking()
-                .Include(applicationUser => applicationUser.Advertisements)
-                .FirstOrDefault(applicationUser => applicationUser.Id == customerId)
-                ?.Advertisements;
-            var advertisementsListDto = new List<AdvertisementsDTO>();
+            var advertisementsList = _appDbContext.Advertisements.Where(a => a.ApplicationUserId == customerId)
+                                     .Include(i => i.Images).Include(c => c.Category)
+                                     .AsNoTracking().ToList();
+                
+            var advertisementsListDto = new List<AdvertisementDTO>();
             foreach (var advertisement in advertisementsList)
             {
-                AdvertisementsDTO advertisementsDto = new AdvertisementsDTO
+                AdvertisementDTO advertisementsDto = new AdvertisementDTO
                 {
                     ID = advertisement.AdvertisementId,
                     Name = advertisement.Name,
@@ -95,18 +94,19 @@ namespace TheTop.Application.Services
                     CategoryName = advertisement.Category.Name,
                     ImagesNames = advertisement.Images.Select(el => el.Name)
                 };
+                advertisementsListDto.Add(advertisementsDto);
             }
 
             return advertisementsListDto;
         }
 
-        public IEnumerable<AdvertisementsDTO> GetAllAdvertisemensts()
+        public IEnumerable<AdvertisementDTO> GetAllAdvertisemensts()
         {
-            var advertisementsList = _appDbContext.Advertisements.AsNoTracking().ToList();
-            var advertisementsListDto = new List<AdvertisementsDTO>();
+            var advertisementsList = _appDbContext.Advertisements.Include(a => a.Images).Include(a =>a.Category).AsNoTracking().ToList();
+            var advertisementsListDto = new List<AdvertisementDTO>();
             foreach (var advertisement in advertisementsList)
             {
-                AdvertisementsDTO advertisementsDto = new AdvertisementsDTO
+                AdvertisementDTO advertisementsDto = new AdvertisementDTO
                 {
                     ID = advertisement.AdvertisementId,
                     Name = advertisement.Name,
@@ -115,12 +115,13 @@ namespace TheTop.Application.Services
                     CategoryName = advertisement.Category.Name,
                     ImagesNames = advertisement.Images.Select(el => el.Name)
                 };
+                advertisementsListDto.Add(advertisementsDto);
             }
 
             return advertisementsListDto;
         }
 
-        public IEnumerable<AdvertisementsDTO> SearchAdvertisemenst(SearchDTO searchDto)
+        public IEnumerable<AdvertisementDTO> SearchAdvertisemenst(SearchDTO searchDto)
         {
             var advertisementList = _appDbContext.Advertisements.AsNoTracking()
                 .Include(advertisement => advertisement.Category)
@@ -154,7 +155,7 @@ namespace TheTop.Application.Services
             }
 
             return advertisementList
-                .Select(advertisement => new AdvertisementsDTO()
+                .Select(advertisement => new AdvertisementDTO()
                 {
                     ID = advertisement.AdvertisementId,
                     Name = advertisement.Name,

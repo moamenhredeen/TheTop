@@ -17,7 +17,7 @@ namespace TheTop.Application.Entities
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         
         public int OfferId { get; set; }

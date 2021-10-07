@@ -185,7 +185,7 @@ namespace TheTop.Application.Services
                 }
             };
         }
-        public IEnumerable<TaskDTO> GetEmployeeTasks(int employeeId)
+        public IEnumerable<TaskDTO> GetEmployeeTasks(string employeeId)
         {
             var tasksList = _appDbContext.TaskEntities
                            .Where(task => task.ApplicationUserId == employeeId)
@@ -266,7 +266,7 @@ namespace TheTop.Application.Services
 
         // Work Service
 
-        public void CreateNewWork(WorkDTO workDto)
+        public void StartWork(WorkDTO workDto)
         {
             _appDbContext.Add(new Work
             {

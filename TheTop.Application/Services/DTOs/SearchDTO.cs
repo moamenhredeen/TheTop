@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TheTop.Application.Services.DTOs
 {
-    class SearchDTO
+    public class SearchDTO
     {
         public string Name { get; set; }     
         public int CategoryId { get; set; }       

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TheTop.Models
 {
-    public class SearchDTO
+    public class SearchVM
     {
         public string Name { get; set; }
 
@@ -27,13 +27,13 @@ namespace TheTop.Models
         [Display(Name = "To Price")]
         public double ToPrice { get; set; }
 
-        public IEnumerable<CategoryDTO> Categorys { get; set; }
-        public IEnumerable<AdvertisementDTO> Advertisements { get; set; }
+        public IEnumerable<CategoryVM> Categorys { get; set; }
+        public IEnumerable<AdvertisementVM> Advertisements { get; set; }
 
-        public SearchDTO()
+        public SearchVM()
         {
-            Categorys = new HashSet<CategoryDTO>();
-            Advertisements = new HashSet<AdvertisementDTO>();
+            Categorys = new HashSet<CategoryVM>();
+            Advertisements = new HashSet<AdvertisementVM>();
         }
     }
 }

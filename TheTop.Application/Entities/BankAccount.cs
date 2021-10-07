@@ -13,7 +13,7 @@ namespace TheTop.Application.Entities
         public string CardNum { get; set; }
         public float Balance { get; set; }
         
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         public DateTime CreatedAt = DateTime.Now; 

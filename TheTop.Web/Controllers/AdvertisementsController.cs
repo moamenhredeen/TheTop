@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -6,30 +8,32 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TheTop.Application.Entities;
+using TheTop.Application.Services;
+using TheTop.Application.Services.DTOs;
 using TheTop.Models;
 
 namespace TheTop.Controllers
 {
     public class AdvertisementsController : Controller
     {
+        private readonly AdvertisementService _service;
+        private readonly IWebHostEnvironment _wepHostEnvironment;
+        private UserManager<ApplicationUser> _userManager;
 
-       static List<AdvertisementDTO> list = new List<AdvertisementDTO>()
-            {
-                new AdvertisementDTO{Name="Car1",Price=70,CategoryId = 1,
-                  createDate = DateTime.Now },
-                new AdvertisementDTO{Name="Car1",Price=60,CategoryId = 2,
-                   createDate = DateTime.Now },
-                new AdvertisementDTO{Name="Car2",Price=30,CategoryId = 3,
-                    createDate = DateTime.Now },
-                 new AdvertisementDTO{Name="Car2",Price=50,CategoryId = 2,
-                    createDate = DateTime.Now },
-                new AdvertisementDTO{Name="Car3",Price=40,CategoryId = 3,
-                    createDate = DateTime.Now }
-            };
-        // GET: AdvertisementDTOsController
+        public AdvertisementsController(AdvertisementService service,
+                                        IWebHostEnvironment wepHostEnvironment,
+                                       UserManager<ApplicationUser> userManager )
+        {                               
+            this._service = service;
+            this._wepHostEnvironment = wepHostEnvironment;
+            this._userManager = userManager;
+        }
+
+       
         public ActionResult Index()
         {
-            ViewBag.listC = new List<string> {"Car1","Car2","Car3"};
+
             ViewBag.listRev = new List<ReviewDTO>()
             {
                 new ReviewDTO{Name="kenan",Email="kenan@gmail.com",
@@ -46,57 +50,80 @@ namespace TheTop.Controllers
                               " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
 
             };
-            return View(list);
-        }
+            List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
+            ViewBag.listC = categoryList.Select(categ => categ.Name);
+          
 
-        public ActionResult GetById(int id)
+            List<AdvertisementDTO> advertisementsDtoList = _service.GetAllAdvertisemensts().ToList();
+            List<AdvertisementVM> advertisementsVMList = advertisementsDtoList
+                                  .Select(advertisement => new AdvertisementVM { 
+                                  Name = advertisement.Name,
+                                  Price= advertisement.Price,
+                                  Category = advertisement.CategoryName,
+                                  CreatedAT = advertisement.CreatedAt,
+                                  PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+                                  }).ToList();
+            return View(advertisementsVMList);
+        }//
+
+        public async Task<ActionResult> GetById(int id)
         {
-
-            return View(list);
-        }
+            var user = await _userManager.GetUserAsync(User);
+            List<AdvertisementDTO> advertisementsDtoList = _service.GetCustomerAdvertisements(user.Id).ToList();
+            List<AdvertisementVM> advertisementsVMList = advertisementsDtoList
+                       .Select(advertisement => new AdvertisementVM
+                         {    ID = advertisement.ID,
+                              Name = advertisement.Name,
+                              Price = advertisement.Price,
+                              Category = advertisement.CategoryName,
+                              CreatedAT = advertisement.CreatedAt,
+                              PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+                              }).ToList();
+            return View(advertisementsVMList);
+        }//
 
         public ActionResult Search()
         {
-            SearchDTO model = new SearchDTO();
-            model.Categorys = new List<CategoryDTO>{
-                new CategoryDTO{ID = 1, Name = "Car1"},
-                new CategoryDTO{ID = 2, Name = "Car2"},
-                new CategoryDTO{ID = 3, Name = "Car3"},
+            SearchVM model = new SearchVM();
+            model.Categorys = new List<CategoryVM>{
+                new CategoryVM{ID = 1, Name = "Car1"},
+                new CategoryVM{ID = 2, Name = "Car2"},
+                new CategoryVM{ID = 3, Name = "Car3"},
             };
            // ViewBag.listC = new List<string> { "Car1", "Car2", "Car3" };
 
-            model.Advertisements =  new List<AdvertisementDTO>()
+            model.Advertisements =  new List<AdvertisementVM>()
             {
-                new AdvertisementDTO{Name="Car1",Price=70,CategoryId = 1,
-                Categorys = new List<CategoryDTO>{
-                new CategoryDTO{ID = 1, Name = "Car1"},
-                new CategoryDTO{ID = 2, Name = "Car2"},
-                new CategoryDTO{ID = 3, Name = "Car3"},
-                 }, createDate = DateTime.Now },
-                new AdvertisementDTO{Name="Car1",Price=60,CategoryId = 2,
-                  Categorys = new List<CategoryDTO>{
-                new CategoryDTO{ID = 1, Name = "Car1"},
-                new CategoryDTO{ID = 2, Name = "Car2"},
-                new CategoryDTO{ID = 3, Name = "Car3"},
-                 },  createDate = DateTime.Now },
-                new AdvertisementDTO{Name="Car2",Price=30,CategoryId = 3,
-                    Categorys = new List<CategoryDTO>{
-                new CategoryDTO{ID = 1, Name = "Car1"},
-                new CategoryDTO{ID = 2, Name = "Car2"},
-                new CategoryDTO{ID = 3, Name = "Car3"},
-                 },  createDate = DateTime.Now },
-                 new AdvertisementDTO{Name="Car2",Price=50,CategoryId = 2,
-                    Categorys = new List<CategoryDTO>{
-                new CategoryDTO{ID = 1, Name = "Car1"},
-                new CategoryDTO{ID = 2, Name = "Car2"},
-                new CategoryDTO{ID = 3, Name = "Car3"},
-                 },  createDate = DateTime.Now },
-                new AdvertisementDTO{Name="Car3",Price=40,CategoryId = 3,
-                    Categorys = new List<CategoryDTO>{
-                new CategoryDTO{ID = 1, Name = "Car1"},
-                new CategoryDTO{ID = 2, Name = "Car2"},
-                new CategoryDTO{ID = 3, Name = "Car3"},
-                 },  createDate = DateTime.Now }
+                new AdvertisementVM{Name="Car1",Price=70,CategoryId = 1,
+                Categorys = new List<CategoryVM>{
+                new CategoryVM{ID = 1, Name = "Car1"},
+                new CategoryVM{ID = 2, Name = "Car2"},
+                new CategoryVM{ID = 3, Name = "Car3"},
+                 } },
+                new AdvertisementVM{Name="Car1",Price=60,CategoryId = 2,
+                  Categorys = new List<CategoryVM>{
+                new CategoryVM{ID = 1, Name = "Car1"},
+                new CategoryVM{ID = 2, Name = "Car2"},
+                new CategoryVM{ID = 3, Name = "Car3"},
+                 } },
+                new AdvertisementVM{Name="Car2",Price=30,CategoryId = 3,
+                    Categorys = new List<CategoryVM>{
+                new CategoryVM{ID = 1, Name = "Car1"},
+                new CategoryVM{ID = 2, Name = "Car2"},
+                new CategoryVM{ID = 3, Name = "Car3"},
+                 }},
+                 new AdvertisementVM{Name="Car2",Price=50,CategoryId = 2,
+                    Categorys = new List<CategoryVM>{
+                new CategoryVM{ID = 1, Name = "Car1"},
+                new CategoryVM{ID = 2, Name = "Car2"},
+                new CategoryVM{ID = 3, Name = "Car3"},
+                 }},
+                new AdvertisementVM{Name="Car3",Price=40,CategoryId = 3,
+                    Categorys = new List<CategoryVM>{
+                new CategoryVM{ID = 1, Name = "Car1"},
+                new CategoryVM{ID = 2, Name = "Car2"},
+                new CategoryVM{ID = 3, Name = "Car3"},
+                 }}
             };
 
             //model.Categorys = new SelectList(list,"ID","Name");
@@ -106,118 +133,205 @@ namespace TheTop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Search(SearchDTO model)
+        public ActionResult Search(SearchVM model)
         {
             Console.WriteLine(model);
             return View(model);
         }
 
-        // GET: AdvertisementDTOsController/Details/5
-        public ActionResult Details(string name)
+        
+        public ActionResult Details(int id)
         {
-            var obj = list.FirstOrDefault(e => e.Name == name);
-            return View(obj);
-        }
+            AdvertisementDTO advertisement = _service.GetAdvertisementById(id);
+            AdvertisementVM advertisementVM = new AdvertisementVM
+            {
+                ID = advertisement.ID,
+                Name = advertisement.Name,
+                Price = advertisement.Price,
+                Category = advertisement.CategoryName,
+                CreatedAT = advertisement.CreatedAt,
+                PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+            };
+          
+            return View(advertisementVM);
+        }//
 
-        // GET: AdvertisementDTOsController/Create
+       
         public ActionResult Create()
         {
+          AdvertisementVM model = new AdvertisementVM();
 
-            AdvertisementDTO model = new AdvertisementDTO();
-             model.Categorys = new List<CategoryDTO>{
-                new CategoryDTO{ID = 1, Name = "Car1"},
-                new CategoryDTO{ID = 2, Name = "Car2"},
-                new CategoryDTO{ID = 3, Name = "Car3"},
-            };
+            List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
+
+            List<CategoryVM> list = categoryList.Select(category => new CategoryVM
+            {
+                Name = category.Name,
+                ID = category.ID
+            }).ToList();
+            model.Categorys = list;
             return View(model);
-        }
+        }//
 
-        // POST: AdvertisementDTOsController/Create
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(AdvertisementDTO model)
+        public async Task<ActionResult> Create(AdvertisementVM viewModel)
         {
-            var uploads = "C:\\ImageTheTop";
-            try
-            {
+            var user = await _userManager.GetUserAsync(User);
+
+            AdvertisementDTO modelDto = new AdvertisementDTO() {
+                Name = viewModel.Name,
+                Price = viewModel.Price,
+                CategoryId = viewModel.CategoryId,
+                UserId = user.Id            
+            };
+           
                 if (ModelState.IsValid)
                 {
-                    var imagesNames = new List<string>();
-                    foreach(var file in model.PhotosNames)
-                    {
-                        if (file.Length > 0)
-                        {
-                            string filePath = Path.Combine(uploads, file.FileName);
-                            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(fileStream);
-                            }
-                            imagesNames.Add(file.FileName);
-                        }
 
+                    var imagesNames = new List<string>();
+
+                    if (viewModel.PhotosFiles.Count > 0)
+                    {
+                        foreach (IFormFile photo in viewModel.PhotosFiles)
+                        {
+                            var fullPath = $"{_wepHostEnvironment.WebRootPath}\\Images\\{Path.GetFileName(photo.FileName)}";
+                            using (var stream = new FileStream(fullPath, FileMode.Create))
+                            {
+                                await photo.CopyToAsync(stream);
+                            }
+                          imagesNames.Add($"/images/{Path.GetFileName(photo.FileName)}");
+                        }
+                       
                     }
 
-                    list.Add(model);
-                    return RedirectToAction(nameof(Index));
+                    modelDto.ImagesNames = imagesNames;
+
+                   _service.CreateNewAdvertisement(modelDto);
+                    return RedirectToAction("HomePage","Home");
                 }
                 else
                 {
-                    return View(model);
+                    return View();
                 }
-            }
-            catch
-            {
-                return View();
-            }
-        }
+           
+        }//
 
-        // GET: AdvertisementDTOsController/Edit/5
-        public ActionResult Edit(string name)
+      
+        public ActionResult Edit(int id)
         {
-            var obj = list.FirstOrDefault(e => e.Name == name);
-            obj.Categorys = new List<CategoryDTO>{
-                new CategoryDTO{ID = 1, Name = "Car1"},
-                new CategoryDTO{ID = 2, Name = "Car2"},
-                new CategoryDTO{ID = 3, Name = "Car3"},
+            List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
+            List<CategoryVM> list = categoryList.Select(category => new CategoryVM
+            {
+                Name = category.Name,
+                ID = category.ID
+            }).ToList();
+            AdvertisementDTO advertisement = _service.GetAdvertisementById(id);
+            AdvertisementVM advertisementVM = new AdvertisementVM
+            {
+                ID = advertisement.ID,
+                Name = advertisement.Name,
+                Price = advertisement.Price,
+                Categorys = list,
+                PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
             };
-            return View(obj);
-        }
+
+            return View(advertisementVM);
+        }//
 
         // POST: AdvertisementDTOsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, AdvertisementDTO model)
+        public async Task<ActionResult> Edit(int id, AdvertisementVM viewModel)
         {
-            try
+            var user = await _userManager.GetUserAsync(User);
+            AdvertisementDTO modelDto = new AdvertisementDTO()
             {
-                Console.WriteLine(model);
-                return RedirectToAction(nameof(Index));
+                ID = viewModel.ID,
+                Name = viewModel.Name,
+                Price = viewModel.Price,
+                CategoryId = viewModel.CategoryId,
+                UserId = user.Id
+            };
+
+            if (ModelState.IsValid)
+            {
+
+                var imagesNames = new List<string>();
+
+                if (viewModel.PhotosFiles.Count > 0)
+                {
+                    foreach (IFormFile photo in viewModel.PhotosFiles)
+                    {
+                        var fullPath = $"{_wepHostEnvironment.WebRootPath}\\Images\\{Path.GetFileName(photo.FileName)}";
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            await photo.CopyToAsync(stream);
+                        }
+                        imagesNames.Add($"/images/{Path.GetFileName(photo.FileName)}");
+                    }
+
+                }
+
+                modelDto.ImagesNames = imagesNames;
+
+                _service.UpdateAdvertisement(modelDto);
+                return RedirectToAction("GetById");
             }
-            catch
+            else
             {
                 return View();
             }
+
         }
 
         // GET: AdvertisementDTOsController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            AdvertisementDTO advertisement = _service.GetAdvertisementById(id);
+            AdvertisementVM advertisementVM = new AdvertisementVM
+            {
+                ID = advertisement.ID,
+                Name = advertisement.Name,
+                Price = advertisement.Price,
+                Category = advertisement.CategoryName,
+                CreatedAT = advertisement.CreatedAt,
+                PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+            };
+
+            return View(advertisementVM);
         }
 
         // POST: AdvertisementDTOsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult DeleteAdv(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _service.RemoveAdvertisement(id);
+                return RedirectToAction("GetById");
             }
             catch
             {
                 return View();
             }
         }
+
+
+
+        //foreach(var file in viewModel.PhotosNames)
+        //{
+        //    if (file.Length > 0)
+        //    {
+        //        string filePath = Path.Combine(uploads, file.FileName);
+        //        using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+        //        {
+        //            await file.CopyToAsync(fileStream);
+        //        }
+        //        imagesNames.Add(file.FileName);
+        //    }
+
+        //}
     }
 }

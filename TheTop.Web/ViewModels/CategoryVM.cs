@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using TheTop.Classs;
 
 namespace TheTop.Models
 {
-    public class CategoryDTO :BASEEntity
+    public class CategoryVM : BASEEntity
     {
         [Display(Name = "Name")]
         [MaxLength(255, ErrorMessage = "Name shoald not exced 255 char!")]
@@ -17,6 +13,6 @@ namespace TheTop.Models
 
 
 
-      
+
     }
 }

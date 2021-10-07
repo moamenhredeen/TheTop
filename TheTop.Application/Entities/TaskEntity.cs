@@ -19,7 +19,7 @@ namespace TheTop.Application.Entities
         public StatusType Status { get; set; }
         public PriorityType Priority { get; set; }
 
-        public int  ApplicationUserId { get; set; }
+        public string  ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         public DateTime CreatedAt = DateTime.Now; 

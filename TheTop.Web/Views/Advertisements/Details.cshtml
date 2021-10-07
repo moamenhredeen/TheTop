@@ -1,4 +1,4 @@
-﻿@model AdvertisementDTO
+﻿@model AdvertisementVM
 @{
 Layout = "_LayoutCustomer";
 }
@@ -12,19 +12,11 @@ Layout = "_LayoutCustomer";
             <div class="col-lg-8">
                 <div class="portfolio-details-slider swiper">
                     <div class="swiper-wrapper align-items-center">
-
+                        @foreach(var img in Model.PhotosNames) { 
                         <div class="swiper-slide">
-                            <img src="~/assets/img/portfolio/portfolio-details-1.jpg" alt="">
+                            <img src="@img" alt="">
                         </div>
-
-                        <div class="swiper-slide">
-                            <img src="~/assets/img/portfolio/portfolio-details-2.jpg" alt="">
-                        </div>
-
-                        <div class="swiper-slide">
-                            <img src="~/assets/img/portfolio/portfolio-details-3.jpg" alt="">
-                        </div>
-
+                        }
                     </div>
                     <div class="swiper-pagination"></div>
                 </div>
@@ -34,10 +26,10 @@ Layout = "_LayoutCustomer";
                 <div class="portfolio-info pb-md-4">
                     <h3>Details Advertisement</h3>
                     <ul>
-                        <li><strong>Category</strong>: @Model.CategoryId</li>
+                        <li><strong>Category</strong>: @Model.Category</li>
                         <li><strong>Name</strong>: @Model.Name</li>
                         <li><strong>Price</strong>: @Model.Price.ToString("c")</li>
-                        <li><strong>Create Date</strong>: @Model.createDate</li>
+                        <li><strong>Create Date</strong>: @Model.CreatedAT</li>
                     </ul>
                 </div>
                 <div class="portfolio-description  mt-md-5">

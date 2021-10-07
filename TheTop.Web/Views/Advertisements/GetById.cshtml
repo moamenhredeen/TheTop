@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AdvertisementDTO>
+﻿@model IEnumerable<AdvertisementVM>
 
 @{
     Layout = "_LayoutCustomer";
@@ -122,9 +122,9 @@
             {
 
                 <div class="col-lg-4 col-md-6 portfolio-item">
-                    <img src="~/assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="">
+                    <img src="@i.PhotosNames.First()" class="img-fluid" alt="">
                     <div class="portfolio-info">
-                        <span class="mb-1">Catogry @i.CategoryId</span>
+                        <span class="mb-1">@i.Category</span>
                         <p class="font-weight-bold" style="font-size:25px">@i.Name</p>
                         <div class="justify-content-between">
 
@@ -133,14 +133,14 @@
                                     <p style="font-size:20px">@i.Price.ToString("c")</p>
                                 </div>
                                 <div class=" w-50 d-flex justify-content-around">
-                                    <a href="~/assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="FullScreen">
+                                    <a href="@i.PhotosNames.First()" data-gallery="portfolioGallery" class="portfolio-lightbox" title="FullScreen">
                                         <i class="bi bi-arrows-fullscreen m-1 text-white" style="font-size:16px"></i>
                                     </a>
 
-                                    <a asp-controller="Advertisements" asp-action="Edit" asp-route-Name="@i.Name" class="">
+                                    <a asp-controller="Advertisements" asp-action="Edit" asp-route-id="@i.ID" class="">
                                         <span class="iconify text-white" data-icon="dashicons:update-alt" style="font-size:20px"></span>
                                     </a>
-                                    <a asp-action="Delete" asp-route-Name="@i.Name" class="">
+                                    <a asp-action="Delete" asp-route-id="@i.ID" class="">
                                         <span class="iconify text-danger" data-icon="fluent:delete-24-filled" style="font-size:20px"></span>
                                     </a>
                                 </div>

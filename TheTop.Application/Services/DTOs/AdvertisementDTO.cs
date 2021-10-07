@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 namespace TheTop.Application.Services.DTOs
 {
-    class AdvertisementsDTO
+    public class AdvertisementDTO
     {
         public int ID { get; set; }
         public string Name { get; set; }
         public decimal Price { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public DateTime CreatedAt { get; set; }

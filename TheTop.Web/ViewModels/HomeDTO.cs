@@ -47,7 +47,7 @@ namespace TheTop.Models
 
         public ReviewDTO Review { get; set; }
 
-        public List<AdvertisementDTO> AdvertisementsList { get; set; }
+        public List<AdvertisementVM> AdvertisementsList { get; set; }
 
         public List<ReviewDTO> ReviewsList { get; set; }
 

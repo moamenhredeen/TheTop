@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AdvertisementDTO>
+﻿@model IEnumerable<AdvertisementVM>
 @{
     List<string> list = ViewBag.listC;
    
@@ -26,10 +26,12 @@
             @foreach (var i in Model)
             {
 
-                <div class="col-lg-4 col-md-6 portfolio-item @i.Name">
-                    <img src="~/assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="">
+                <div class="col-lg-4 col-md-6 portfolio-item @i.Category">
+                   
+                    <img src="@i.PhotosNames.First()"  style="max-width:100%; height:auto;" class="img-fluid" alt="">
+                    
                     <div class="portfolio-info">
-                        <span class="mb-1 text-white">Catogry @i.CategoryId</span>
+                        <span class="mb-1 text-white">@i.Category</span>
                         <p class="font-weight-bold"style="font-size:25px">@i.Name</p>
                         <div class="justify-content-between">
 
@@ -40,11 +42,12 @@
 
                                 <div class="d-flex justify-content-around align-items-center w-25 ">
                                     <div class="mb-2">
-                                        <a href="~/assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="FullScreen"><i class="bi bi-arrows-fullscreen m-1" style="font-size:17px"></i></a>
-
-                                    </div>
+                                      
+                                    <a href="@i.PhotosNames.First()" data-gallery="portfolioGallery" class="portfolio-lightbox" title="FullScreen"><i class="bi bi-arrows-fullscreen m-1" style="font-size:17px"></i></a>
+                                       
+                                                    </div>
                                     <div class="d-flex align-items-center">
-                                        <a asp-controller="Advertisements" asp-action="Details" asp-route-Name="@i.Name" class="" title="More Details"><i class="bx bx-link" style="font-size:22px"></i></a>
+                                        <a asp-controller="Advertisements" asp-action="Details" asp-route-id="@i.ID" class="" title="More Details"><i class="bx bx-link" style="font-size:22px"></i></a>
 
                                     </div>
                                 </div>
@@ -53,7 +56,7 @@
                             <div class="d-flex justify-content-between pr-2">
                                 <a asp-controller="Advertisements" class="btn btn-primary" asp-action="Details">Buy Now</a>
 
-                                <a asp-controller="Home" asp-action="HomePage" asp-route-id="@i.Name"><i class="bi bi-cart-plus text-danger" title="Add To Cart" style="font-size:25px"></i></a>
+                                <a asp-controller="Home" asp-action="HomePage" asp-route-id="@i.ID"><i class="bi bi-cart-plus text-danger" title="Add To Cart" style="font-size:25px"></i></a>
 
                             </div>
 

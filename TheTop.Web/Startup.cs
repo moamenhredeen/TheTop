@@ -28,6 +28,8 @@ namespace TheTop
                 options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
+            // TODO : define extension methods ot add the services 
+            services.AddScoped<AdvertisementService>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

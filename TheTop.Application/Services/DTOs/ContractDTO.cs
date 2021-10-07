@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TheTop.Application.Services.DTOs
 {
-    class ContractDTO
+    public class ContractDTO
     {
         public int ID { get; set; }
         public decimal HourSalary { get; set; }

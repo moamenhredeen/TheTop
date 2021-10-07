@@ -11,7 +11,7 @@ namespace TheTop.Application.Entities
         public int OrderId { get; set; }
         public float TotalPrice { get; set; }
 
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         
         public ICollection<Advertisement> Advertisements { get; set; }

@@ -4,48 +4,53 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheTop.Application.Services;
+using TheTop.Application.Services.DTOs;
 using TheTop.Models;
 
 namespace TheTop.Controllers
 {
     public class CategorysController : Controller
     {
+        private readonly AdvertisementService _service;
+
+        public CategorysController(AdvertisementService service)
+        {
+            this._service = service;
+        }
         // GET: CategoryDTOsController
         public ActionResult Index()
         {
-            List<CategoryDTO> list = new List<CategoryDTO>()
+            List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
+
+            List<CategoryVM> list = categoryList.Select(category => new CategoryVM
             {
-                new CategoryDTO{Name ="Cars"},
-                 new CategoryDTO{Name ="Restaurants"},
-                  new CategoryDTO{Name ="Company"},
-            };
+                Name = category.Name
+            }).ToList();
+             
+           
             return View(list);
         }
 
-        // GET: CategoryDTOsController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View(new CategoryDTO { Name = "Care", createDate = DateTime.Now});
-        }
+        
 
         // GET: CategoryDTOsController/Create
         public ActionResult Create()
         {
-            return View(new CategoryDTO());
+            return View(new CategoryVM());
         }
 
         // POST: CategoryDTOsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CategoryDTO model)
+        public ActionResult Create(CategoryVM model)
         {
-
+           
             try
             {
                 if (ModelState.IsValid)
                 {
-
-                    
+                    _service.AddCategory(new CategoryDTO() { Name = model.Name});
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -63,7 +68,7 @@ namespace TheTop.Controllers
         // GET: CategoryDTOsController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View(new CategoryDTO { Name = "Rawashdeh"});
+            return View(new CategoryVM { Name = "Rawashdeh"});
         }
 
         // POST: CategoryDTOsController/Edit/5

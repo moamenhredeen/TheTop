@@ -13,12 +13,12 @@ namespace TheTop.Classs
         public int ID { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Create Date")]
-        public DateTime createDate { get; set; } = DateTime.Now;
+        [Display(Name = "Create At")]
+        public DateTime CreatedAT { get; set; } = DateTime.Now;
 
 
         [DataType(DataType.Date)]
-        [Display(Name = "Update Date")]
-        public DateTime updateDate { get; set; }
+        [Display(Name = "Update At")]
+        public DateTime UpdatedAt { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model AdvertisementDTO
+﻿@model AdvertisementVM
 
 @{
     Layout = "_LayoutCustomer";
@@ -29,9 +29,9 @@
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="mb-2">
-                <label asp-for="PhotosNames"></label>
-                <input asp-for="PhotosNames" class="col-12 form-control" type="file" multiple style="" />
-                <span asp-validation-for="PhotosNames" class="text-danger"></span>
+                <label asp-for="PhotosFiles"></label>
+                <input asp-for="PhotosFiles" class="col-12 form-control" type="file" multiple style="" />
+                <span asp-validation-for="PhotosFiles" class="text-danger"></span>
 
             </div>
 
