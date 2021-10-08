@@ -82,8 +82,10 @@ namespace TheTop.Controllers
             return View(advertisementsVMList);
         }//
 
-        public ActionResult Search()
+        public async Task<ActionResult> Search()
         {
+            var user = await _userManager.GetUserAsync(User);
+            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
             SearchVM modelVM = new SearchVM();
             List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
 
@@ -122,12 +124,12 @@ namespace TheTop.Controllers
 
             List<AdvertisementVM> advertisementsVMList = searchAdvertisementsDtoList
                                   .Select(advertisement => new AdvertisementVM
-                                  {
+                                  {  ID = advertisement.ID,
                                       Name = advertisement.Name,
                                       Price = advertisement.Price,
                                       Category = advertisement.CategoryName,
                                       CreatedAT = advertisement.CreatedAt,
-                                      PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+                                      PhotosNames = advertisement.ImagesNames.ToList(),
                                   }).ToList();
 
             modelVM.Advertisements = advertisementsVMList;

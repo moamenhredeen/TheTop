@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +16,11 @@ namespace TheTop.Controllers
     public class EmployeesController : Controller
     {
         private UserManager<ApplicationUser> _userManager;
-        public EmployeesController(UserManager<ApplicationUser> userManager)
+        private RoleManager<IdentityRole> _roleManager;
+        public EmployeesController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             this._userManager = userManager;
+            this._roleManager = roleManager;
         }
         // GET: EmployeeDTOsController
         public ActionResult Index()
@@ -30,6 +35,7 @@ namespace TheTop.Controllers
 
 
             var data =await _userManager.GetUsersInRoleAsync("Admin");
+           
             //List<EmployeeDTO> list = new List<EmployeeDTO>() {
             // new EmployeeDTO{FirstName= "Moamen",LastName="Hraden",Email="kenan@gmi.com",Password="12345678" ,
             //                 Phone = "0789555" ,Role=RoleAdmin.SuperAdmin,Salary=1500,Username="ken",BirthDate = DateTime.Now},
@@ -50,7 +56,6 @@ namespace TheTop.Controllers
                 Email = "noor@gmi.com",
                 Password = "12345678",
                 Phone = "0789555",
-                Role = RoleAdmin.Accountant,
                 Salary = 800,
                 Username = "ken",
                 BirthDate = DateTime.Now
@@ -59,32 +64,50 @@ namespace TheTop.Controllers
         }
 
         // GET: EmployeeDTOsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View(new EmployeeDTO());
+           
+            var roles = await _roleManager.Roles.ToListAsync();
+            List<SelectListItem> roleList = new ();
+            roles.ForEach(e =>
+            {
+                roleList.Add(new SelectListItem { Text = e.Name,Value = e.Name});
+            });
+
+            EmployeeDTO emp = new EmployeeDTO();
+            emp.Roles = roleList;
+            return View(emp);
         }
 
         // POST: EmployeeDTOsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(EmployeeDTO model)
+        public async Task<ActionResult> Create(EmployeeDTO employeeDto)
         {
-            try
-            {
-                if (ModelState.IsValid)
+            
+                if (! ModelState.IsValid)
                 {
-                    return RedirectToAction(nameof(Index));
-
+                return View(employeeDto);            
                 }
-                else
-                {
-                    return View(model);
-                }
-            }
-            catch
+               
+            var result = await _userManager.CreateAsync(new ApplicationUser
             {
-                return View();
+                FirstName = employeeDto.FirstName,
+                LastName = employeeDto.LastName,
+                BirthDate = employeeDto.BirthDate,
+                Email = employeeDto.Email,
+                Country = employeeDto.Country,
+                City = employeeDto.City,
+                UserName = employeeDto.Username
+            });
+            if (result.Succeeded)
+            {
+              var user = await _userManager.FindByEmailAsync(employeeDto.Email);
+              await _userManager.AddToRoleAsync(user, employeeDto.RoleName);
             }
+          
+                return RedirectToAction("HomePage", "Home");          
+            
         }
 
         // GET: EmployeeDTOsController/Edit/5
@@ -97,7 +120,6 @@ namespace TheTop.Controllers
                 Email = "noor@gmi.com",
                 Password = "12345678",
                 Phone = "0789555",
-                Role = RoleAdmin.Accountant,
                 Salary = 800,
                 Username = "ken",
                 BirthDate = DateTime.Now

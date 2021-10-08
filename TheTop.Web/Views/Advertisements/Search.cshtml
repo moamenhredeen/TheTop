@@ -47,55 +47,72 @@
         </div>
     </form>
 
-    @if (Model.Advertisements.ToList().Count > 0)
-    {
-        @await Html.PartialAsync("~/Views/Advertisements/Index.cshtml", Model.Advertisements)
-    }
-    @*<div class="text-primary"><h1>Result </h1></div>*@
+    @*@if (Model.Advertisements.ToList().Count > 0)
+        {
+            @await Html.PartialAsync("~/Views/Advertisements/Index.cshtml", Model.Advertisements)
+        }*@
+    <div class="text-primary"><h3>Result </h3></div>
     <hr />
-    @*<section id="portfolio" class="portfolio">
-            <div class="container" data-aos="fade-up">
 
-                <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
-                    @foreach (var i in Model.Advertisements)
-                    {
+    @if (Model.Advertisements.ToList().Count == 0)
+    {
+        <p> There is no data here</p> }
+            else
+     {
+<section id="portfolio" class="portfolio">
+    <div class="container" data-aos="fade-up">
 
-                        <div class="col-lg-4 col-md-6 portfolio-item @i.Name">
-                            <img src="~/assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-info">
-                                <h4>Catogry @i.CategoryId</h4>
-                                <h5>@i.Name</h5>
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <p style="font-size:20px">@i.Price $</p>
-                                    </div>
+        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+            @foreach (var i in Model.Advertisements)
+            {
 
-                                    <div class="d-flex">
-                                        <div class="mb-2 bg-warning w-25">
-                                            <a href="~/assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="FullScreen"><i class="bi bi-arrows-fullscreen m-1" style="font-size:15px"></i></a>
+            <div class="col-lg-4 col-md-6 portfolio-item @i.Category">
 
-                                        </div>
-                                        <div class="bg-info">
-                                            <a asp-controller="Advertisements" asp-action="Details" asp-route-Name="@i.Name" class="" title="More Details"><i class="bx bx-link"></i></a>
+            <img src="@i.PhotosNames.First()" style="max-width:100%; height:auto;" class="img-fluid" alt="">
 
-                                        </div>
-                                    </div>
+           <div class="portfolio-info">
+           <span class="mb-1 text-white">@i.Category</span>
+           <p class="font-weight-bold" style="font-size:20px">@i.Name</p>
+           <div class="justify-content-between">
 
-                                    <a asp-controller="Advertisements" asp-action="Details"><i class="bi bi-cart-plus" title="Add To Cart" style="font-size:30px"></i></a>
-
-
-
-                                </div>
-
-
-                            </div>
-                        </div>
-                    }
-
+            <div class="d-flex justify-content-between">
+                <div>
+                    <p style="font-size:18px">@i.Price.ToString("c")</p>
                 </div>
 
+                <div class="d-flex justify-content-around align-items-center w-25 ">
+                    <div class="mb-2">
+
+                        <a href="@i.PhotosNames.First()" data-gallery="portfolioGallery" class="portfolio-lightbox" title="FullScreen"><i class="bi bi-arrows-fullscreen m-1" style="font-size:17px"></i></a>
+
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a asp-controller="Advertisements" asp-action="Details" asp-route-id="@i.ID" class="" title="More Details"><i class="bx bx-link" style="font-size:22px"></i></a>
+
+                    </div>
+                </div>
             </div>
-        </section>*@
+
+            <div class="d-flex justify-content-between pr-2">
+                <a asp-controller="Advertisements" class="btn btn-primary" asp-action="Details">Buy Now</a>
+
+                <a asp-controller="Home" asp-action="AddToCart" asp-route-id="@i.ID"><i class="bi bi-cart-plus text-danger" title="Add To Cart" style="font-size:25px"></i></a>
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+</div>      }
+
+        </div>
+
+    </div>
+</section>}
+
 
     <hr />
 </div>

@@ -36,12 +36,15 @@ namespace TheTop.Controllers
        
        
 
-        public IActionResult HomePage()
+        public async Task<IActionResult> HomePage()
         {
+            var user = await _userManager.GetUserAsync(User);
+
             ViewBag.listC = new List<string> { "kenan11", "kenan22", "kenan33" };
             List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
-
-
+             if(user != null) { 
+            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
+            }
             List<AdvertisementDTO> advertisementsDtoList = _service.GetAllAdvertisemensts().ToList();
             List<AdvertisementVM> advertisementsVMList = advertisementsDtoList
                                   .Select(advertisement => new AdvertisementVM
@@ -83,7 +86,11 @@ namespace TheTop.Controllers
 
         public async Task<IActionResult> GetAllItemToCart()
         {
+
+           
+
             var user = await _userManager.GetUserAsync(User);
+            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
             List<ShoppingCartDTO> ShoppingCartDtoList = _service.GetAdvertisementsInShoppingCart(user.Id).ToList();
             List<ShoppingCartVM> ShoppingCartVMList = ShoppingCartDtoList
                                  .Select(cart => new ShoppingCartVM
@@ -109,6 +116,7 @@ namespace TheTop.Controllers
              ApplicationUserId = user.Id
             });
 
+            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
             ViewBag.listC = new List<string> { "kenan11", "kenan22", "kenan33" };
             List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
 
@@ -155,9 +163,12 @@ namespace TheTop.Controllers
 
         public async Task<IActionResult> DeleteFromCart(int id)
         {
-           _service.RemoveFromShoppingCart(id);
-
             var user = await _userManager.GetUserAsync(User);
+
+            _service.RemoveFromShoppingCart(id);
+
+            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
+           
             List<ShoppingCartDTO> ShoppingCartDtoList = _service.GetAdvertisementsInShoppingCart(user.Id).ToList();
             List<ShoppingCartVM> ShoppingCartVMList = ShoppingCartDtoList
                                  .Select(cart => new ShoppingCartVM
@@ -172,7 +183,6 @@ namespace TheTop.Controllers
                                      },
                                      ShoppingCartId = cart.ShoppingCartId
                                  }).ToList();
-            //HttpContext.Session.SetInt32("age", 20);
             return View("GetAllItemToCart", ShoppingCartVMList);
         }
     }

@@ -25,11 +25,13 @@ namespace TheTop.Classs
         public string LastName { get; set; }
 
         [DataType(DataType.Date)]
+        //[Range(typeof(DateTime), "1/1/1900", "1/1/2010", ErrorMessage = "Value for {0} must be between {1} and {2}")]
         [Display(Name = "Birth Date")]
+        [Required(ErrorMessage = "Birth Date is required")]
         public DateTime BirthDate { get; set; }
 
         [EmailAddress(ErrorMessage = "Invalide email address")]
-        [MaxLength(55, ErrorMessage = "Email shoald not exced 55 char!")]
+        [MaxLength(255, ErrorMessage = "Email shoald not exced 255 char!")]
         [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
 
@@ -39,10 +41,10 @@ namespace TheTop.Classs
         [MinLength(8, ErrorMessage = "Password should not be less than 8 char!")]
         public string Password { get; set; }
 
-        [DataType(DataType.Password)]
-        [Compare("Password",ErrorMessage ="Password must be match!")]
-        [Required(ErrorMessage = "Password is required")]
-        public string ConfirmPassword { get; set; }
+        //[DataType(DataType.Password)]
+        //[Compare("Password",ErrorMessage ="Password must be match!")]
+        ////[Required(ErrorMessage = "Password is required")]
+        //public string ConfirmPassword { get; set; }
 
         [StringLength(55, MinimumLength = 3, ErrorMessage = "Username should have 3 up to 55 char!")]
         [Required(ErrorMessage = "Username is required")]

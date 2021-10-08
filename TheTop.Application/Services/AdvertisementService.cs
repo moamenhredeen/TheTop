@@ -134,13 +134,20 @@ namespace TheTop.Application.Services
 
         public IEnumerable<AdvertisementDTO> SearchAdvertisemenst(SearchDTO searchDto)
         {
-            var advertisementList = _appDbContext.Advertisements.Include(a => a.Images).Include(a => a.Category).AsNoTracking().ToList();
-            //Where(a => a.CategoryId == searchDto.CategoryId)
-            //                     .Include(a => a.Category).AsNoTracking().ToList();
-
-            advertisementList = advertisementList
-                .Where(advertisement => searchDto.FromDate >= advertisement.CreatedAt.Date &&
-                                        advertisement.CreatedAt.Date <= searchDto.ToDate).ToList();
+            var advertisementList = _appDbContext.Advertisements.AsNoTracking().Where(a => a.CategoryId == searchDto.CategoryId)
+                                   .Include(a =>a.Images)
+                                   .Include(a => a.Category).ToList();
+             
+            if(searchDto.FromDate != new DateTime(0001, 01, 01)){
+                advertisementList = advertisementList
+               .Where(advertisement => searchDto.FromDate >= advertisement.CreatedAt.Date).ToList();
+            }
+            if (searchDto.ToDate != new DateTime(0001, 01, 01))
+            {
+                advertisementList = advertisementList
+               .Where(advertisement => advertisement.CreatedAt.Date <= searchDto.ToDate).ToList();
+            }
+            
 
             // TODO : refactoring 
             if (searchDto.Name != null)
@@ -212,29 +219,29 @@ namespace TheTop.Application.Services
         }
 
 
-        //Order Service 
+        //ShoppingCart Service 
 
-        public void AddShoppingCart(ShoppingCartDTO cartDto)
+        public void AddShoppingCart(ShoppingCartDTO shoppingCartDto)
         {
             _appDbContext.Add(new ShoppingCart {
-                AdvertisementId = cartDto.AdvertisementId,
-                ApplicationUserId = cartDto.ApplicationUserId
+                AdvertisementId = shoppingCartDto.AdvertisementId,
+                ApplicationUserId = shoppingCartDto.ApplicationUserId
             });
             _appDbContext.SaveChanges();
         }
 
-        public void RemoveFromShoppingCart(int id)
+        public void RemoveFromShoppingCart(int shoppingCartId)
         {
-            _appDbContext.Remove(new ShoppingCart { ShoppingCartId = id});
+            _appDbContext.Remove(new ShoppingCart { ShoppingCartId = shoppingCartId });
             _appDbContext.SaveChanges();
         }
 
         public IEnumerable<ShoppingCartDTO> GetAdvertisementsInShoppingCart(string CustomerId)
         {
-            var advertisementsList = _appDbContext.ShoppingCarts.Where(a => a.ApplicationUserId == CustomerId)
-                                    .Include(a => a.Advertisement).Include(imageName => imageName.Advertisement.Images).Include(c => c.Advertisement.Category).ToList();
+            var itemCartList = _appDbContext.ShoppingCarts.Where(advertisement => advertisement.ApplicationUserId == CustomerId)
+                                    .Include(advertisement => advertisement.Advertisement).Include(imageName => imageName.Advertisement.Images).Include(category => category.Advertisement.Category).ToList();
 
-            return advertisementsList.Select(cart => new ShoppingCartDTO
+            return itemCartList.Select(cart => new ShoppingCartDTO
             {
                 CreatedAt = cart.CreatedAt,
                 Advertisement = new AdvertisementDTO { Name = cart.Advertisement.Name,
@@ -244,5 +251,14 @@ namespace TheTop.Application.Services
                 ShoppingCartId = cart.ShoppingCartId
             });
         }
+
+        public int GetNumItemShoppingCart(string CustomerId)
+        {
+            var advertisementsList = _appDbContext.ShoppingCarts.Where(item => item.ApplicationUserId == CustomerId).ToList();
+
+            return advertisementsList.Count();
+        }
+
+        // Order Se
     }
 }

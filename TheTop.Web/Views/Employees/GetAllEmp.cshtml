@@ -19,7 +19,7 @@
             <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).LastName"></label></th>
             <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).Email"></label></th>
             <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).Salary"></label></th>
-            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).Role"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).RoleName"></label></th>
             <th colspan="3"></th>
         </tr>
     </thead>
@@ -39,7 +39,7 @@
         <td>@c.LastName</td>
         <td>@c.Email</td>
         <td>@c.Salary.ToString("c")</td>
-        <td>@c.Role</td>
+        <td>@c.RoleName</td>
         <td>
             <a asp-action="edit" asp-route-id="@c.ID" class="text-success"><i class="fas fa-edit"></i></a>
         </td>
