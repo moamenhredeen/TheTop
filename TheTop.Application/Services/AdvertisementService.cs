@@ -214,9 +214,35 @@ namespace TheTop.Application.Services
 
         //Order Service 
 
-        public void AddOrder(OrderDTO orderDto)
+        public void AddShoppingCart(ShoppingCartDTO cartDto)
         {
-           
+            _appDbContext.Add(new ShoppingCart {
+                AdvertisementId = cartDto.AdvertisementId,
+                ApplicationUserId = cartDto.ApplicationUserId
+            });
+            _appDbContext.SaveChanges();
+        }
+
+        public void RemoveFromShoppingCart(int id)
+        {
+            _appDbContext.Remove(new ShoppingCart { ShoppingCartId = id});
+            _appDbContext.SaveChanges();
+        }
+
+        public IEnumerable<ShoppingCartDTO> GetAdvertisementsInShoppingCart(string CustomerId)
+        {
+            var advertisementsList = _appDbContext.ShoppingCarts.Where(a => a.ApplicationUserId == CustomerId)
+                                    .Include(a => a.Advertisement).Include(imageName => imageName.Advertisement.Images).Include(c => c.Advertisement.Category).ToList();
+
+            return advertisementsList.Select(cart => new ShoppingCartDTO
+            {
+                CreatedAt = cart.CreatedAt,
+                Advertisement = new AdvertisementDTO { Name = cart.Advertisement.Name,
+                                                       CategoryName = cart.Advertisement.Category.Name,
+                                                       ImagesNames = cart.Advertisement.Images.Select(imageName => imageName.Name),
+                                                       Price = cart.Advertisement.Price},  
+                ShoppingCartId = cart.ShoppingCartId
+            });
         }
     }
 }

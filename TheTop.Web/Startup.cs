@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace TheTop
 {
@@ -47,6 +48,7 @@ namespace TheTop
             }
             
             app.UseHttpsRedirection();
+            //app.UseSession();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using TheTop.Application.Entities;
 using TheTop.Application.Services;
 using TheTop.Application.Services.DTOs;
-using TheTop.Models;
+using TheTop.ViewModels;
 
 namespace TheTop.Controllers
 {

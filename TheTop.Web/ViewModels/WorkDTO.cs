@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TheTop.Models
+namespace TheTop.ViewModels
 {
     public class WorkDTO
     {

@@ -10,8 +10,8 @@ namespace TheTop.Application.Entities
     {
         public int ShoppingCartId { get; set; }
 
-        public decimal Price { get; set; }
-
+        public int AdvertisementId { get; set; }
+        public Advertisement Advertisement { get; set; }
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 

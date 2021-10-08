@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TheTop.Application.Entities;
 using TheTop.Application.Services;
 using TheTop.Application.Services.DTOs;
-using TheTop.Models;
+using TheTop.ViewModels;
 
 namespace TheTop.Controllers
 {
@@ -17,30 +21,25 @@ namespace TheTop.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AdvertisementService _service;
-        public HomeController(ILogger<HomeController> logger, AdvertisementService service)
+      
+        private UserManager<ApplicationUser> _userManager;
+       
+        public HomeController(ILogger<HomeController> logger, AdvertisementService service,
+                              UserManager<ApplicationUser> userManager
+                              )
         {
             _logger = logger;
             _service = service;
+            _userManager = userManager;
+           
         }
-        List<AdvertisementVM> list = new List<AdvertisementVM>()
-            {
-                new AdvertisementVM{Name="Car1",Price=70,CategoryId = 1,
-                   },
-                new AdvertisementVM{Name="Car1",Price=60,CategoryId = 2,
-                   },
-                new AdvertisementVM{Name="Car2",Price=30,CategoryId = 3,
-                    },
-                 new AdvertisementVM{Name="Car2",Price=50,CategoryId = 2,
-                   },
-                new AdvertisementVM{Name="Car3",Price=40,CategoryId = 3,
-                  }
-            };
+       
+       
 
         public IActionResult HomePage()
         {
             ViewBag.listC = new List<string> { "kenan11", "kenan22", "kenan33" };
             List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
-           // ViewBag.listC = categoryList.Select(categ => categ.Name);
 
 
             List<AdvertisementDTO> advertisementsDtoList = _service.GetAllAdvertisemensts().ToList();
@@ -82,27 +81,99 @@ namespace TheTop.Controllers
             return View(model);
         }
 
-        public IActionResult Cart(string id)
+        public async Task<IActionResult> GetAllItemToCart()
         {
-           
-            return View(new AdvertisementVM
-            {
-                Name = "Car1",
-                Price = 100,
-                CategoryId = 1,
-              
-            });
+            var user = await _userManager.GetUserAsync(User);
+            List<ShoppingCartDTO> ShoppingCartDtoList = _service.GetAdvertisementsInShoppingCart(user.Id).ToList();
+            List<ShoppingCartVM> ShoppingCartVMList = ShoppingCartDtoList
+                                 .Select(cart => new ShoppingCartVM
+                                 {
+                                     CreatedAt = cart.CreatedAt,
+                                      Advertisement = new AdvertisementVM
+                                      {
+                                          Name = cart.Advertisement.Name,
+                                          Price = cart.Advertisement.Price,
+                                          Category =cart.Advertisement.CategoryName,
+                                          PhotosNames = cart.Advertisement.ImagesNames.Select(imageName => imageName).ToList()
+                                      },
+                                      ShoppingCartId = cart.ShoppingCartId
+                                 }).ToList();
+            return View(ShoppingCartVMList);
         }
 
-        //public IActionResult Privacy()
-        //{
-        //    return View();
-        //}
+        public async Task<IActionResult> AddToCart(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            _service.AddShoppingCart(new ShoppingCartDTO {
+             AdvertisementId = id,
+             ApplicationUserId = user.Id
+            });
 
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
+            ViewBag.listC = new List<string> { "kenan11", "kenan22", "kenan33" };
+            List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
+
+
+            List<AdvertisementDTO> advertisementsDtoList = _service.GetAllAdvertisemensts().ToList();
+            List<AdvertisementVM> advertisementsVMList = advertisementsDtoList
+                                  .Select(advertisement => new AdvertisementVM
+                                  {
+                                      ID = advertisement.ID,
+                                      Name = advertisement.Name,
+                                      Price = advertisement.Price,
+                                      Category = advertisement.CategoryName,
+                                      CreatedAT = advertisement.CreatedAt,
+                                      PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+                                  }).ToList();
+
+            List<ReviewDTO> listRev = new List<ReviewDTO>()
+            {
+                new ReviewDTO{Name="kenan",Email="kenan@gmail.com",
+                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
+                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
+                new ReviewDTO{Name="Noor",Email="kenan@gmail.com",
+                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
+                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
+                new ReviewDTO{Name="Moamen",Email="kenan@gmail.com",
+                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
+                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
+                new ReviewDTO{Name="Wael",Email="kenan@gmail.com",
+                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
+                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
+
+            };
+
+            HomeDTO model = new HomeDTO
+            {
+                AdvertisementsList = advertisementsVMList,
+                ReviewsList = listRev,
+                Review = new ReviewDTO(),
+            };
+           
+
+            return View("HomePage", model);
+        }
+
+        public async Task<IActionResult> DeleteFromCart(int id)
+        {
+           _service.RemoveFromShoppingCart(id);
+
+            var user = await _userManager.GetUserAsync(User);
+            List<ShoppingCartDTO> ShoppingCartDtoList = _service.GetAdvertisementsInShoppingCart(user.Id).ToList();
+            List<ShoppingCartVM> ShoppingCartVMList = ShoppingCartDtoList
+                                 .Select(cart => new ShoppingCartVM
+                                 {
+                                     CreatedAt = cart.CreatedAt,
+                                     Advertisement = new AdvertisementVM
+                                     {
+                                         Name = cart.Advertisement.Name,
+                                         Price = cart.Advertisement.Price,
+                                         Category = cart.Advertisement.CategoryName,
+                                         PhotosNames = cart.Advertisement.ImagesNames.Select(imageName => imageName).ToList()
+                                     },
+                                     ShoppingCartId = cart.ShoppingCartId
+                                 }).ToList();
+            //HttpContext.Session.SetInt32("age", 20);
+            return View("GetAllItemToCart", ShoppingCartVMList);
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheTop.Application.Entities;
-using TheTop.Models;
+using TheTop.ViewModels;
 
 namespace TheTop.Controllers
 {

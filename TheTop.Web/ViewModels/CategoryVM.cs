@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TheTop.Classs;
 
-namespace TheTop.Models
+namespace TheTop.ViewModels
 {
     public class CategoryVM : BASEEntity
     {
