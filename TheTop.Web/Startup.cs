@@ -30,6 +30,7 @@ namespace TheTop
                 .AddEntityFrameworkStores<AppDbContext>();
             // TODO : define extension methods ot add the services 
             services.AddScoped<AdvertisementService>();
+            services.AddScoped<ReviewService>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

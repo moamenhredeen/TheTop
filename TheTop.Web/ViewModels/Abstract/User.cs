@@ -55,6 +55,8 @@ namespace TheTop.Classs
         [Required(ErrorMessage = "Phone is required")]
         public string Phone { get; set; }
 
+        public string ImageName { get; set; }
+
     }
 }
 

@@ -100,10 +100,14 @@ namespace TheTop.Controllers
                 City = employeeDto.City,
                 UserName = employeeDto.Username
             });
+
             if (result.Succeeded)
             {
+
               var user = await _userManager.FindByEmailAsync(employeeDto.Email);
-              await _userManager.AddToRoleAsync(user, employeeDto.RoleName);
+                await _userManager.AddPasswordAsync(user, employeeDto.Password); 
+                  await _userManager.AddToRoleAsync(user, employeeDto.RoleName);
+                
             }
           
                 return RedirectToAction("HomePage", "Home");          

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TaskDTO>
+﻿@model IEnumerable<TaskVM>
 
 
 
@@ -30,7 +30,7 @@
         }
         else
         {
-            foreach (TaskDTO t in Model)
+            foreach (TaskVM t in Model)
             {
     <tr>
         <td>@t.Title</td>

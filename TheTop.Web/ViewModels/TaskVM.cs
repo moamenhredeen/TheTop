@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,7 +8,7 @@ using TheTop.Classs;
 
 namespace TheTop.ViewModels
 {
-    public class TaskDTO : BASEEntity
+    public class TaskVM : BASEEntity
     {
         [Display(Name = "Title")]
         [MaxLength(255, ErrorMessage = "Title shoald not exced 255 char!")]
@@ -15,9 +16,11 @@ namespace TheTop.ViewModels
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }
 
+        
         [StringLength(500, MinimumLength = 5, ErrorMessage = "Description should have 5 up to 500 char!")]
         public string Description { get; set; }
 
+        [Display(Name = "Duration(Day)")]
         [Required(ErrorMessage = "Duration is required")]
         public int Duration { get; set; }
 
@@ -27,8 +30,10 @@ namespace TheTop.ViewModels
         public StatusType Status { get; set; }
 
         public PriorityType Priority { get; set; }
-        public int EmployeeId { get; set; }
-        
 
+        [Display(Name = "Employee")]
+        public string EmployeeId { get; set; }
+        public EmployeeDTO EmployeeDTO { get; set; }
+        public ICollection<SelectListItem> Employees { get; set; }
     }
 }

@@ -43,14 +43,14 @@ namespace TheTop.Areas.Identity.Pages.Account
                 // TODO : Delete
                 if (!await _roleManager.RoleExistsAsync("Customer"))
                 {
-                    await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                    await _roleManager.CreateAsync(new IdentityRole("Customer"));
                 }
 
                 var user = new ApplicationUser {UserName = Input.Email, Email = Input.Email};
                 IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    result = await _userManager.AddToRoleAsync(user, "Admin");
+                    result = await _userManager.AddToRoleAsync(user, "Customer");
                 }
 
                 if (result.Succeeded)

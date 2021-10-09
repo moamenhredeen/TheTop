@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ApplicationModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using TheTop.Application.Services.DTOs;
 
 namespace TheTop.Application.Services
 {
-    class ReviewService
+    public class ReviewService
     {
 
         //Review Service
@@ -133,9 +134,15 @@ namespace TheTop.Application.Services
                Description = taskTdo.Description,
                Duration = taskTdo.Duration,
                DueDate = taskTdo.DueDate,
-               Status = taskTdo.Status,
-               Priority = taskTdo.Priority,
-               ApplicationUserId = taskTdo.ApplicationUserId
+               Status = taskTdo.Status == StatusType.Done.ToString() ?
+                        StatusType.Done:
+                        taskTdo.Status == StatusType.InProgress.ToString() ?
+                        StatusType.InProgress : StatusType.Todo,
+               Priority = taskTdo.Priority == PriorityType.High.ToString() ?
+                        PriorityType.High :
+                        taskTdo.Status == PriorityType.Low.ToString() ?
+                        PriorityType.Low : PriorityType.Med,
+                ApplicationUserId = taskTdo.ApplicationUserId
             });
 
             _appDbContext.SaveChanges();
@@ -149,8 +156,14 @@ namespace TheTop.Application.Services
                 Description = taskTdo.Description,
                 Duration = taskTdo.Duration,
                 DueDate = taskTdo.DueDate,
-                Status = taskTdo.Status,
-                Priority = taskTdo.Priority,
+                Status = taskTdo.Status == StatusType.Done.ToString() ?
+                        StatusType.Done :
+                        taskTdo.Status == StatusType.InProgress.ToString() ?
+                        StatusType.InProgress : StatusType.Todo,
+                Priority = taskTdo.Priority == PriorityType.High.ToString() ?
+                        PriorityType.High :
+                        taskTdo.Status == PriorityType.Low.ToString() ?
+                        PriorityType.Low : PriorityType.Med,
                 ApplicationUserId = taskTdo.ApplicationUserId
             });
 
@@ -172,8 +185,8 @@ namespace TheTop.Application.Services
                 Description = task.Description,
                 Duration = task.Duration,
                 DueDate = task.DueDate,
-                Status = task.Status,
-                Priority = task.Priority,
+                Status = task.Status.ToString(),
+                Priority = task.Priority.ToString(),
                 User = new UserDTO
                 {
                     FirstName = task.ApplicationUser.FirstName,
@@ -197,14 +210,14 @@ namespace TheTop.Application.Services
                Description = task.Description,
                DueDate = task.DueDate,
                Duration = task.Duration,
-               Priority  = task.Priority,
-               Status = task.Status,
+               Priority  = task.Priority.ToString(),
+               Status = task.Status.ToString(),
                CreatedAt = task.CreatedAt
             });
         }
-        public IEnumerable<TaskDTO> GetAllTasks(int employeeId)
+        public IEnumerable<TaskDTO> GetAllTasks()
         {
-            var tasksList = _appDbContext.TaskEntities.AsNoTracking().ToList();
+            var tasksList = _appDbContext.TaskEntities.Include(task => task.ApplicationUser).ToList();
 
             return tasksList.Select(task => new TaskDTO
             {
@@ -213,8 +226,8 @@ namespace TheTop.Application.Services
                 Description = task.Description,
                 DueDate = task.DueDate,
                 Duration = task.Duration,
-                Priority = task.Priority,
-                Status = task.Status,
+                Priority = task.Priority.ToString(),
+                Status = task.Status.ToString(),
                 CreatedAt = task.CreatedAt,
                 User = new UserDTO
                 {

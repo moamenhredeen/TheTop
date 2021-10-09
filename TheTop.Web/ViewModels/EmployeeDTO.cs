@@ -21,7 +21,7 @@ namespace TheTop.ViewModels
         public string Country { get; set; }
 
         public string RoleName { get; set; }
-        public string RoleId { get; set; }
+        
         public ICollection<SelectListItem> Roles { get; set; }
     }
 }
