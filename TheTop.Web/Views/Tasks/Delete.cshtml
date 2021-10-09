@@ -1,1 +1,12 @@
-﻿<h1>Delete Task</h1>
+﻿@model TaskVM
+@{ Layout = "_LayoutAdmin"; }
+<div class="container">
+    <h2 class="text-danger">Remove Task</h2>
+    <hr />
+    <p>Are you sure to delete this Task <span class="text-danger">" @Model.Title" </span> ?</p>
+
+    <div>
+        <a asp-action="DeleteTask" asp-route-id="@Model.ID" class="btn btn-danger">Delete</a>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</div>

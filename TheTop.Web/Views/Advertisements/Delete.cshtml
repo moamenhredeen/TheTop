@@ -1,6 +1,9 @@
 ﻿@model AdvertisementVM
 
 @{ Layout = "_LayoutCustomer"; }
+
+<h2 class="text-danger">Remove Advertisement</h2>
+<hr />
 <div class="container mb-5">
     <div class="w-50 d-flex flex-column m-auto">
         <p>Are you sure to delete this Advertisement <span class="text-danger">" @Model.Name" </span>?</p>
@@ -12,5 +15,5 @@
             <a asp-action="GetById" class="btn btn-secondary">Cancel</a>
         </div>
     </div>
-    
+
 </div>

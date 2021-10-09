@@ -2,7 +2,7 @@
 @{
     Layout = "_LayoutAdmin";
 }
-<h2 class="m-5">Details Task</h2>
+<h2 class="m-2 text-primary">Information Task</h2>
 <hr />
 
 <div class="row w-75 m-auto">
@@ -20,6 +20,10 @@
         <div class="form-group ">
             <label asp-for="DueDate"></label>
             <input asp-for="DueDate" class="form-control" readonly />
+        </div>
+        <div class="form-group ">
+            <label>Username Emplyee</label>
+            <input value="@Model.EmployeeDTO.Username" class="form-control" readonly />
         </div>
         <div class="form-group ">
             <label asp-for="Description"></label>
@@ -41,13 +45,17 @@
             <input asp-for="CreatedAT" class="form-control" readonly />
         </div>
 
+        <div class="form-group ">
+            <label >Email Emplyee</label>
+            <input  value="@Model.EmployeeDTO.Email" class="form-control" readonly />
+        </div>
+
         @if (false)
         {
-            <div class="form-group ">
-                <label asp-for="EmployeeId"></label>
-                <input asp-for="EmployeeId" class="form-control" readonly />
-            </div>
-        }
+    <div class="form-group ">
+        <label asp-for="EmployeeId"></label>
+        <input asp-for="EmployeeId" class="form-control" readonly />
+    </div>}
 
         <div class="form-group mt-5 text-center d-flex justify-content-end">
             <a asp-action="GetTasksProg" class="btn btn-secondary font-weight-bold w-25" style="font-size: 17px;">Back</a>

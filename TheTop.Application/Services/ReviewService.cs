@@ -176,8 +176,9 @@ namespace TheTop.Application.Services
         }
         public TaskDTO GetTaskById(int taskId)
         {
-            var task = _appDbContext.TaskEntities
-                      .SingleOrDefault(task => task.TaskEntityId == taskId);
+            var task = _appDbContext.TaskEntities.Where(task => task.TaskEntityId == taskId)
+                       .Include(task => task.ApplicationUser).Single();
+                    
 
             return new TaskDTO {
                 ID = task.TaskEntityId,
@@ -192,7 +193,7 @@ namespace TheTop.Application.Services
                     FirstName = task.ApplicationUser.FirstName,
                     LastName = task.ApplicationUser.LastName,
                     Email = task.ApplicationUser.Email,
-                    ImagName = task.ApplicationUser.ImagName,
+                    //ImagName = task.ApplicationUser.ImagName,
                     Country = task.ApplicationUser.Country,
                     Username = task.ApplicationUser.UserName
                 }
