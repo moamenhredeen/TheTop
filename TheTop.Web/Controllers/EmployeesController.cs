@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheTop.Application.Entities;
+using TheTop.Application.Services;
+using TheTop.Application.Services.DTOs;
 using TheTop.ViewModels;
 
 namespace TheTop.Controllers
@@ -17,10 +19,14 @@ namespace TheTop.Controllers
     {
         private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
-        public EmployeesController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly ReviewService _service;
+        public EmployeesController(UserManager<ApplicationUser> userManager,
+                                   RoleManager<IdentityRole> roleManager,
+                                   ReviewService service)
         {
             this._userManager = userManager;
             this._roleManager = roleManager;
+            this._service = service;
         }
         // GET: EmployeeDTOsController
         public ActionResult Index()
@@ -99,14 +105,14 @@ namespace TheTop.Controllers
                 Country = employeeDto.Country,
                 City = employeeDto.City,
                 UserName = employeeDto.Username
-            });
+            },employeeDto.Password);
 
             if (result.Succeeded)
             {
 
-              var user = await _userManager.FindByEmailAsync(employeeDto.Email);
-                await _userManager.AddPasswordAsync(user, employeeDto.Password); 
-                  await _userManager.AddToRoleAsync(user, employeeDto.RoleName);
+                var user = await _userManager.FindByEmailAsync(employeeDto.Email);
+                //  await _userManager.AddPasswordAsync(user, employeeDto.Password); 
+                await _userManager.AddToRoleAsync(user, employeeDto.RoleName);
                 
             }
           
@@ -177,20 +183,32 @@ namespace TheTop.Controllers
             }
         }
 
-        public ActionResult Login()
+        public async Task<ActionResult> StartWork()
         {
-            
-                return View(new EmployeeDTO());            
-        }
-        [HttpPost]
-        public ActionResult Login(EmployeeDTO model)
-        {
-            if (ModelState.IsValid)
+            var user = await _userManager.GetUserAsync(User);
+
+            _service.StartWork(new WorkDTO
             {
-                return View(new EmployeeDTO());
-            }
-            return View();
+                ApplicationUserId = user.Id,
+                StartDate = DateTime.Now
+            }); 
+
+                return View("Index");            
         }
+
+        public async Task<ActionResult> EndWork()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            _service.EndWork(new WorkDTO
+            {
+                ApplicationUserId = user.Id,
+                EndDate = DateTime.Now
+            });
+
+            return View("Index");
+        }
+
 
 
         public ActionResult ReportMonthlyOfSells()
@@ -212,7 +230,7 @@ namespace TheTop.Controllers
             return View();
         }
 
-
+       
        
 
         //Accountant

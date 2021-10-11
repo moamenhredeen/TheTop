@@ -282,13 +282,51 @@ namespace TheTop.Application.Services
 
         public void StartWork(WorkDTO workDto)
         {
-            _appDbContext.Add(new Work
+               
+            if (FindStartDate(workDto.StartDate) == null)
             {
-                ApplicationUserId = workDto.ApplicationUserId,
-                StartDate = workDto.StartDate
-            });
-            _appDbContext.SaveChanges();
+                _appDbContext.Add(new Work
+                {
+                    ApplicationUserId = workDto.ApplicationUserId,
+                    StartDate = workDto.StartDate
+                });
+                _appDbContext.SaveChanges();
+            }
+          
         }
-       
+
+        public void EndWork(WorkDTO workDto)
+        {
+            var workStart = FindStartDate(workDto.EndDate);
+            var workEnd = FindEndDate(workDto.EndDate);
+
+            if (workStart != null && workEnd == null)
+            {
+                _appDbContext.Update(new Work
+                {
+                    WorkId = workStart.WorkId,
+                    ApplicationUserId = workStart.ApplicationUserId,
+                    StartDate = workStart.StartDate,
+                    EndDate = workDto.EndDate
+                }) ; 
+                _appDbContext.SaveChanges();
+            }
+
+        }
+
+
+
+        public Work FindStartDate(DateTime date)
+        {
+            var data = _appDbContext.Works.Where(w => w.StartDate.Date == date.Date).AsNoTracking().SingleOrDefault();
+
+            return data;
+        }
+        public Work FindEndDate(DateTime date)
+        {
+            var data = _appDbContext.Works.Where(w => w.EndDate.Value.Date == date.Date).AsNoTracking().SingleOrDefault();
+
+            return data;
+        }
     }
 }

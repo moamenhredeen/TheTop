@@ -60,7 +60,7 @@ namespace TheTop.Controllers
             return View(taskVMList);
         }//
 
-        public async Task<ActionResult> GetTasksProg(int id)
+        public async Task<ActionResult> GetTasksProgrammer(int id)
         {
             var user = await _userManager.GetUserAsync(User);
             List<TaskDTO> taskDtoList = _service.GetEmployeeTasks(user.Id).ToList();
@@ -80,19 +80,12 @@ namespace TheTop.Controllers
                     Status = task.Status == StatusType.Done.ToString() ?
                             StatusType.Done : task.Status == StatusType.InProgress.ToString() ?
                             StatusType.InProgress : StatusType.Todo,
-                    EmployeeDTO = new EmployeeDTO
-                    {
-                        FirstName = task.User.FirstName,
-                        LastName = task.User.LastName,
-                        Email = task.User.Email,
-                        Username = task.User.Username,
-                        //ImageName = task.User.ImagName
-                    }
+                    
                 });
             });
             return View(taskVMList);
 
-        }
+        }//
 
         
         public ActionResult Details(int id)
@@ -128,7 +121,7 @@ namespace TheTop.Controllers
         
         public async Task<ActionResult> Create()
         {
-            var data = _userManager.Users.ToList();
+            //var data = _userManager.Users.ToList();
             var employees = await _userManager.GetUsersInRoleAsync("Programmer");
             List<SelectListItem> employeeList = new();
             foreach(var e in employees)
@@ -217,7 +210,30 @@ namespace TheTop.Controllers
 
         }//
 
-        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProgrammer(TaskVM taskVM)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View(taskVM);
+            }
+            _service.UpdateTask(new TaskDTO
+            {
+                ID = taskVM.ID,
+                Title = taskVM.Title,
+                Description = taskVM.Description,
+                ApplicationUserId = taskVM.EmployeeId,
+                Duration = taskVM.Duration,
+                DueDate = taskVM.DueDate,
+                Priority = taskVM.Priority.ToString(),
+                Status = taskVM.Status.ToString(),
+            });
+            return RedirectToAction(nameof(Index));
+
+        }//
+
         public ActionResult Delete(int id)
         {
             TaskDTO taskDto = _service.GetTaskById(id);

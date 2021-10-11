@@ -2,16 +2,28 @@
 
 
 
-@{
-    ViewData["Title"] = "Index";
-    Layout = "_LayoutAdmin";
-}
+@{ ViewData["Title"] = "Index";
+                Layout = "_LayoutAdmin"; }
 
 <h2 class="m-5">Tasks</h2>
 <hr />
-<p class="ml-5">
-    <a asp-action="create" class="btn btn-outline-primary">Add Task</a>
-</p>
+<div class="d-flex justify-content-between w-100 ">
+    <p class="ml-5">
+        <a asp-action="create" class="btn btn-outline-primary">Add Task</a>
+    </p>
+    <!-- Topbar Search -->
+    @*<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                   aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+    </form>*@
+</div>
 <table class="table m-auto  p-5" style="width:91%">
     <thead>
         <tr class="table-primary">
@@ -27,33 +39,31 @@
     <tbody>
         @if (Model is null || Model.ToList().Count == 0)
         {
-            <tr>
-                <td colspan="9"> There is no data here</td>
-            </tr>
-        }
-        else
-        {
-            foreach (TaskVM t in Model)
+<tr>
+    <td colspan="9"> There is no data here</td>
+</tr> }
+            else
             {
-    <tr>
-        <td>@t.Title</td>
-        <td>@t.EmployeeDTO.Username</td>
-        <td>@t.Duration</td>
-        <td>@t.DueDate.ToString("D")</td>
-        <td>@t.Status</td>
-        <td>@t.Priority</td>
-        <td>
-            <a asp-action="edit" asp-route-id="@t.ID" class="text-success"><i class="fas fa-edit"></i></a>
-        </td>
-        <td>
-            <a asp-action="details" asp-route-id="@t.ID" class="text-primary"><i class="fas fa-info"></i></a>
-        </td>
-        <td>
-            <a asp-action="delete" asp-route-id="@t.ID" class="text-danger"><i class="fas fa-trash"></i></a>
-        </td>
-    </tr>
+                foreach (TaskVM t in Model)
+                {
+<tr>
+    <td>@t.Title</td>
+    <td>@t.EmployeeDTO.Username</td>
+    <td>@t.Duration</td>
+    <td>@t.DueDate.ToString("D")</td>
+    <td>@t.Status</td>
+    <td>@t.Priority</td>
+    <td>
+        <a asp-action="edit" asp-route-id="@t.ID" class="text-success"><i class="fas fa-edit"></i></a>
+    </td>
+    <td>
+        <a asp-action="details" asp-route-id="@t.ID" class="text-primary"><i class="fas fa-info"></i></a>
+    </td>
+    <td>
+        <a asp-action="delete" asp-route-id="@t.ID" class="text-danger"><i class="fas fa-trash"></i></a>
+    </td>
+</tr>}
             }
-        }
     </tbody>
     <tfoot>
         <tr class="table-info">

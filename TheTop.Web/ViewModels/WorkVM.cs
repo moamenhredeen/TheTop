@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TheTop.ViewModels
 {
-    public class WorkDTO
+    public class WorkVM
     {
         [Key]
         public int ID { get; set; }

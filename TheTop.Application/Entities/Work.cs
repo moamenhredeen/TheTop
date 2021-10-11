@@ -8,7 +8,7 @@ namespace TheTop.Application.Entities
         public int WorkId { get; set; }
 
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
