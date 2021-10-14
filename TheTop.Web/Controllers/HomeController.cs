@@ -21,17 +21,18 @@ namespace TheTop.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AdvertisementService _service;
-      
+        private readonly ReviewService _serviceReview;
         private UserManager<ApplicationUser> _userManager;
        
         public HomeController(ILogger<HomeController> logger, AdvertisementService service,
-                              UserManager<ApplicationUser> userManager
+                              UserManager<ApplicationUser> userManager,
+                              ReviewService serviceReview
                               )
         {
             _logger = logger;
             _service = service;
             _userManager = userManager;
-           
+            _serviceReview = serviceReview;
         }
        
        
@@ -57,37 +58,37 @@ namespace TheTop.Controllers
                                       PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
                                   }).ToList();
 
-            List<ReviewDTO> listRev = new List<ReviewDTO>()
+            List<ReviewDTO> reviewDtoList = _serviceReview.GetApprovedReviews().ToList();
+
+            List<ReviewVM> reviewVMlist = new List<ReviewVM>();
+            reviewDtoList.ForEach(review =>
             {
-                new ReviewDTO{Name="kenan",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Noor",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Moamen",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Wael",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-
-            };
-
-            HomeDTO model = new HomeDTO
+                reviewVMlist.Add(new ReviewVM
+                {
+                    Customer = new CustomerDTO
+                    {
+                        FirstName = review.User.FirstName,
+                        LastName = review.User.LastName,
+                        Email = review.User.Email,
+                        //ImageName = review.User.ImagName
+                    },
+                    Massage = review.Massage,
+                    Subject = review.Subject,
+                    ID = review.ID
+                });
+            });
+                HomeDTO model = new HomeDTO
             {
                AdvertisementsList = advertisementsVMList,
-                ReviewsList = listRev,
-                Review = new ReviewDTO(),               
+                ReviewsList = reviewVMlist,
+                Review = new ReviewVM(),               
             };
-            ViewBag.numCart = 5;
+
             return View(model);
         }
 
         public async Task<IActionResult> GetAllItemToCart()
         {
-
-           
 
             var user = await _userManager.GetUserAsync(User);
             ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
@@ -133,28 +134,31 @@ namespace TheTop.Controllers
                                       PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
                                   }).ToList();
 
-            List<ReviewDTO> listRev = new List<ReviewDTO>()
-            {
-                new ReviewDTO{Name="kenan",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Noor",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Moamen",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Wael",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
+            List<ReviewDTO> reviewDtoList = _serviceReview.GetApprovedReviews().ToList();
 
-            };
+            List<ReviewVM> reviewVMlist = new List<ReviewVM>();
+            reviewDtoList.ForEach(review =>
+            {
+                reviewVMlist.Add(new ReviewVM
+                {
+                    Customer = new CustomerDTO
+                    {
+                        FirstName = review.User.FirstName,
+                        LastName = review.User.LastName,
+                        Email = review.User.Email,
+                        //ImageName = review.User.ImagName
+                    },
+                    Massage = review.Massage,
+                    Subject = review.Subject,
+                    ID = review.ID
+                });
+            });
 
             HomeDTO model = new HomeDTO
             {
                 AdvertisementsList = advertisementsVMList,
-                ReviewsList = listRev,
-                Review = new ReviewDTO(),
+                ReviewsList = reviewVMlist,
+                Review = new ReviewVM(),
             };
            
 

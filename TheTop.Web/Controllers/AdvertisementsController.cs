@@ -34,22 +34,7 @@ namespace TheTop.Controllers
         public ActionResult Index()
         {
 
-            ViewBag.listRev = new List<ReviewDTO>()
-            {
-                new ReviewDTO{Name="kenan",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Noor",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Moamen",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Wael",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-
-            };
+            
             List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
             ViewBag.listC = categoryList.Select(categ => categ.Name);
           

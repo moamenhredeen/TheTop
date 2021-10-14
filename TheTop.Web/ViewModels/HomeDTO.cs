@@ -45,11 +45,11 @@ namespace TheTop.ViewModels
         [Display(Name = "Designed by")]
         public string DesignerBy { get; set; }
 
-        public ReviewDTO Review { get; set; }
+        public ReviewVM Review { get; set; }
 
         public List<AdvertisementVM> AdvertisementsList { get; set; }
 
-        public List<ReviewDTO> ReviewsList { get; set; }
+        public List<ReviewVM> ReviewsList { get; set; }
 
         public List<string> CategorysList { get; set; }
     }

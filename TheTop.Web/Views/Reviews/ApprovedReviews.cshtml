@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ReviewDTO>
+﻿@model IEnumerable<ReviewVM>
 <!-- ======= Testimonials Section ======= -->
 <section id="testimonials">
     <div class="container" data-aos="fade-up">
@@ -20,8 +20,8 @@
                                     <img src="assets/img/quote-sign-right.png" class="quote-sign-right" alt="">*@
                             </p>
                             <img src="~/assets/img/testimonial-1.jpg" class="testimonial-img" alt="">
-                            <h3>@item.Name</h3>
-                            <h4>@item.Email</h4>
+                            <h3>@item.Customer.FirstName @item.Customer.LastName</h3>
+                            <h4>@item.Customer.Email</h4>
                         </div>
                     </div>
                 }

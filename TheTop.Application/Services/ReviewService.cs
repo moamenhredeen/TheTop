@@ -12,40 +12,32 @@ namespace TheTop.Application.Services
 {
     public class ReviewService
     {
+        private AppDbContext _appDbContext;
 
         //Review Service
-        private AppDbContext _appDbContext;
+
         public ReviewService(AppDbContext appDbContext) => _appDbContext = appDbContext;
-        public void CreateNewReview(ReviewsDTO reviewDto)
+        public void CreateNewReview(ReviewDTO reviewDto)
          {
             _appDbContext.Add(new Review()
             {
-                Name = reviewDto.Name,
                 Subject = reviewDto.Subject,
-                Email = reviewDto.Email,
                 Massage = reviewDto.Massage,
                 ApplicationUserId = reviewDto.UserId,
                 Approved = false,
+                CreatedAt = DateTime.Now,
+                
             });
             _appDbContext.SaveChanges();
         }
-        public void UpdateReview(ReviewsDTO reviewDto)
+        public void ApproveReview(int reviewId)
         {
-            Review reviewModel = new Review()
-            {
-                ReviewId = reviewDto.ID,
-                Name = reviewDto.Name,
-                Subject = reviewDto.Subject,
-                Email = reviewDto.Email,
-                Massage = reviewDto.Massage,
-                ApplicationUserId = reviewDto.UserId,
-                UpdatedAt = DateTime.Now
-            };
+            var review = _appDbContext.Reviews
+                       .Where(review => review
+                       .ReviewId == reviewId).Include(review => review.ApplicationUser).Single();
 
-            reviewModel.Approved = reviewDto.Approved == false ? true : false;
+            review.Approved = !review.Approved ;
              
-          
-            _appDbContext.Update(reviewModel);
             _appDbContext.SaveChanges();
 
         }
@@ -54,38 +46,35 @@ namespace TheTop.Application.Services
             _appDbContext.Remove(new Review { ReviewId = id });
             _appDbContext.SaveChanges();
         }
-        public ReviewsDTO GetReviewById(int reviewId)
+
+        public ReviewDTO GetReviewById(int reviewId)
         {
             var review = _appDbContext.Reviews
-                        .SingleOrDefault(review => review
-                        .ReviewId == reviewId);
+                        .Where(review => review
+                        .ReviewId == reviewId).Include(review => review.ApplicationUser).Single();
 
-            return new ReviewsDTO { 
+            return new ReviewDTO { 
               ID = review.ReviewId,
-              Name = review.Name,
-              Email = review.Email,
               Massage = review.Massage,
               Subject = review.Subject,
               CreatedAt = review.CreatedAt,
+              Approved = review.Approved,
               User = new UserDTO {
-                  ID = review.ApplicationUserId, 
+                  //ID = review.ApplicationUserId,
                   FirstName = review.ApplicationUser.FirstName,
                   LastName = review.ApplicationUser.LastName,
                   Email = review.ApplicationUser.Email,
-                  ImagName = review.ApplicationUser.ImagName,
-                  Country = review.ApplicationUser.Country,
-                  Username = review.ApplicationUser.UserName,
-              } 
+                  //ImagName = review.ApplicationUser.ImagName,               
+              }
             };
         }
-        public IEnumerable<ReviewsDTO> GetAllAllReviews()
+        public IEnumerable<ReviewDTO> GetAllAllReviews()
         {
-            var reviewsList = _appDbContext.Reviews.AsNoTracking().ToList();
+            var reviewsList = _appDbContext.Reviews.Include(review => review.ApplicationUser).ToList();
 
-            return reviewsList.Select(review => new ReviewsDTO
+            return reviewsList.Select(review => new ReviewDTO
             {
-                Name = review.Name,
-                Email = review.Email,
+                ID = review.ReviewId,
                 Massage = review.Massage,
                 Approved = review.Approved,
                 Subject = review.Subject,
@@ -95,21 +84,19 @@ namespace TheTop.Application.Services
                     FirstName = review.ApplicationUser.FirstName,
                     LastName = review.ApplicationUser.LastName,
                     Email = review.ApplicationUser.Email,
-                    ImagName = review.ApplicationUser.ImagName,
-                    Country = review.ApplicationUser.Country,                    
+                    //ImagName = review.ApplicationUser.ImagName,
                 }
             });        
         }
-        public IEnumerable<ReviewsDTO> GetApprovedReviews()
+        public IEnumerable<ReviewDTO> GetApprovedReviews()
         {
             var reviewsList = _appDbContext.Reviews
                              .Where(review => review.
-                             Approved == true).ToList();
+                             Approved == true).Include(review => review.ApplicationUser).ToList();
 
-            return reviewsList.Select(review => new ReviewsDTO
+            return reviewsList.Select(review => new ReviewDTO
             {
-                Name = review.Name,
-                Email = review.Email,
+                
                 Massage = review.Massage,
                 Approved = review.Approved,
                 Subject = review.Subject,
@@ -119,8 +106,7 @@ namespace TheTop.Application.Services
                     FirstName = review.ApplicationUser.FirstName,
                     LastName = review.ApplicationUser.LastName,
                     Email = review.ApplicationUser.Email,
-                    ImagName = review.ApplicationUser.ImagName,
-                    Country = review.ApplicationUser.Country,
+                    //ImagName = review.ApplicationUser.ImagName,
                 }
             });
         }
@@ -294,7 +280,6 @@ namespace TheTop.Application.Services
             }
           
         }
-
         public void EndWork(WorkDTO workDto)
         {
             var workStart = FindStartDate(workDto.EndDate);
@@ -313,9 +298,6 @@ namespace TheTop.Application.Services
             }
 
         }
-
-
-
         public Work FindStartDate(DateTime date)
         {
             var data = _appDbContext.Works.Where(w => w.StartDate.Date == date.Date).AsNoTracking().SingleOrDefault();

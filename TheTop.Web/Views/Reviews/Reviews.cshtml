@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ReviewVM>
+
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_LayoutAdmin"; 
+    }
+
+<h2 class="m-5">Reviews</h2>
+<hr />
+<div class="d-flex justify-content-between w-100 ">
+   
+    <!-- Topbar Search -->
+    @*<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                       aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>*@
+</div>
+<table class="table m-auto  p-5" style="width:91%">
+    <thead>
+        <tr class="table-primary">
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Customer.FirstName"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Customer.LastName"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Customer.Email"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Subject"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Approved"></label></th>
+            <th colspan="2"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is null || Model.ToList().Count == 0)
+        {
+<tr>
+    <td colspan="6"> There is no data here</td>
+</tr>
+ }
+else
+{
+foreach (ReviewVM review in Model)
+{
+    <tr>
+        <td>@review.Customer.FirstName</td>
+        <td>@review.Customer.LastName</td>
+        <td>@review.Customer.Email</td>
+        <td>@review.Subject</td>
+        @if (review.Approved == true)
+        {
+    <td>
+        <a asp-action="ApproveReview" asp-route-id="@review.ID" class="text-success">Allowed</a>
+    </td> }
+                        else
+                        {
+    <td>
+        <a asp-action="ApproveReview" asp-route-id="@review.ID" class="text-primary">Not Allowed</a>
+    </td>}
+
+        <td>
+            <a asp-action="Detils" asp-route-id="@review.ID" class="text-primary"><i class="fas fa-info"></i></a>
+        </td>
+    </tr>
+}
+}
+    </tbody>
+    <tfoot>
+        <tr class="table-info">
+            <td colspan="6"></td>
+        </tr>
+    </tfoot>
+</table>
+

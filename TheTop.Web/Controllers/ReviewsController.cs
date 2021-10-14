@@ -1,104 +1,103 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheTop.Application.Entities;
+using TheTop.Application.Services;
+using TheTop.Application.Services.DTOs;
 using TheTop.ViewModels;
 
 namespace TheTop.Controllers
 {
     public class ReviewsController : Controller
     {
-        // GET: ReviewDTOsController
-        public ActionResult Index()
-        {
-            List<ReviewDTO> list = new List<ReviewDTO>()
-            {
-                new ReviewDTO{Name="kenan",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Noor",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Moamen",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
-                new ReviewDTO{Name="Wael",Email="kenan@gmail.com",
-                              Subject ="Erorr",Massage="Sed tamen tempor magna labore dolore dolor" +
-                              " sint tempor duis magna elit veniam aliqua esse amet veniam enim" },
+        private UserManager<ApplicationUser> _userManager;
+        private readonly ReviewService _service;
 
-            };
-            return View(list);
+        public ReviewsController(UserManager<ApplicationUser> userManager, ReviewService service)
+        {
+            this._userManager = userManager;
+            this._service = service;
+        }
+        // GET: ReviewDTOsController
+        public ActionResult Reviews()
+        {
+            List<ReviewDTO> reviewDtoList = _service.GetAllAllReviews().ToList();
+
+            List<ReviewVM> reviewVMlist = new List<ReviewVM>();
+            reviewDtoList.ForEach(review =>
+            {
+                reviewVMlist.Add(new ReviewVM { 
+                 Customer = new CustomerDTO
+                 {
+                     FirstName = review.User.FirstName,
+                     LastName = review.User.LastName,
+                     Email = review.User.Email,
+                     //ImageName = review.User.ImagName
+                 },
+                 Massage = review.Massage,
+                 Subject = review.Subject,
+                 ID = review.ID,
+                 Approved = review.Approved
+                });
+            });
+            return View(reviewVMlist);
         }
 
-        // GET: ReviewDTOsController/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
+        //GET: ReviewDTOsController/Details/5
+        public ActionResult Details(int id)
+        {
+            ReviewDTO reviewDTO = _service.GetReviewById(id);
+            return View(new ReviewVM {
+                Customer = new CustomerDTO
+                {
+                    FirstName = reviewDTO.User.FirstName,
+                    LastName = reviewDTO.User.LastName,
+                    Email = reviewDTO.User.Email,
+                    //ImageName = review.User.ImagName
+                },
+                Massage = reviewDTO.Massage,
+              Subject = reviewDTO.Subject,
+              Approved = reviewDTO.Approved,
+            });
+        }
 
         // GET: ReviewDTOsController/Create
         public ActionResult Create()
         {
-            return View(new ReviewDTO());
+            return View(new ReviewVM());
         }
 
         // POST: ReviewDTOsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ReviewDTO model)
+        public async Task<ActionResult> Create(ReviewVM reviewVM)
         {
-              model.ID = 1;
-            if (ModelState.IsValid)
-            { 
-                
-                Console.WriteLine(model);
+            var user = await _userManager.GetUserAsync(User);
+            if (! ModelState.IsValid)
+            {               
                 return RedirectToAction("HomePage", "Home");
             }
+            _service.CreateNewReview(new ReviewDTO
+            {
+                
+                Massage = reviewVM.Massage,
+                Subject = reviewVM.Subject,
+                UserId = user.Id,
+            });
             return RedirectToAction("HomePage", "Home");
         }
 
         // GET: ReviewDTOsController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
+        public ActionResult ApproveReview(int id)
+        {
+            _service.ApproveReview(id);
+            return RedirectToAction("Reviews");
+        }
 
-        //// POST: ReviewDTOsController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        // GET: ReviewDTOsController/Delete/5
-        //    public ActionResult Delete(int id)
-        //    {
-        //        return View();
-        //    }
-
-        //    // POST: ReviewDTOsController/Delete/5
-        //    [HttpPost]
-        //    [ValidateAntiForgeryToken]
-        //    public ActionResult Delete(int id, IFormCollection collection)
-        //    {
-        //        try
-        //        {
-        //            return RedirectToAction(nameof(Index));
-        //        }
-        //        catch
-        //        {
-        //            return View();
-        //        }
-        //    }
+       
     }
 }
