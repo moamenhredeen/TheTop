@@ -39,9 +39,6 @@
                 <input asp-for="Phone" class="form-control" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
-        </div>
-
-        <div class="col-6">
             <div class="form-group">
                 <label asp-for="Salary" class="control-label"></label>
                 <input asp-for="Salary" class="form-control" />
@@ -52,6 +49,9 @@
                 <input asp-for="BirthDate" value="yyyy-mm-dd" class="form-control" />
                 <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
+        </div>
+
+        <div class="col-6">
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
                 <input asp-for="City" class="form-control" />
@@ -71,6 +71,16 @@
                 <label asp-for="RoleName" class="control-label"></label>
 
                 <select asp-for="RoleName" asp-items="@Model.Roles" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="HourSalary" class="control-label"></label>
+                <input asp-for="HourSalary" class="form-control" />
+                <span asp-validation-for="HourSalary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MonthlyWorkingHours" class="control-label"></label>
+                <input asp-for="MonthlyWorkingHours" class="form-control" />
+                <span asp-validation-for="MonthlyWorkingHours" class="text-danger"></span>
             </div>
             <div class="form-group mt-5 w-50 text-center d-flex ">
                 <input type="submit" value="Add" class="btn btn-success font-weight-bold w-50" style="font-size: 17px;" />

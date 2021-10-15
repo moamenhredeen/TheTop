@@ -12,8 +12,8 @@ namespace TheTop.Application.Entities
         public string Code { get; set; }
         public float Ratio { get; set; }
         public DateTime ValidityDate { get; set; }
-        public DateTime CreatedAt = DateTime.Now; 
-        
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
         public ICollection<Order> Orders { get; set; }
         public Coupon()
         {

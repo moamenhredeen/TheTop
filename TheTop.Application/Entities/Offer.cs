@@ -14,8 +14,8 @@ namespace TheTop.Application.Entities
         public DateTime EndDate { get; set; }
 
         public ICollection<Advertisement> Advertisements { get; set; }
-        
-        public DateTime CreatedAt = DateTime.Now; 
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; } 
     }
 }

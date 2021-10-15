@@ -54,16 +54,16 @@ foreach (ReviewVM review in Model)
         @if (review.Approved == true)
         {
     <td>
-        <a asp-action="ApproveReview" asp-route-id="@review.ID" class="text-success">Allowed</a>
+        <a asp-action="ApproveReview" asp-route-id="@review.ID" class="text-success">Approved</a>
     </td> }
                         else
                         {
     <td>
-        <a asp-action="ApproveReview" asp-route-id="@review.ID" class="text-primary">Not Allowed</a>
+        <a asp-action="ApproveReview" asp-route-id="@review.ID" class="text-primary">Approve</a>
     </td>}
 
         <td>
-            <a asp-action="Detils" asp-route-id="@review.ID" class="text-primary"><i class="fas fa-info"></i></a>
+            <a asp-action="Details" asp-route-id="@review.ID" class="text-primary"><i class="fas fa-info"></i></a>
         </td>
     </tr>
 }

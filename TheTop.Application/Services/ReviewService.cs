@@ -234,7 +234,7 @@ namespace TheTop.Application.Services
             _appDbContext.Add(new Contract {
              HourSalary = contractDto.HourSalary,
              MonthlyWorkingHours = contractDto.MonthlyWorkingHours,
-              //UserID           
+             //ApplicationUserId = contractDto.ApplicationUserId,
             });
 
             _appDbContext.SaveChanges();
@@ -246,7 +246,7 @@ namespace TheTop.Application.Services
                 UpdatedAt = DateTime.Now,
                 HourSalary = contractDto.HourSalary,
                 MonthlyWorkingHours = contractDto.MonthlyWorkingHours,
-                //UserID           
+                //ApplicationUserId = contractDto.ApplicationUserId, 
             });
 
             _appDbContext.SaveChanges();
@@ -259,13 +259,13 @@ namespace TheTop.Application.Services
             {
                 HourSalary = contract.HourSalary,
                 MonthlyWorkingHours = contract.MonthlyWorkingHours,
-                CreateAt = contract.CreateAt
-                //User
+                CreateAt = contract.CreatedAt
+                
             });
         } 
 
-        // Work Service
 
+        // Work Service
         public void StartWork(WorkDTO workDto)
         {
                
@@ -310,5 +310,7 @@ namespace TheTop.Application.Services
 
             return data;
         }
+
+
     }
 }

@@ -59,6 +59,7 @@ namespace TheTop.Controllers
                     Email = reviewDTO.User.Email,
                     //ImageName = review.User.ImagName
                 },
+                ID = reviewDTO.ID,
                 Massage = reviewDTO.Massage,
               Subject = reviewDTO.Subject,
               Approved = reviewDTO.Approved,
@@ -98,6 +99,12 @@ namespace TheTop.Controllers
             return RedirectToAction("Reviews");
         }
 
-       
+
+        public ActionResult DeleteReview(int id)
+        {
+            _service.RemoveReview(id);
+            return RedirectToAction("Reviews");
+        }
+
     }
 }

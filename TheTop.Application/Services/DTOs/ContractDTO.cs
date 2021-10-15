@@ -13,5 +13,9 @@ namespace TheTop.Application.Services.DTOs
         public float MonthlyWorkingHours { get; set; }
         public DateTime CreateAt { get; set; } 
         public DateTime UpdatedAt { get; set; }
+        public string ApplicationUserId { get; set; }
+
+        //TODO
+        //public ApplicationUser ApplicationUser { get; set; }
     }
 }

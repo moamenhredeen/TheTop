@@ -42,17 +42,9 @@ namespace TheTop.Controllers
 
             var data =await _userManager.GetUsersInRoleAsync("Admin");
            
-            //List<EmployeeDTO> list = new List<EmployeeDTO>() {
-            // new EmployeeDTO{FirstName= "Moamen",LastName="Hraden",Email="kenan@gmi.com",Password="12345678" ,
-            //                 Phone = "0789555" ,Role=RoleAdmin.SuperAdmin,Salary=1500,Username="ken",BirthDate = DateTime.Now},
-            // new EmployeeDTO{FirstName= "kenan",LastName="Hassan",Email="kenan@gmi.com",Password="12345678" ,
-            //                 Phone = "0789555" ,Role=RoleAdmin.Programmer,Salary=1000,Username="ken",BirthDate = DateTime.Now},
-            // new EmployeeDTO{FirstName= "Bahaa",LastName="Rawashdeh",Email="kenan@gmi.com",Password="12345678" ,
-            //                 Phone = "0789555" ,Role=RoleAdmin.Accountant,Salary=800,Username="ken",BirthDate = DateTime.Now}
-            //};
             return View();
         }
-        // GET: EmployeeDTOsController/Details/5
+
         public ActionResult Details(int id)
         {
            EmployeeDTO obj = new EmployeeDTO
@@ -69,7 +61,6 @@ namespace TheTop.Controllers
             return View(obj);
         }
 
-        // GET: EmployeeDTOsController/Create
         public async Task<ActionResult> Create()
         {
            
@@ -80,12 +71,12 @@ namespace TheTop.Controllers
                 roleList.Add(new SelectListItem { Text = e.Name,Value = e.Name});
             });
 
-            EmployeeDTO emp = new EmployeeDTO();
-            emp.Roles = roleList;
-            return View(emp);
+            EmployeeDTO employee = new EmployeeDTO();
+            employee.Roles = roleList;
+            return View(employee);
         }
 
-        // POST: EmployeeDTOsController/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(EmployeeDTO employeeDto)
@@ -111,8 +102,13 @@ namespace TheTop.Controllers
             {
 
                 var user = await _userManager.FindByEmailAsync(employeeDto.Email);
-                //  await _userManager.AddPasswordAsync(user, employeeDto.Password); 
                 await _userManager.AddToRoleAsync(user, employeeDto.RoleName);
+
+                _service.CreateNewContract(new ContractDTO { 
+                  ApplicationUserId = user.Id,
+                  HourSalary = employeeDto.HourSalary,
+                  MonthlyWorkingHours = employeeDto.MonthlyWorkingHours,
+                });
                 
             }
           
@@ -120,7 +116,6 @@ namespace TheTop.Controllers
             
         }
 
-        // GET: EmployeeDTOsController/Edit/5
         public ActionResult Edit(int id)
         {
             EmployeeDTO obj = new EmployeeDTO
@@ -137,7 +132,6 @@ namespace TheTop.Controllers
             return View(obj);
         }
 
-        // POST: EmployeeDTOsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, EmployeeDTO model)
@@ -162,13 +156,11 @@ namespace TheTop.Controllers
 
 
 
-        // GET: EmployeeDTOsController/Delete/5
         public ActionResult Delete(int id)
         {
             return View(new EmployeeDTO());
         }
 
-        // POST: EmployeeDTOsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
@@ -266,10 +258,6 @@ namespace TheTop.Controllers
             return View("Error");
         }
 
-        public ActionResult GetTasks()
-        {
-            return View("Error");
-        }
 
         public ActionResult GetSalarySlip()
         {

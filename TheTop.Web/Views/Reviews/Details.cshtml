@@ -1,0 +1,26 @@
+﻿
+@model ReviewVM
+@{
+    Layout = "_LayoutAdmin";
+ }
+
+<div class="m-5">
+    <h2>Info Review</h2>
+    <hr />
+
+    <p> <span class="font-weight-bold text-primary">Name :</span> @Model.Customer.FirstName.ToUpper() @Model.Customer.LastName.ToUpper()</p>
+    <p><span class="font-weight-bold text-primary">Email :</span> @Model.Customer.Email</p>
+    <p><span class="font-weight-bold text-primary">Title :</span> @Model.Subject</p>
+    <p><span class="font-weight-bold text-primary">Massage :</span> @Model.Massage</p>
+    @if (Model.Approved)
+    {
+        <a asp-action="ApproveReview" asp-route-id="@Model.ID" class="btn btn-outline-success">Approved</a>
+
+    }
+    else
+    {
+      <a asp-action="ApproveReview" asp-route-id="@Model.ID" class="btn btn-outline-success">Approve</a>
+
+    }
+    <a asp-action="DeleteReview" asp-route-id="@Model.ID" class="btn btn-outline-danger">Delete</a>
+</div>

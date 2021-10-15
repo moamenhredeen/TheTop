@@ -22,7 +22,7 @@ namespace TheTop.Application.Entities
         public string  ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
-        public DateTime CreatedAt = DateTime.Now; 
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; } 
     }
 }

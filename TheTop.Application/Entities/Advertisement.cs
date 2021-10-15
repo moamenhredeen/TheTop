@@ -25,8 +25,8 @@ namespace TheTop.Application.Entities
 
         public ICollection<Image> Images { get; set; }
         public ICollection<Order> Orders { get; set; }
-        
-        public DateTime CreatedAt = DateTime.Now; 
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; } 
 
         public Advertisement()

@@ -21,7 +21,15 @@ namespace TheTop.ViewModels
         public string Country { get; set; }
 
         public string RoleName { get; set; }
-        
+
+        [Display(Name = "Hour Salary")]
+        [Required(ErrorMessage = "Hour Salary is required")]
+        public decimal HourSalary { get; set; }
+
+        [Display(Name = "Monthly Working Hours")]
+        [Required(ErrorMessage = "Monthly Working Hours is required")]
+        public float MonthlyWorkingHours { get; set; }
+
         public ICollection<SelectListItem> Roles { get; set; }
     }
 }
