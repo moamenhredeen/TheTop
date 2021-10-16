@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TheTop.Application.Migrations
 {
-    public partial class v7 : Migration
+    public partial class v1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,6 +28,7 @@ namespace TheTop.Application.Migrations
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -58,7 +59,7 @@ namespace TheTop.Application.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     HourSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MonthlyWorkingHours = table.Column<float>(type: "real", nullable: false),
-                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -74,7 +75,8 @@ namespace TheTop.Application.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(255)", nullable: true),
                     Ratio = table.Column<float>(type: "real", nullable: false),
-                    ValidityDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ValidityDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,11 +92,26 @@ namespace TheTop.Application.Migrations
                     Ratio = table.Column<float>(type: "real", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Offers", x => x.OfferId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShoppingCarts",
+                columns: table => new
+                {
+                    ShoppingCartId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShoppingCarts", x => x.ShoppingCartId);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,6 +147,7 @@ namespace TheTop.Application.Migrations
                     ImagName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ContractId = table.Column<int>(type: "int", nullable: true),
+                    ShoppingCartId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -154,6 +172,12 @@ namespace TheTop.Application.Migrations
                         principalTable: "Contracts",
                         principalColumn: "ContractId",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_ShoppingCarts_ShoppingCartId",
+                        column: x => x.ShoppingCartId,
+                        principalTable: "ShoppingCarts",
+                        principalColumn: "ShoppingCartId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -167,6 +191,7 @@ namespace TheTop.Application.Migrations
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     OfferId = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -293,6 +318,7 @@ namespace TheTop.Application.Migrations
                     CardNum = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Balance = table.Column<float>(type: "real", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -312,8 +338,9 @@ namespace TheTop.Application.Migrations
                 {
                     OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TotalPrice = table.Column<float>(type: "real", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CouponId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -346,6 +373,7 @@ namespace TheTop.Application.Migrations
                     Massage = table.Column<string>(type: "nvarchar(255)", nullable: true),
                     Approved = table.Column<bool>(type: "bit", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -372,6 +400,7 @@ namespace TheTop.Application.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     Priority = table.Column<int>(type: "int", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -392,7 +421,7 @@ namespace TheTop.Application.Migrations
                     WorkId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -404,6 +433,30 @@ namespace TheTop.Application.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdvertisementShoppingCart",
+                columns: table => new
+                {
+                    AdvertisementsAdvertisementId = table.Column<int>(type: "int", nullable: false),
+                    ShoppingCartsShoppingCartId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdvertisementShoppingCart", x => new { x.AdvertisementsAdvertisementId, x.ShoppingCartsShoppingCartId });
+                    table.ForeignKey(
+                        name: "FK_AdvertisementShoppingCart_Advertisements_AdvertisementsAdvertisementId",
+                        column: x => x.AdvertisementsAdvertisementId,
+                        principalTable: "Advertisements",
+                        principalColumn: "AdvertisementId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AdvertisementShoppingCart_ShoppingCarts_ShoppingCartsShoppingCartId",
+                        column: x => x.ShoppingCartsShoppingCartId,
+                        principalTable: "ShoppingCarts",
+                        principalColumn: "ShoppingCartId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -471,6 +524,11 @@ namespace TheTop.Application.Migrations
                 column: "OfferId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AdvertisementShoppingCart_ShoppingCartsShoppingCartId",
+                table: "AdvertisementShoppingCart",
+                column: "ShoppingCartsShoppingCartId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -511,6 +569,11 @@ namespace TheTop.Application.Migrations
                 name: "IX_AspNetUsers_ContractId",
                 table: "AspNetUsers",
                 column: "ContractId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_ShoppingCartId",
+                table: "AspNetUsers",
+                column: "ShoppingCartId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -559,6 +622,9 @@ namespace TheTop.Application.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AdvertisementOrder");
+
+            migrationBuilder.DropTable(
+                name: "AdvertisementShoppingCart");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -616,6 +682,9 @@ namespace TheTop.Application.Migrations
 
             migrationBuilder.DropTable(
                 name: "Contracts");
+
+            migrationBuilder.DropTable(
+                name: "ShoppingCarts");
         }
     }
 }

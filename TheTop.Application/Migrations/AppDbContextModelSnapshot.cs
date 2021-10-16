@@ -34,6 +34,21 @@ namespace TheTop.Application.Migrations
                     b.ToTable("AdvertisementOrder");
                 });
 
+            modelBuilder.Entity("AdvertisementShoppingCart", b =>
+                {
+                    b.Property<int>("AdvertisementsAdvertisementId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShoppingCartsShoppingCartId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AdvertisementsAdvertisementId", "ShoppingCartsShoppingCartId");
+
+                    b.HasIndex("ShoppingCartsShoppingCartId");
+
+                    b.ToTable("AdvertisementShoppingCart");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -275,6 +290,9 @@ namespace TheTop.Application.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ShoppingCartId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -293,6 +311,8 @@ namespace TheTop.Application.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("ShoppingCartId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -479,8 +499,8 @@ namespace TheTop.Application.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<float>("TotalPrice")
-                        .HasColumnType("real");
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -539,12 +559,6 @@ namespace TheTop.Application.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AdvertisementId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -552,10 +566,6 @@ namespace TheTop.Application.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ShoppingCartId");
-
-                    b.HasIndex("AdvertisementId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("ShoppingCarts");
                 });
@@ -635,6 +645,21 @@ namespace TheTop.Application.Migrations
                     b.HasOne("TheTop.Application.Entities.Order", null)
                         .WithMany()
                         .HasForeignKey("OrdersOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AdvertisementShoppingCart", b =>
+                {
+                    b.HasOne("TheTop.Application.Entities.Advertisement", null)
+                        .WithMany()
+                        .HasForeignKey("AdvertisementsAdvertisementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TheTop.Application.Entities.ShoppingCart", null)
+                        .WithMany()
+                        .HasForeignKey("ShoppingCartsShoppingCartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -723,7 +748,13 @@ namespace TheTop.Application.Migrations
                         .WithMany()
                         .HasForeignKey("ContractId");
 
+                    b.HasOne("TheTop.Application.Entities.ShoppingCart", "ShoppingCart")
+                        .WithMany()
+                        .HasForeignKey("ShoppingCartId");
+
                     b.Navigation("Contract");
+
+                    b.Navigation("ShoppingCart");
                 });
 
             modelBuilder.Entity("TheTop.Application.Entities.BankAccount", b =>
@@ -762,23 +793,6 @@ namespace TheTop.Application.Migrations
                     b.HasOne("TheTop.Application.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany("Reviews")
                         .HasForeignKey("ApplicationUserId");
-
-                    b.Navigation("ApplicationUser");
-                });
-
-            modelBuilder.Entity("TheTop.Application.Entities.ShoppingCart", b =>
-                {
-                    b.HasOne("TheTop.Application.Entities.Advertisement", "Advertisement")
-                        .WithMany()
-                        .HasForeignKey("AdvertisementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TheTop.Application.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.Navigation("Advertisement");
 
                     b.Navigation("ApplicationUser");
                 });

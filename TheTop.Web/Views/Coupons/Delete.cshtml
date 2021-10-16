@@ -1,0 +1,12 @@
+﻿@model CouponVM
+@{ Layout = "_LayoutAdmin"; }
+<div class="container">
+    <h2 class="text-danger">Remove Coupon</h2>
+    <hr />
+    <p>Are you sure to delete this Coupon <span class="text-danger">" @Model.Code" || (@Model.Ratio) || (@Model.ValidityDate) </span> ?</p>
+
+    <div>
+        <a asp-action="DeleteCoupon" asp-route-id="@Model.CouponId" class="btn btn-danger">Delete</a>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</div>

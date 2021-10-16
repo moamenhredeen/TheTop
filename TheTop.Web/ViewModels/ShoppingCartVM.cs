@@ -8,11 +8,9 @@ namespace TheTop.ViewModels
     public class ShoppingCartVM
     {
         public int ShoppingCartId { get; set; }
-        public int AdvertisementId { get; set; }
+       
+        public ICollection<AdvertisementVM> Advertisements { get; set; }
 
-        public string ApplicationUserId { get; set; }
-        public AdvertisementVM Advertisement { get; set; }
-
-        public DateTime CreatedAt = DateTime.Now;
+        public decimal TotalPrice { get; set; }
     }
 }

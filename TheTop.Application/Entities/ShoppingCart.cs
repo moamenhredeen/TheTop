@@ -10,12 +10,15 @@ namespace TheTop.Application.Entities
     {
         public int ShoppingCartId { get; set; }
 
-        public int AdvertisementId { get; set; }
-        public Advertisement Advertisement { get; set; }
-        public string ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public ICollection<Advertisement> Advertisements { get; set; }
+       
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
+
+        public ShoppingCart()
+        {
+            Advertisements = new HashSet<Advertisement>();
+        }
     }
 }

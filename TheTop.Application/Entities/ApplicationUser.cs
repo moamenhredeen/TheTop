@@ -24,6 +24,10 @@ namespace TheTop.Application.Entities
        
         public int? ContractId { get; set; }
         public Contract Contract { get; set; }
+
+        public int? ShoppingCartId { get; set; }
+        public ShoppingCart ShoppingCart { get; set; }
+
         public ICollection<Review> Reviews { get; set; }
         public ICollection<Advertisement> Advertisements { get; set; }
         public ICollection<Order> Orders { get; set; }

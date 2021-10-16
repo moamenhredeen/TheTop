@@ -300,7 +300,12 @@ namespace TheTop.Controllers
         }//
 
 
-
+        public async Task<ActionResult> Order()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            _service.AddOreder(user.Id);
+            return RedirectToAction("GetAllItemToCart", "Home");
+        }
         
     }
 }

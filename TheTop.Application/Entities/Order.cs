@@ -9,7 +9,7 @@ namespace TheTop.Application.Entities
     public class Order 
     {
         public int OrderId { get; set; }
-        public float TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
 
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

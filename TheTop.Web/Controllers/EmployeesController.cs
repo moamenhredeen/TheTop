@@ -95,7 +95,12 @@ namespace TheTop.Controllers
                 Email = employeeDto.Email,
                 Country = employeeDto.Country,
                 City = employeeDto.City,
-                UserName = employeeDto.Username
+                UserName = employeeDto.Username,
+                Contract = new Contract { 
+                HourSalary = employeeDto.HourSalary,
+                MonthlyWorkingHours = employeeDto.MonthlyWorkingHours,
+                CreatedAt  = DateTime.Now
+                },
             },employeeDto.Password);
 
             if (result.Succeeded)
@@ -103,12 +108,6 @@ namespace TheTop.Controllers
 
                 var user = await _userManager.FindByEmailAsync(employeeDto.Email);
                 await _userManager.AddToRoleAsync(user, employeeDto.RoleName);
-
-                _service.CreateNewContract(new ContractDTO { 
-                  ApplicationUserId = user.Id,
-                  HourSalary = employeeDto.HourSalary,
-                  MonthlyWorkingHours = employeeDto.MonthlyWorkingHours,
-                });
                 
             }
           

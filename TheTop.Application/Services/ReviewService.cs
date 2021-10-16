@@ -311,6 +311,76 @@ namespace TheTop.Application.Services
             return data;
         }
 
+        // Coupon Service 
+        public void CreateCoupon(CouponDTO couponDto)
+        {
+            
+        _appDbContext.Add(new Coupon
+            {
+                Code = "ABZ"+couponDto.Ratio,
+                Ratio = couponDto.Ratio,
+                ValidityDate = couponDto.ValidityDate,
+            });
+            _appDbContext.SaveChanges();
+        }
+
+        public void UpdateCoupon(CouponDTO couponDto)
+        {
+            _appDbContext.Update(new Coupon
+            {
+                CouponId = couponDto.CouponId,
+                Code = couponDto.Code,
+                Ratio = couponDto.Ratio,
+                ValidityDate = couponDto.ValidityDate,
+            });
+            _appDbContext.SaveChanges();
+        }
+
+        public void RemoveCoupon(int couponId)
+        {
+            _appDbContext.Remove(new Coupon { CouponId = couponId });
+            _appDbContext.SaveChanges();
+        }
+
+        public ICollection<CouponDTO> GetAllCoupons()
+        {
+            var coupons = _appDbContext.Coupons.ToList();
+
+            return coupons.Select(coupon => new CouponDTO
+            {
+                Code = coupon.Code,
+                ValidityDate = coupon.ValidityDate,
+                Ratio = coupon.Ratio,
+                CouponId = coupon.CouponId,
+                CreatedAt = coupon.CreatedAt
+            }).ToList();
+        }
+
+        public CouponDTO GetValidCoupon()
+        {
+            var coupon = _appDbContext.Coupons.Where(coupon => coupon.ValidityDate < DateTime.Now)
+                         .SingleOrDefault();
+            return new CouponDTO { 
+             ValidityDate = coupon.ValidityDate,
+             Code = coupon.Code,
+             Ratio = coupon.Ratio,
+             CreatedAt = coupon.CreatedAt,
+            };
+        }
+
+        public CouponDTO GetCouponById(int couponId)
+        {
+            var coupon = _appDbContext.Coupons.Where(coupon => coupon.CouponId == couponId)
+                         .SingleOrDefault();
+            return new CouponDTO
+            {
+                ValidityDate = coupon.ValidityDate,
+                Code = coupon.Code,
+                Ratio = coupon.Ratio,
+                CreatedAt = coupon.CreatedAt,
+                CouponId = coupon.CouponId,
+            };
+        }
 
     }
 }

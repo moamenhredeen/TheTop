@@ -25,6 +25,7 @@ namespace TheTop.Application.Entities
 
         public ICollection<Image> Images { get; set; }
         public ICollection<Order> Orders { get; set; }
+        public ICollection<ShoppingCart> ShoppingCarts { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; } 
@@ -34,6 +35,7 @@ namespace TheTop.Application.Entities
             //Reviews = new HashSet<Review>();
             Images = new HashSet<Image>();
             Orders = new HashSet<Order>();
+            ShoppingCarts = new HashSet<ShoppingCart>();
         }
     }
 }

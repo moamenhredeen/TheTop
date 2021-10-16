@@ -10,12 +10,11 @@ namespace TheTop.Application.Services.DTOs
    public class ShoppingCartDTO
     {
         public int ShoppingCartId { get; set; }
-        public int AdvertisementId { get; set; }
+       
 
-        public string ApplicationUserId { get; set; }
+        public ICollection<AdvertisementDTO> Advertisements { get; set; }
 
-        public AdvertisementDTO Advertisement { get; set; }
-        public DateTime CreatedAt = DateTime.Now;
-        public DateTime UpdatedAt { get; set; }
+        public decimal TotalPrice { get; set; }
+
     }
 }

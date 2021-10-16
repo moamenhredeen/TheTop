@@ -1,5 +1,5 @@
 ﻿@{
-    int x = 3;
+    int x = 1;
 }
 
 <!DOCTYPE html>
@@ -35,7 +35,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="HomePage">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -60,23 +60,37 @@
 
                 <!-- Nav Item - Employees -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link"  asp-controller="Employees" asp-action="Create">
                         <i class="bi bi-person-fill text-white"></i>
                         <span>Employees</span>
                     </a>
                 </li>
                 <!-- Nav Item - Categorys -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" asp-controller="Categorys" asp-action="Index">
                         <i class="bi bi-emoji-smile"></i>
                         <span>Categorys</span>
                     </a>
                 </li>
                 <!-- Nav Item - Tasks -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" asp-controller="Tasks" asp-action="Index">
                         <i class="bi bi-list-task"></i>
                         <span>Tasks</span>
+                    </a>
+                </li>
+                 <!-- Nav Item - Coupon -->
+                <li class="nav-item active">
+                    <a class="nav-link"  asp-controller="Coupons" asp-action="Index">
+                        <i class="bi bi-list-task"></i>
+                        <span>Coupon</span>
+                    </a>
+                </li>
+                 <!-- Nav Item - Reviews -->
+                <li class="nav-item active">
+                    <a class="nav-link"  asp-controller="Reviews" asp-action="Reviews">
+                        <i class="bi bi-list-task"></i>
+                        <span>Reviews</span>
                     </a>
                 </li>
                 <!-- Nav Item - Layout -->

@@ -221,12 +221,24 @@ namespace TheTop.Application.Services
 
         //ShoppingCart Service 
 
-        public void AddShoppingCart(ShoppingCartDTO shoppingCartDto)
+        public void AddShoppingCart(int advertisementId , string userId)
         {
-            _appDbContext.Add(new ShoppingCart {
-                AdvertisementId = shoppingCartDto.AdvertisementId,
-                ApplicationUserId = shoppingCartDto.ApplicationUserId
-            });
+            var user = _appDbContext.ApplicationUsers.Where(a => a.Id == userId)
+                .Include(a => a.ShoppingCart).ThenInclude(a => a.Advertisements).Single();
+
+            var adv = _appDbContext.Advertisements.Where(a => a.AdvertisementId == advertisementId).Single();
+
+            if(user.ShoppingCart is null)
+            {
+                user.ShoppingCart = new ShoppingCart();
+
+                user.ShoppingCart.Advertisements.Add(adv);
+
+            }
+            else{
+                user.ShoppingCart.Advertisements.Add(adv);
+
+            }
             _appDbContext.SaveChanges();
         }
 
@@ -236,29 +248,67 @@ namespace TheTop.Application.Services
             _appDbContext.SaveChanges();
         }
 
-        public IEnumerable<ShoppingCartDTO> GetAdvertisementsInShoppingCart(string CustomerId)
+        public ShoppingCartDTO GetAdvertisementsInShoppingCart(string userId)
         {
-            var itemCartList = _appDbContext.ShoppingCarts.Where(advertisement => advertisement.ApplicationUserId == CustomerId)
-                                    .Include(advertisement => advertisement.Advertisement).Include(imageName => imageName.Advertisement.Images).Include(category => category.Advertisement.Category).ToList();
+            var user = _appDbContext.ApplicationUsers.Where(user => user.Id == userId).
+                              Include(c => c.ShoppingCart).ThenInclude(a => a.Advertisements).ThenInclude(c => c.Category).
+                              Include(c => c.ShoppingCart).ThenInclude(a => a.Advertisements).ThenInclude(c => c.Images)
+                              .Single();
 
-            return itemCartList.Select(cart => new ShoppingCartDTO
+
+
+            var shoppingCartDTO = new ShoppingCartDTO();
+
+            if( ! (user.ShoppingCart is null))
             {
-                CreatedAt = cart.CreatedAt,
-                Advertisement = new AdvertisementDTO { Name = cart.Advertisement.Name,
-                                                       CategoryName = cart.Advertisement.Category.Name,
-                                                       ImagesNames = cart.Advertisement.Images.Select(imageName => imageName.Name),
-                                                       Price = cart.Advertisement.Price},  
-                ShoppingCartId = cart.ShoppingCartId
-            });
+                shoppingCartDTO.Advertisements = user.ShoppingCart.Advertisements.Select(a => new AdvertisementDTO
+                {
+                    Name = a.Name,
+                    CategoryName = a.Category.Name,
+                    ImagesNames = a.Images.Select(imageName => imageName.Name),
+                    Price = a.Price
+                }).ToList();
+
+                shoppingCartDTO.ShoppingCartId = user.ShoppingCart.ShoppingCartId;
+                shoppingCartDTO.TotalPrice = shoppingCartDTO.Advertisements.Sum(a => a.Price);
+            }
+           
+
+            return shoppingCartDTO;
         }
 
-        public int GetNumItemShoppingCart(string CustomerId)
+        public int GetNumItemShoppingCart(string userId)
         {
-            var advertisementsList = _appDbContext.ShoppingCarts.Where(item => item.ApplicationUserId == CustomerId).ToList();
+            var x = _appDbContext.ApplicationUsers.Where(user => user.Id == userId).
+                                     Include(c => c.ShoppingCart).ThenInclude(a =>a.Advertisements)
+                                     .Single();
+            if(x.ShoppingCart is null)
+            {
+                return 0;
+            }
 
-            return advertisementsList.Count();
+            return x.ShoppingCart.Advertisements.Count();
+   
         }
 
-        // Order Se
+
+        // Order Service
+        public void AddOreder(string userId)
+        {
+            var user = _appDbContext.ApplicationUsers.Where(user => user.Id == userId)
+                               .Include(c => c.ShoppingCart)
+                               .ThenInclude(a => a.Advertisements).Single();
+                
+                
+            var totalPrice = user.ShoppingCart.Advertisements.Sum(a => a.Price);
+
+            _appDbContext.Add(new Order { 
+               ApplicationUserId = userId,
+               Advertisements = user.ShoppingCart.Advertisements, 
+               TotalPrice = totalPrice
+            });
+            _appDbContext.SaveChanges();
+        }
+
     }
 }

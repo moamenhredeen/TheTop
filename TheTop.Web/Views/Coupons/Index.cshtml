@@ -1,0 +1,58 @@
+﻿
+@model IEnumerable<CouponVM>
+
+
+
+@{ ViewData["Title"] = "Index";
+    Layout = "_LayoutAdmin"; }
+
+<h2 class="m-5">Coupons</h2>
+<hr />
+<div class="d-flex justify-content-between w-100 ">
+    <p class="ml-5">
+        <a asp-action="create" class="btn btn-outline-primary">Create Coupon</a>
+    </p>
+</div>
+<table class="table m-auto  p-5" style="width:91%">
+    <thead>
+        <tr class="table-primary">
+            <th><label asp-for="@Model.FirstOrDefault(t => t.CouponId == 0).Code"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.CouponId == 0).Ratio"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.CouponId == 0).ValidityDate"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.CouponId == 0).CreatedAt"></label></th>
+            <th colspan="2"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is null || Model.ToList().Count == 0)
+        {
+<tr>
+    <td colspan="6"> There is no data here</td>
+</tr>
+ }
+else
+{
+foreach (CouponVM t in Model)
+{
+<tr>
+    <td>@t.Code</td>
+    <td>@t.Ratio</td>
+    <td>@t.ValidityDate</td>
+    <td>@t.CreatedAt</td>
+    <td>
+        <a asp-action="edit" asp-route-id="@t.CouponId" class="text-success"><i class="fas fa-edit"></i></a>
+    </td>
+    <td>
+        <a asp-action="delete" asp-route-id="@t.CouponId" class="text-danger"><i class="fas fa-trash"></i></a>
+    </td>
+</tr>
+}
+}
+    </tbody>
+    <tfoot>
+        <tr class="table-info">
+            <td colspan="6"></td>
+        </tr>
+    </tfoot>
+</table>
+

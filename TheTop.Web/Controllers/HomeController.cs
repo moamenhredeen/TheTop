@@ -92,102 +92,43 @@ namespace TheTop.Controllers
 
             var user = await _userManager.GetUserAsync(User);
             ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
-            List<ShoppingCartDTO> ShoppingCartDtoList = _service.GetAdvertisementsInShoppingCart(user.Id).ToList();
-            List<ShoppingCartVM> ShoppingCartVMList = ShoppingCartDtoList
-                                 .Select(cart => new ShoppingCartVM
-                                 {
-                                     CreatedAt = cart.CreatedAt,
-                                      Advertisement = new AdvertisementVM
-                                      {
-                                          Name = cart.Advertisement.Name,
-                                          Price = cart.Advertisement.Price,
-                                          Category =cart.Advertisement.CategoryName,
-                                          PhotosNames = cart.Advertisement.ImagesNames.Select(imageName => imageName).ToList()
-                                      },
-                                      ShoppingCartId = cart.ShoppingCartId
-                                 }).ToList();
-            return View(ShoppingCartVMList);
+            ShoppingCartDTO shoppingCartDTO = _service.GetAdvertisementsInShoppingCart(user.Id);
+
+
+            // if(!(shoppingCartDTO.Advertisements is null))
+            //{
+            //    return View(new ShoppingCartVM());
+            //}
+            ShoppingCartVM ShoppingCartVM = new ShoppingCartVM()
+            {
+                Advertisements = shoppingCartDTO.Advertisements.Select(a => new AdvertisementVM
+                {
+                    Name = a.Name,
+                    Price = a.Price,
+                    Category = a.CategoryName,
+                    PhotosNames = a.ImagesNames.ToList()
+                }).ToList(),
+                TotalPrice = shoppingCartDTO.TotalPrice,
+                ShoppingCartId = shoppingCartDTO.ShoppingCartId
+            };
+            return View(ShoppingCartVM);
         }
 
         public async Task<IActionResult> AddToCart(int id)
         {
             var user = await _userManager.GetUserAsync(User);
-            _service.AddShoppingCart(new ShoppingCartDTO {
-             AdvertisementId = id,
-             ApplicationUserId = user.Id
-            });
+            _service.AddShoppingCart(id, user.Id);
 
-            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
-            ViewBag.listC = new List<string> { "kenan11", "kenan22", "kenan33" };
-            List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
-
-
-            List<AdvertisementDTO> advertisementsDtoList = _service.GetAllAdvertisemensts().ToList();
-            List<AdvertisementVM> advertisementsVMList = advertisementsDtoList
-                                  .Select(advertisement => new AdvertisementVM
-                                  {
-                                      ID = advertisement.ID,
-                                      Name = advertisement.Name,
-                                      Price = advertisement.Price,
-                                      Category = advertisement.CategoryName,
-                                      CreatedAT = advertisement.CreatedAt,
-                                      PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
-                                  }).ToList();
-
-            List<ReviewDTO> reviewDtoList = _serviceReview.GetApprovedReviews().ToList();
-
-            List<ReviewVM> reviewVMlist = new List<ReviewVM>();
-            reviewDtoList.ForEach(review =>
-            {
-                reviewVMlist.Add(new ReviewVM
-                {
-                    Customer = new CustomerDTO
-                    {
-                        FirstName = review.User.FirstName,
-                        LastName = review.User.LastName,
-                        Email = review.User.Email,
-                        //ImageName = review.User.ImagName
-                    },
-                    Massage = review.Massage,
-                    Subject = review.Subject,
-                    ID = review.ID
-                });
-            });
-
-            HomeDTO model = new HomeDTO
-            {
-                AdvertisementsList = advertisementsVMList,
-                ReviewsList = reviewVMlist,
-                Review = new ReviewVM(),
-            };
-           
-
-            return View("HomePage", model);
+            
+            return RedirectToAction("HomePage");
         }
 
-        public async Task<IActionResult> DeleteFromCart(int id)
+        public IActionResult DeleteFromCart(int id)
         {
-            var user = await _userManager.GetUserAsync(User);
-
             _service.RemoveFromShoppingCart(id);
 
-            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
-           
-            List<ShoppingCartDTO> ShoppingCartDtoList = _service.GetAdvertisementsInShoppingCart(user.Id).ToList();
-            List<ShoppingCartVM> ShoppingCartVMList = ShoppingCartDtoList
-                                 .Select(cart => new ShoppingCartVM
-                                 {
-                                     CreatedAt = cart.CreatedAt,
-                                     Advertisement = new AdvertisementVM
-                                     {
-                                         Name = cart.Advertisement.Name,
-                                         Price = cart.Advertisement.Price,
-                                         Category = cart.Advertisement.CategoryName,
-                                         PhotosNames = cart.Advertisement.ImagesNames.Select(imageName => imageName).ToList()
-                                     },
-                                     ShoppingCartId = cart.ShoppingCartId
-                                 }).ToList();
-            return View("GetAllItemToCart", ShoppingCartVMList);
+          
+            return RedirectToAction("GetAllItemToCart");
         }
     }
 }
