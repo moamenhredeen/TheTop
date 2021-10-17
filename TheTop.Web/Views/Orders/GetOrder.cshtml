@@ -1,0 +1,52 @@
+﻿@model OrderVM
+
+<div class="container pt-5">
+    @if (Model.Advertisements.Count > 0)
+    {
+        <div class="d-flex justify-content-between">
+            <h2 class="text-primary">Orders</h2>
+
+            <form class="form-inline" asp-action="Coupon">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" name="textCoupon" class="form-control" id="inputPassword2" placeholder="Enter Coupon ...">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2">Send</button>
+                </form>
+        </div>
+        <hr />
+        @foreach (var item in Model.Advertisements)
+        {
+            <div class="d-flex justify-content-between w-75">
+                <div class="">
+                    <img src="@item.PhotosNames.First()" class="img-fluid" width="200px" height="200px" alt="">
+                </div>
+                <div>
+                    <p class="font-weight-bold " style="font-size:20px">@item.Name</p>
+                    <span class="p-1">@item.Category</span>
+                </div>
+                <div>
+                    <p class="pt-1">@item.CreatedAT.ToString("D")</p>
+                </div>
+                <div class="col-4  d-flex flex-column justify-content-between">
+                    <p class="font-weight-bold  d-flex justify-content-end" style="font-size:20px">@item.Price.ToString("c")</p>
+                </div>
+            </div>
+            <hr />
+        }
+
+        <div class=" d-flex flex-column align-items-end">
+            <p class="font-weight-bold ">Total Price: <span class="text-success">@Model.TotalPrice.ToString("c")</span></p>
+            @*@if (Model.Coupon.ID != 0)
+            {
+                <p class=" font-weight-bold">Discount Price: <span class="text-success">@discountPrice.ToString("c")</span> </p>
+            }*@
+            <div class="m-2"><a class="btn btn-primary text-white" asp-controller="Advertisements" asp-action="Order" asp-route-couponID="">Buy</a></div>
+
+        </div>
+
+    }
+    else
+    {
+  <h2 class="text-primary m-5"> no orders found</h2>
+    }
+</div>

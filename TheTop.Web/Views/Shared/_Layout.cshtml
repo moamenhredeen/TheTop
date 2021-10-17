@@ -1,5 +1,6 @@
 ﻿@{
     int? numC = ViewBag.numItemCart == null ? 0 : ViewBag.numItemCart;
+    CouponVM coupon =  ViewBag.Coupon ;
  }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +30,27 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    <!-- ======= Top Bar ======= -->
+    <section id="topbar" class="d-flex align-items-center">
+        <div class="container d-flex justify-content-center justify-content-md-between">
+            <div class="contact-info d-flex align-items-center">
+                @if (!(coupon.Code is null))
+                {
+                 <i class="bi  d-flex align-items-center"><span >You have coupon : <i class="text-success">@coupon.Code</i> </span> </i>
+                 <i class="bi  d-flex align-items-center ms-4"><span>Ration : <i class="text-success"> @coupon.Ratio%</i></span></i>
+                 <i class="bi  d-flex align-items-center ms-4"><span>Expiry Date : <i class="text-danger">@coupon.ValidityDate</i></span></i>
+
+                }
+
+            </div>
+            <div class="social-links d-none d-md-flex align-items-center">
+                <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></i></a>
+            </div>
+        </div>
+    </section><!-- End Top Bar-->
     <!-- ======= Header ======= -->
     <header id="header" class="d-flex align-items-center">
         <div class="container d-flex justify-content-between">
@@ -47,8 +69,8 @@
                     <li><a class="nav-link scrollto " href="#portfolio">Advertisements</a></li>
                     <li><a class="nav-link scrollto" asp-controller="Advertisements" asp-action="GetById">Dashboard</a></li>
                     <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-                    <partial name="_LoginPartial"/>
-                    <li><a class="" asp-controller="Home" asp-action="GetAllItemToCart"><i class="bi bi-cart3" style="font-size:35px"></i>@numC</a></li>
+                    <partial name="_LoginPartial" />
+                    <li><a class="" asp-controller="ShoppingCarts" asp-action="GetAllItemToCart"><i class="bi bi-cart3" style="font-size:35px"></i>@numC</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav><!-- .navbar -->

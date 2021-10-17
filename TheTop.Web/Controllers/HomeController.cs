@@ -41,11 +41,24 @@ namespace TheTop.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
+            //Coupon
+            CouponDTO couponDTO = _serviceReview.GetValidCoupon();
+            CouponVM couponVM = new CouponVM
+            {
+                Code = couponDTO.Code,
+                Ratio = couponDTO.Ratio,
+                ValidityDate = couponDTO.ValidityDate,
+                CreatedAT = couponDTO.CreatedAt,
+            };
+            ViewBag.Coupon = couponVM;
+
+
             ViewBag.listC = new List<string> { "kenan11", "kenan22", "kenan33" };
             List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
              if(user != null) { 
             ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
             }
+
             List<AdvertisementDTO> advertisementsDtoList = _service.GetAllAdvertisemensts().ToList();
             List<AdvertisementVM> advertisementsVMList = advertisementsDtoList
                                   .Select(advertisement => new AdvertisementVM
@@ -87,48 +100,6 @@ namespace TheTop.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> GetAllItemToCart()
-        {
-
-            var user = await _userManager.GetUserAsync(User);
-            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
-            ShoppingCartDTO shoppingCartDTO = _service.GetAdvertisementsInShoppingCart(user.Id);
-
-
-            // if(!(shoppingCartDTO.Advertisements is null))
-            //{
-            //    return View(new ShoppingCartVM());
-            //}
-            ShoppingCartVM ShoppingCartVM = new ShoppingCartVM()
-            {
-                Advertisements = shoppingCartDTO.Advertisements.Select(a => new AdvertisementVM
-                {
-                    Name = a.Name,
-                    Price = a.Price,
-                    Category = a.CategoryName,
-                    PhotosNames = a.ImagesNames.ToList()
-                }).ToList(),
-                TotalPrice = shoppingCartDTO.TotalPrice,
-                ShoppingCartId = shoppingCartDTO.ShoppingCartId
-            };
-            return View(ShoppingCartVM);
-        }
-
-        public async Task<IActionResult> AddToCart(int id)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            _service.AddShoppingCart(id, user.Id);
-
-            
-            return RedirectToAction("HomePage");
-        }
-
-        public IActionResult DeleteFromCart(int id)
-        {
-            _service.RemoveFromShoppingCart(id);
-
-          
-            return RedirectToAction("GetAllItemToCart");
-        }
+      
     }
 }

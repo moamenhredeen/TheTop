@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using TheTop.Classs;
 
 namespace TheTop.ViewModels
 {
-    public class CouponVM
+    public class CouponVM : BASEEntity
     {
-        public int CouponId { get; set; }
 
         public string Code { get; set; }
 
@@ -17,6 +17,5 @@ namespace TheTop.ViewModels
 
         public DateTime ValidityDate { get; set; }
 
-        public DateTime CreatedAt { get; set; }
     }
 }

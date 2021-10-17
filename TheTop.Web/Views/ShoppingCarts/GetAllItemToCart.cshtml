@@ -1,0 +1,58 @@
+﻿@model ShoppingCartVM
+
+
+@{
+    decimal discountPrice = Model.TotalPrice - (Model.TotalPrice * ((decimal)Model.Coupon.Ratio / 100));
+  }
+<div class="container pt-5">
+    @if (Model.Advertisements.Count > 0)
+    {
+        <div class="d-flex justify-content-between">
+            <h2 class="text-primary">Shopping Cart</h2>
+
+            @*<form class="form-inline" asp-action="Coupon">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" name="textCoupon" class="form-control" id="inputPassword2" placeholder="Enter Coupon ...">
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2">Send</button>
+                </form>*@
+        </div>
+        <hr />
+        @foreach (var item in Model.Advertisements)
+        {
+            <div class="d-flex justify-content-between w-75">
+                <div class="">
+                    <img src="@item.PhotosNames.First()" class="img-fluid" width="200px" height="200px" alt="">
+                </div>
+                <div>
+                    <p class="font-weight-bold " style="font-size:20px">@item.Name</p>
+                    <span class="p-1">@item.Category</span>
+                </div>
+                <div>
+                    <p class="pt-1">@item.CreatedAT.ToString("D")</p>
+                </div>
+                <div class="col-4  d-flex flex-column justify-content-between">
+                    <p class="font-weight-bold  d-flex justify-content-end" style="font-size:20px">@item.Price.ToString("c")</p>
+                    <div class="d-flex justify-content-end"><a asp-action="DeleteFromCart" asp-route-AdvId="@item.ID" class="btn btn-danger text-white">Delete</a></div>
+                </div>
+            </div>
+            <hr />
+        }
+
+        <div class=" d-flex flex-column align-items-end">
+            <p class="font-weight-bold ">Total Price: <span class="text-success">@Model.TotalPrice.ToString("c")</span></p>
+            @if (Model.Coupon.ID != 0)
+            {
+                <p class=" font-weight-bold">Discount Price: <span class="text-success">@discountPrice.ToString("c")</span> </p>
+            }
+            <div class="m-2"><a class="btn btn-primary text-white" asp-controller="Orders" asp-action="Order" >Buy</a></div>
+
+        </div>
+
+    }
+    else
+    {
+        <h2 class="text-primary m-5"> Your Shopping Cart Is Empty</h2>
+    }
+</div>
+

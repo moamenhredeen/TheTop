@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationModel;
 using Microsoft.EntityFrameworkCore;
 using TheTop.Application.Dao;
 using TheTop.Application.Entities;
@@ -242,9 +243,12 @@ namespace TheTop.Application.Services
             _appDbContext.SaveChanges();
         }
 
-        public void RemoveFromShoppingCart(int shoppingCartId)
+        public void RemoveFromShoppingCart(int advertisementId, string userId)
         {
-            _appDbContext.Remove(new ShoppingCart { ShoppingCartId = shoppingCartId });
+            var user = _appDbContext.ApplicationUsers.Where(a => a.Id == userId)
+                .Include(a => a.ShoppingCart).ThenInclude(a => a.Advertisements).Single();
+            var advertisement = user.ShoppingCart.Advertisements.Single(e => e.AdvertisementId == advertisementId);
+            user.ShoppingCart.Advertisements.Remove(advertisement);
             _appDbContext.SaveChanges();
         }
 
@@ -266,7 +270,8 @@ namespace TheTop.Application.Services
                     Name = a.Name,
                     CategoryName = a.Category.Name,
                     ImagesNames = a.Images.Select(imageName => imageName.Name),
-                    Price = a.Price
+                    Price = a.Price,
+                    ID = a.AdvertisementId,
                 }).ToList();
 
                 shoppingCartDTO.ShoppingCartId = user.ShoppingCart.ShoppingCartId;
@@ -305,9 +310,32 @@ namespace TheTop.Application.Services
             _appDbContext.Add(new Order { 
                ApplicationUserId = userId,
                Advertisements = user.ShoppingCart.Advertisements, 
-               TotalPrice = totalPrice
+               TotalPrice = totalPrice,
+               Status = StatusOrderType.Cancel,
             });
             _appDbContext.SaveChanges();
+        }
+
+        public OrderDTO GetOrder(string userId)
+        {
+            var order = _appDbContext.Orders.Where(order => order.ApplicationUserId == userId)
+                         .Include(a =>a.Advertisements).ThenInclude(a =>a.Category)
+                         .Include(a => a.Advertisements).ThenInclude(a => a.Images)
+                        .FirstOrDefault();
+
+            return new OrderDTO { 
+              Advertisements = order.Advertisements.Select(a => new AdvertisementDTO
+              {
+                  Name = a.Name,
+                  CategoryName = a.Category.Name,
+                  ImagesNames = a.Images.Select(imageName => imageName.Name),
+                  Price = a.Price,
+                  ID = a.AdvertisementId,
+              }).ToList(),
+              TotalPrice = order.TotalPrice,
+              //DiscountPrice = (decimal)order.DiscountPrice,
+              OrderId = order.OrderId
+        };
         }
 
     }

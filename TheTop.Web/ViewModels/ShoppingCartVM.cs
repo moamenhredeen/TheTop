@@ -12,5 +12,7 @@ namespace TheTop.ViewModels
         public ICollection<AdvertisementVM> Advertisements { get; set; }
 
         public decimal TotalPrice { get; set; }
+
+        public CouponVM Coupon { get; set; }
     }
 }

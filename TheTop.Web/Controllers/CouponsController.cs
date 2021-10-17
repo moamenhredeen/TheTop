@@ -27,9 +27,9 @@ namespace TheTop.Controllers
                 {
                     Code = c.Code,
                     Ratio = c.Ratio,
-                    CreatedAt = c.CreatedAt,
+                    CreatedAT = c.CreatedAt,
                     ValidityDate = c.ValidityDate,
-                    CouponId = c.CouponId,
+                    ID = c.CouponId,
                 });
             });
             return View(couponsVMList);
@@ -65,17 +65,17 @@ namespace TheTop.Controllers
             return View(new CouponVM { 
             Code = couponDTO.Code,
             Ratio = couponDTO.Ratio,
-            CreatedAt = couponDTO.CreatedAt,
+            CreatedAT = couponDTO.CreatedAt,
             ValidityDate = couponDTO.ValidityDate,
-            CouponId = couponDTO.CouponId,
+            ID = couponDTO.CouponId,
             });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(CouponVM couponVM)
+        public ActionResult Edit(int id, CouponVM couponVM)
         {
-            if (!ModelState.IsValid)
+            if (! ModelState.IsValid)
             {
                 return View();
             }
@@ -84,7 +84,8 @@ namespace TheTop.Controllers
             {
                 Ratio = couponVM.Ratio,
                 ValidityDate = couponVM.ValidityDate,
-                CouponId = couponVM.CouponId
+                CouponId = couponVM.ID,
+                Code = couponVM.Code,
             });
             return RedirectToAction(nameof(Index));
         }
@@ -97,9 +98,9 @@ namespace TheTop.Controllers
             {
                 Code = couponDTO.Code,
                 Ratio = couponDTO.Ratio,
-                CreatedAt = couponDTO.CreatedAt,
+                CreatedAT = couponDTO.CreatedAt,
                 ValidityDate = couponDTO.ValidityDate,
-                CouponId = couponDTO.CouponId,
+                ID = couponDTO.CouponId,
             });
         }
 

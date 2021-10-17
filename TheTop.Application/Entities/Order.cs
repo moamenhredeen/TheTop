@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApplicationModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace TheTop.Application.Entities
     {
         public int OrderId { get; set; }
         public decimal TotalPrice { get; set; }
+        public float? DiscountPrice { get; set; }
 
+        public StatusOrderType Status { get; set; }
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         

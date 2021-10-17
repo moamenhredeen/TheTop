@@ -18,16 +18,20 @@ namespace TheTop.Controllers
     public class AdvertisementsController : Controller
     {
         private readonly AdvertisementService _service;
+        private readonly ReviewService _serviceReview;
         private readonly IWebHostEnvironment _wepHostEnvironment;
         private UserManager<ApplicationUser> _userManager;
 
         public AdvertisementsController(AdvertisementService service,
                                         IWebHostEnvironment wepHostEnvironment,
-                                       UserManager<ApplicationUser> userManager )
+                                       UserManager<ApplicationUser> userManager,
+                                       ReviewService serviceReview
+                                       )
         {                               
             this._service = service;
             this._wepHostEnvironment = wepHostEnvironment;
             this._userManager = userManager;
+            this._serviceReview = serviceReview;
         }
 
        
@@ -69,6 +73,17 @@ namespace TheTop.Controllers
 
         public async Task<ActionResult> Search()
         {
+            //Coupon
+            CouponDTO couponDTO = _serviceReview.GetValidCoupon();
+            CouponVM couponVM = new CouponVM
+            {
+                Code = couponDTO.Code,
+                Ratio = couponDTO.Ratio,
+                ValidityDate = couponDTO.ValidityDate,
+                CreatedAT = couponDTO.CreatedAt,
+            };
+            ViewBag.Coupon = couponVM;
+
             var user = await _userManager.GetUserAsync(User);
             ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
             SearchVM modelVM = new SearchVM();
@@ -300,12 +315,12 @@ namespace TheTop.Controllers
         }//
 
 
-        public async Task<ActionResult> Order()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            _service.AddOreder(user.Id);
-            return RedirectToAction("GetAllItemToCart", "Home");
-        }
+        //public async Task<ActionResult> Order()
+        //{
+        //    var user = await _userManager.GetUserAsync(User);
+        //    _service.AddOreder(user.Id);
+        //    return RedirectToAction("GetAllItemToCart", "ShoppingCarts");
+        //}
         
     }
 }

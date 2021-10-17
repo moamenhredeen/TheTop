@@ -6,13 +6,14 @@ using TheTop.Classs;
 
 namespace TheTop.ViewModels
 {
-    public class OrderDTO : BASEEntity
+    public class OrderVM : BASEEntity
     {
-        public float TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
 
+        public decimal DiscountPrice { get; set; }
         public int CustomerId { get; set; }
 
-
+        public ICollection<AdvertisementVM> Advertisements { get; set; }
 
     }
 }

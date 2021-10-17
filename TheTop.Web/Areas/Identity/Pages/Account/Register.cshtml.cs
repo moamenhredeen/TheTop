@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TheTop.Areas.Identity.Pages.Account
 {
@@ -38,6 +40,9 @@ namespace TheTop.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            Random random = new Random();
+            var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
             returnUrl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
@@ -57,6 +62,12 @@ namespace TheTop.Areas.Identity.Pages.Account
                     ImagName = Input.ImageName,
                     City = Input.City,
                     Country = Input.Country,
+                    BankAccounts = new List<BankAccount>
+                    {
+                        new BankAccount{
+                            CardNum = new string(chars.Select(c => chars[random.Next(chars.Length)]).Take(4).ToArray()),
+                            Balance = random.Next(0,2)}
+                    }
                 };
                 IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)

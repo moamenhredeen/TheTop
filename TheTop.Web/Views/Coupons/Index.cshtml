@@ -16,10 +16,10 @@
 <table class="table m-auto  p-5" style="width:91%">
     <thead>
         <tr class="table-primary">
-            <th><label asp-for="@Model.FirstOrDefault(t => t.CouponId == 0).Code"></label></th>
-            <th><label asp-for="@Model.FirstOrDefault(t => t.CouponId == 0).Ratio"></label></th>
-            <th><label asp-for="@Model.FirstOrDefault(t => t.CouponId == 0).ValidityDate"></label></th>
-            <th><label asp-for="@Model.FirstOrDefault(t => t.CouponId == 0).CreatedAt"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Code"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).Ratio"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).ValidityDate"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(t => t.ID == 0).CreatedAT"></label></th>
             <th colspan="2"></th>
         </tr>
     </thead>
@@ -38,12 +38,12 @@ foreach (CouponVM t in Model)
     <td>@t.Code</td>
     <td>@t.Ratio</td>
     <td>@t.ValidityDate</td>
-    <td>@t.CreatedAt</td>
+    <td>@t.CreatedAT</td>
     <td>
-        <a asp-action="edit" asp-route-id="@t.CouponId" class="text-success"><i class="fas fa-edit"></i></a>
+        <a asp-action="edit" asp-route-id="@t.ID" class="text-success"><i class="fas fa-edit"></i></a>
     </td>
     <td>
-        <a asp-action="delete" asp-route-id="@t.CouponId" class="text-danger"><i class="fas fa-trash"></i></a>
+        <a asp-action="delete" asp-route-id="@t.ID" class="text-danger"><i class="fas fa-trash"></i></a>
     </td>
 </tr>
 }

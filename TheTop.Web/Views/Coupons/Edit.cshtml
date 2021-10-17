@@ -8,6 +8,11 @@
     <div class="row  m-auto w-75">
 
         <div class="col-6">
+            <div class="mb-2" hidden>
+                <label asp-for="Code"></label>
+                <input asp-for="Code" class="col-12  form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
             <div class="mb-2">
                 <label asp-for="Ratio"></label>
                 <input asp-for="Ratio" class="col-12  form-control" />

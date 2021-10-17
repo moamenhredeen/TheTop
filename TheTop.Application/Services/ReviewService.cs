@@ -358,8 +358,14 @@ namespace TheTop.Application.Services
 
         public CouponDTO GetValidCoupon()
         {
-            var coupon = _appDbContext.Coupons.Where(coupon => coupon.ValidityDate < DateTime.Now)
+            var coupon = _appDbContext.Coupons.Where(coupon => coupon.ValidityDate > DateTime.Now)
                          .SingleOrDefault();
+
+             if(coupon is null)
+            {
+                return new CouponDTO();
+            }
+
             return new CouponDTO { 
              ValidityDate = coupon.ValidityDate,
              Code = coupon.Code,
@@ -382,5 +388,22 @@ namespace TheTop.Application.Services
             };
         }
 
+
+        public CouponDTO CheckCoupon(string codeCoupon)
+        {
+            var coupon = _appDbContext.Coupons.Where(coupon => coupon.Code == codeCoupon && coupon.ValidityDate > DateTime.Now)
+                         .SingleOrDefault();
+
+            if (coupon is null)
+            {
+                return null;
+            }
+
+            return new CouponDTO
+            { 
+                Ratio = coupon.Ratio,
+                CouponId = coupon.CouponId,
+            };
+        }
     }
 }
