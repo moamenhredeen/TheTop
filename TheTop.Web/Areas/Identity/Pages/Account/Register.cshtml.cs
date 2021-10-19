@@ -66,7 +66,7 @@ namespace TheTop.Areas.Identity.Pages.Account
                     {
                         new BankAccount{
                             CardNum = new string(chars.Select(c => chars[random.Next(chars.Length)]).Take(4).ToArray()),
-                            Balance = random.Next(0,2)}
+                            Balance = random.Next(-1000,10000)}
                     }
                 };
                 IdentityResult result = await _userManager.CreateAsync(user, Input.Password);

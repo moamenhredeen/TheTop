@@ -10,9 +10,10 @@ namespace TheTop.ViewModels
     {
         public decimal TotalPrice { get; set; }
 
-        public decimal DiscountPrice { get; set; }
+        public decimal? DiscountPrice { get; set; }
         public int CustomerId { get; set; }
 
+        public string InvaildCoupon { get; set; }
         public ICollection<AdvertisementVM> Advertisements { get; set; }
 
     }

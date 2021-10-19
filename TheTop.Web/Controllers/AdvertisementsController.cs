@@ -134,6 +134,17 @@ namespace TheTop.Controllers
 
             modelVM.Advertisements = advertisementsVMList;
 
+            //Coupon
+            CouponDTO couponDTO = _serviceReview.GetValidCoupon();
+            CouponVM couponVM = new CouponVM
+            {
+                Code = couponDTO.Code,
+                Ratio = couponDTO.Ratio,
+                ValidityDate = couponDTO.ValidityDate,
+                CreatedAT = couponDTO.CreatedAt,
+            };
+            ViewBag.Coupon = couponVM;
+
             return View(modelVM);
         }
 

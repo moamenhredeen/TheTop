@@ -387,23 +387,23 @@ namespace TheTop.Application.Services
                 CouponId = coupon.CouponId,
             };
         }
-
-
-        public CouponDTO CheckCoupon(string codeCoupon)
+        public bool ApplyCoupon(string codeCoupon, int orderId)
         {
             var coupon = _appDbContext.Coupons.Where(coupon => coupon.Code == codeCoupon && coupon.ValidityDate > DateTime.Now)
                          .SingleOrDefault();
 
             if (coupon is null)
             {
-                return null;
+                return false;
             }
+            var order = _appDbContext.Orders.Where(order => order.OrderId == orderId).Single();
 
-            return new CouponDTO
-            { 
-                Ratio = coupon.Ratio,
-                CouponId = coupon.CouponId,
-            };
+            order.CouponId = coupon.CouponId;
+            order.DiscountPrice = order.TotalPrice - (order.TotalPrice * ((decimal)coupon.Ratio / 100));
+            _appDbContext.SaveChanges();
+
+            return true;
+            
         }
     }
 }

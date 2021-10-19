@@ -1,114 +1,80 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheTop.Application.Entities;
 using TheTop.ViewModels;
 
 namespace TheTop.Controllers
 {
     public class CustomersController : Controller
     {
-        // GET: CustomerDTOController1
-        public ActionResult GetAllCust()
-        {
-            List<CustomerDTO> list = new List<CustomerDTO>() {
-             new CustomerDTO{FirstName= "Moamen",LastName="Hraden",Email="kenan@gmi.com",
-                             Phone = "0789555",Username="ken",BirthDate = DateTime.Now},
-             new CustomerDTO{FirstName= "kenan",LastName="Hassan",Email="kenan@gmi.com",
-                             Phone = "0789555" ,Username="ken",BirthDate = DateTime.Now},
-             new CustomerDTO{FirstName= "Bahaa",LastName="Rawashdeh",Email="kenan@gmi.com",
-                             Phone = "0789555" ,Username="ken",BirthDate = DateTime.Now}
-            };
-            return View(list);
-        }
+        private UserManager<ApplicationUser> _userManager;
 
-        // GET: CustomerDTOController1/Details/5
-        public ActionResult Details(int id)
+        public CustomersController( UserManager<ApplicationUser> userManager)
         {
-            CustomerDTO obj = new CustomerDTO
+            this._userManager = userManager;
+        }
+        public async Task<ActionResult> GetAllCust()
+        {
+            var programmers = await _userManager.GetUsersInRoleAsync("Customer");
+
+            List<CustomerVM> customersList = programmers.Select(customer => new CustomerVM
             {
-                FirstName = "Noor",
-                LastName = "Rawashdeh",
-                Email = "noor@gmi.com",
-                Phone = "0789555",
-                Username = "ken",
-                BirthDate = DateTime.Now
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                BirthDate = customer.BirthDate,
+                Country = customer.Country,
+                City = customer.City,
+                Phone = customer.PhoneNumber,
+                ID = customer.Id,
+                Username = customer.UserName,
+            }).ToList();
+
+            
+            return View(customersList);
+        }
+
+        public async Task<ActionResult> Details(string custId)
+        {
+            var customer = await _userManager.FindByIdAsync(custId);
+
+            CustomerVM customerVM = new CustomerVM
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                BirthDate = customer.BirthDate,
+                Country = customer.Country,
+                City = customer.City,
+                Phone = customer.PhoneNumber,
+                ID = customer.Id,
+                Username = customer.UserName,
             };
-            return View(obj);
+            return View(customerVM);
         }
 
-        // GET: CustomerDTOController1/Create
-        // public ActionResult Register()
-        // {
-        //     return View(new CustomerDTO());
-        // }
-
-        // POST: CustomerDTOController1/Create
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public ActionResult Register(CustomerDTO model)
-        // {
-        //     try
-        //     {
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     catch
-        //     {
-        //         return View();
-        //     }
-        // }
-        //
-        // public ActionResult Login()
-        // {
-        //     return View(new CustomerDTO());
-        // }
-        //
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public ActionResult Login(IFormCollection collection)
-        // {
-        //     try
-        //     {
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     catch
-        //     {
-        //         return View();
-        //     }
-        // }
-
-
-       
-
-
-        // GET: CustomerDTOController1/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> profile()
         {
-            return View("Error");
-        }
-
-        // POST: CustomerDTOController1/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            return View("Error");
-        }
-
-        // GET: CustomerDTOController1/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View("Error");
-        }
-
-        // POST: CustomerDTOController1/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            return View("Error");
+            var user = await _userManager.GetUserAsync(User);
+            var customer = await _userManager.FindByIdAsync(user.Id);
+            CustomerVM customerVM = new CustomerVM
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                BirthDate = customer.BirthDate,
+                Country = customer.Country,
+                City = customer.City,
+                Phone = customer.PhoneNumber,
+                ID = customer.Id,
+                Username = customer.UserName,
+            };
+            return View(customerVM);
         }
     }
 }

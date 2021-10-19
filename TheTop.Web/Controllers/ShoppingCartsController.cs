@@ -42,11 +42,6 @@ namespace TheTop.Controllers
             ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
             ShoppingCartDTO shoppingCartDTO = _service.GetAdvertisementsInShoppingCart(user.Id);
 
-
-            // if(!(shoppingCartDTO.Advertisements is null))
-            //{
-            //    return View(new ShoppingCartVM());
-            //}
             ShoppingCartVM ShoppingCartVM = new ShoppingCartVM()
             {
                 Advertisements = shoppingCartDTO.Advertisements.Select(a => new AdvertisementVM
@@ -83,57 +78,7 @@ namespace TheTop.Controllers
         }
 
 
-        public async Task<IActionResult> Coupon(string textCoupon)
-        {
-            if (textCoupon == null)
-            {
-                return RedirectToAction("GetAllItemToCart");
-            }
-            //return Coupon If found
-            CouponDTO couponDTO = _serviceReview.GetValidCoupon();
-            CouponVM couponVM = new CouponVM
-            {
-                Code = couponDTO.Code,
-                Ratio = couponDTO.Ratio,
-                ValidityDate = couponDTO.ValidityDate,
-                CreatedAT = couponDTO.CreatedAt,
-            };
-            ViewBag.Coupon = couponVM;
-            /////////////////////////////////////////
-           
-            CouponDTO Findcoupon = _serviceReview.CheckCoupon(textCoupon);
-           
-            var user = await _userManager.GetUserAsync(User);
-            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
-            ShoppingCartDTO shoppingCartDTO = _service.GetAdvertisementsInShoppingCart(user.Id);
-
-            ShoppingCartVM ShoppingCartVM = new ShoppingCartVM()
-            {
-                Advertisements = shoppingCartDTO.Advertisements.Select(a => new AdvertisementVM
-                {
-                    Name = a.Name,
-                    Price = a.Price,
-                    Category = a.CategoryName,
-                    PhotosNames = a.ImagesNames.ToList()
-                }).ToList(),
-                TotalPrice = shoppingCartDTO.TotalPrice,
-                ShoppingCartId = shoppingCartDTO.ShoppingCartId, 
-            };
-            if (!(Findcoupon is null))
-            {
-                ShoppingCartVM.Coupon = new CouponVM
-                {
-                    ID = Findcoupon.CouponId,
-                    Ratio = Findcoupon.Ratio,
-                };
-            }
-            else
-            {
-                ShoppingCartVM.Coupon = new CouponVM();
-            }
-
-            return View("GetAllItemToCart", ShoppingCartVM);
-        }
+        
 
        
     }

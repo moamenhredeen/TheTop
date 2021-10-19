@@ -31,7 +31,7 @@ namespace TheTop.Controllers
             reviewDtoList.ForEach(review =>
             {
                 reviewVMlist.Add(new ReviewVM { 
-                 Customer = new CustomerDTO
+                 Customer = new CustomerVM
                  {
                      FirstName = review.User.FirstName,
                      LastName = review.User.LastName,
@@ -52,7 +52,7 @@ namespace TheTop.Controllers
         {
             ReviewDTO reviewDTO = _service.GetReviewById(id);
             return View(new ReviewVM {
-                Customer = new CustomerDTO
+                Customer = new CustomerVM
                 {
                     FirstName = reviewDTO.User.FirstName,
                     LastName = reviewDTO.User.LastName,

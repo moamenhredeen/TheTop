@@ -10,8 +10,10 @@ namespace TheTop.Application.Services.DTOs
     {
         public int OrderId { get; set; }
         public decimal TotalPrice { get; set; }
-        public decimal DiscountPrice { get; set; }
+        public decimal? DiscountPrice { get; set; }
         public string ApplicationUserId { get; set; }
+
+        public DateTime CreatedAt { get; set; }
 
         public ICollection<AdvertisementDTO> Advertisements { get; set; }
 

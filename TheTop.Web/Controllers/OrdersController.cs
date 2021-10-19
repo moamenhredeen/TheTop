@@ -32,13 +32,14 @@ namespace TheTop.Controllers
         public async Task<ActionResult> Order()
         {
             var user = await _userManager.GetUserAsync(User);
-            _service.AddOreder(user.Id);
-            return RedirectToAction("GetOrder");
+            int orderId = _service.AddOreder(user.Id);
+            return RedirectToAction("GetOrder", new { orderId = orderId, flag = false });
         }
 
-        // GET: OrderDTOsController
-        public async Task<ActionResult> GetOrder()
+        
+        public async Task<ActionResult> GetOrder(int orderId, bool flag)
         {
+            var user = await _userManager.GetUserAsync(User);
             //Coupon
             CouponDTO couponDTO = _serviceReview.GetValidCoupon();
             CouponVM couponVM = new CouponVM
@@ -50,73 +51,70 @@ namespace TheTop.Controllers
             };
             ViewBag.Coupon = couponVM;
 
-            var user = await _userManager.GetUserAsync(User);
+            //Cart
+            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
 
-            OrderDTO orderDTO = _service.GetOrder(user.Id);
+            OrderDTO orderDTO = _service.GetOrder(orderId);
 
-            OrderVM orderVM = new OrderVM { 
-            Advertisements = orderDTO.Advertisements.Select(a => new AdvertisementVM
-            {
-                Name = a.Name,
-                Price = a.Price,
-                Category = a.CategoryName,
-                PhotosNames = a.ImagesNames.ToList(),
-                ID = a.ID,
-            }).ToList(),
-            TotalPrice = orderDTO.TotalPrice,
-            ID = orderDTO.OrderId,
-            DiscountPrice = orderDTO.DiscountPrice,
+            OrderVM orderVM = new OrderVM {
+                Advertisements = orderDTO.Advertisements.Select(a => new AdvertisementVM
+                {
+                    Name = a.Name,
+                    Price = a.Price,
+                    Category = a.CategoryName,
+                    PhotosNames = a.ImagesNames.ToList(),
+                    ID = a.ID,
+                }).ToList(),
+                TotalPrice = orderDTO.TotalPrice,
+                ID = orderDTO.OrderId,
+                DiscountPrice = orderDTO.DiscountPrice,
+                InvaildCoupon = flag == true ? "Invalid Coupon" : " ",
             };
             return View(orderVM);
         }
 
-        // GET: OrderDTOsController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult ApplyCoupon(string textCoupon , int orderId)
         {
-            return View("Error");
+
+            if (textCoupon == null)
+            {
+                return RedirectToAction("GetOrder", new { orderId = orderId });
+            }
+            bool flag =  _serviceReview.ApplyCoupon(textCoupon, orderId);
+
+            return RedirectToAction("GetOrder", new { orderId = orderId , flag = flag == true ? false : true });
         }
 
-        // GET: OrderDTOsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Checkout(int orderId)
         {
-            return View("Error");
+
+            var user = await _userManager.GetUserAsync(User);
+            bool Confirmed = _service.CheckoutOrder(user.Id, orderId);
+
+            //Coupon
+            CouponDTO couponDTO = _serviceReview.GetValidCoupon();
+            CouponVM couponVM = new CouponVM
+            {
+                Code = couponDTO.Code,
+                Ratio = couponDTO.Ratio,
+                ValidityDate = couponDTO.ValidityDate,
+                CreatedAT = couponDTO.CreatedAt,
+            };
+            ViewBag.Coupon = couponVM;
+
+            return View("OrderConfirmed", new OrderConfirmed { Confirm = Confirmed });
         }
 
-        // POST: OrderDTOsController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            return View("Error");
-        }
         
-
-        // GET: OrderDTOsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> OrderCancel(int orderId)
         {
-            return View("Error");
-        }
+            var user = await _userManager.GetUserAsync(User);
 
-        // POST: OrderDTOsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            return View("Error");
-        }
+            _service.RemoveOrder(orderId);
 
-        // GET: OrderDTOsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View("Error");
-        }
+            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
 
-        // POST: OrderDTOsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            return View("Error");
+            return RedirectToAction("GetAllItemToCart", "ShoppingCarts");
         }
     }
 }

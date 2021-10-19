@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" href="./assets/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>
-        Paper Dashboard 2 by Creative Tim
+         Dashboard User
     </title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
     <!--     Fonts and icons     -->
@@ -16,7 +16,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <!-- CSS Files -->
     <link href="~/dashbordCus/assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    @*<link href="~/dashbordCus/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">*@
 
     <link href="~/dashbordCus/assets/css/paper-dashboard.css?v=2.0.1" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
@@ -54,15 +54,15 @@
             <div class="sidebar-wrapper">
                 <ul class="nav">
                     <li class="active ">
-                        <a href="javascript:;">
-                            <i class="nc-icon nc-bank"></i>
-                            <p>First Item</p>
+                        <a asp-controller="Customers" asp-action="profile">
+                            <i class="nc-icon nc-single-02"></i>
+                            <p>User Profile</p>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:;">
+                        <a asp-controller="Advertisements" asp-action="GetById">
                             <i class="nc-icon nc-diamond"></i>
-                            <p>Second Item</p>
+                            <p>My Advertisements</p>
                         </a>
                     </li>
                     <li>
@@ -86,7 +86,7 @@
                                 <span class="navbar-toggler-bar bar3"></span>
                             </button>
                         </div>
-                        <a class="navbar-brand" href="javascript:;">Title</a>
+                        <a class="navbar-brand text-success" >Dashboard</a>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-bar navbar-kebab"></span>

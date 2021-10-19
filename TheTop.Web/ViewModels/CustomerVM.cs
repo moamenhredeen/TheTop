@@ -6,11 +6,10 @@ using TheTop.Classs;
 
 namespace TheTop.ViewModels
 {
-    public class OrderAdvDTO : BASEEntity
+    public class CustomerVM : User
     {
-        public int OrderId { get; set; }
-        public int AdvertisementId { get; set; }
+       
 
-      
+        
     }
 }

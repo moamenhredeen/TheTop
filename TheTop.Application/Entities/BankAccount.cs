@@ -11,7 +11,7 @@ namespace TheTop.Application.Entities
     {
         public int BankAccountId { get; set; }
         public string CardNum { get; set; }
-        public float Balance { get; set; }
+        public decimal Balance { get; set; }
         
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

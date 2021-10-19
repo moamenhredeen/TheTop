@@ -1,8 +1,8 @@
-﻿@model CustomerDTO
+﻿@model CustomerVM
 @{
-    Layout = "_LayoutAdmin";
+    Layout = "_LayoutCustomer";
 }
-<h2 class="m-5">Details Employee</h2>
+<h2 class="m-5">Info Customer</h2>
 <hr />
 
 <div class="row w-75 m-auto">
@@ -20,11 +20,20 @@
             <label asp-for="Email"></label>
             <input asp-for="Email" class="form-control" readonly />
         </div>
-    </div>
-    <div class="col-6">
         <div class="form-group ">
             <label asp-for="Phone"></label>
             <input asp-for="Phone" class="form-control" readonly />
+        </div>
+    </div>
+    <div class="col-6">
+       
+        <div class="form-group ">
+            <label asp-for="Country"></label>
+            <input asp-for="Country" class="form-control" readonly />
+        </div>
+        <div class="form-group ">
+            <label asp-for="City"></label>
+            <input asp-for="City" class="form-control" readonly />
         </div>
         <div class="form-group ">
             <label asp-for="BirthDate"></label>
@@ -34,8 +43,9 @@
             <label asp-for="Username"></label>
             <input asp-for="Username" class="form-control" readonly />
         </div>
-        <div class="form-group mt-5 w-50 text-center d-flex ">
-            <a asp-action="GetAllCust" class="btn btn-secondary font-weight-bold w-50" style="font-size: 17px;">Back</a>
+        <div class="form-group mt-5 w-100 text-center d-flex justify-content-between ">
+            <a asp-action="GetAllCust" class="btn btn-secondary font-weight-bold w-25" style="font-size: 17px;">Back</a>
+            <a  class=" font-weight-bold w-25 text-primary" style="font-size: 17px;">Massage</a>
         </div>
     </div>
 

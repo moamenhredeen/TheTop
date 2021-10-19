@@ -1,0 +1,15 @@
+﻿@model OrderConfirmed 
+
+<div class="m-5">
+    @if (Model.Confirm == true)
+      {
+
+
+            <h2 class="text-success"> Purchase completed successfully </h2>
+      }
+   else
+       {
+            <h2 class="text-danger"> Your balance is insufficient </h2>
+        }
+
+</div>

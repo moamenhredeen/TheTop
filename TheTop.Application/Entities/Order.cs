@@ -11,9 +11,13 @@ namespace TheTop.Application.Entities
     {
         public int OrderId { get; set; }
         public decimal TotalPrice { get; set; }
-        public float? DiscountPrice { get; set; }
+        public decimal? DiscountPrice { get; set; }
 
         public StatusOrderType Status { get; set; }
+
+        public int? CouponId { get; set; }
+        public Coupon Coupon { get; set; }
+
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         

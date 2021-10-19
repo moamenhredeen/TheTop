@@ -1,8 +1,8 @@
-﻿@model IEnumerable<CustomerDTO>
+﻿@model IEnumerable<CustomerVM>
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "_LayoutAdmin";
+    Layout = "_LayoutCustomer";
 }
 
 <h2 class="m-5">Customers</h2>
@@ -10,12 +10,11 @@
 <table class="table m-auto  p-5" style="width:91%">
     <thead>
         <tr class="table-primary">
-            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).FirstName"></label></th>
-            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).LastName"></label></th>
-            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).Email"></label></th>
-            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).BirthDate
-                       "></label></th>
-            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == 0).Phone"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == "").FirstName"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == "").LastName"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == "").Email"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == "").BirthDate"></label></th>
+            <th><label asp-for="@Model.FirstOrDefault(c => c.ID == "").Phone"></label></th>
             <th colspan="1"></th>
         </tr>
     </thead>
@@ -28,7 +27,7 @@
         }
         else
         {
-            foreach (CustomerDTO c in Model)
+            foreach (CustomerVM c in Model)
             {
                 <tr>
                     <td>@c.FirstName</td>
@@ -37,7 +36,7 @@
                     <td>@c.BirthDate.ToString("d")</td>
                     <td>@c.Phone</td>
                     <td>
-                        <a asp-action="details" asp-route-id="@c.ID" class="text-primary"><i class="fas fa-info"></i></a>
+                        <a asp-action="details" asp-route-custId="@c.ID" class="text-primary"><i class="fas fa-info"></i></a>
                     </td>
                     
                 </tr>

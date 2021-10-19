@@ -49,7 +49,7 @@
             {
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" asp-controller="Employees" asp-action="Index">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Dashboard Admin</span>
                     </a>
@@ -60,7 +60,7 @@
 
                 <!-- Nav Item - Employees -->
                 <li class="nav-item active">
-                    <a class="nav-link"  asp-controller="Employees" asp-action="Create">
+                    <a class="nav-link"  asp-controller="Employees" asp-action="GetAllEmp">
                         <i class="bi bi-person-fill text-white"></i>
                         <span>Employees</span>
                     </a>
@@ -116,7 +116,7 @@
 
                 <!-- Nav Item - Customers -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" asp-controller="Customers" asp-action="GetAllCust">
                         <i class="bi bi-person-fill text-white"></i>
                         <span>Customers</span>
                     </a>

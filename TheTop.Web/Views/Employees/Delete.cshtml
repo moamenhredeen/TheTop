@@ -1,5 +1,13 @@
-﻿
-@{
-    Layout = "_LayoutAdmin";
-}
-<h1>Delete Employee</h1>
+﻿@model EmployeeDTO
+@{ Layout = "_LayoutAdmin"; }
+
+<div class="container">
+    <h2 class="text-danger">Remove Employee</h2>
+    <hr />
+    <p>Are you sure to delete this Employee <span class="text-danger">|"@Model.FirstName @Model.LastName" | (@Model.Email)</span> ?</p>
+
+    <div>
+        <a asp-action="DeleteCoupon" asp-route-id="@Model.ID" class="btn btn-danger">Delete</a>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</div>

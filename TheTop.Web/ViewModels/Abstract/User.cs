@@ -10,7 +10,7 @@ namespace TheTop.Classs
     public class User
     {
         [Key()]
-        public int ID { get; set; }
+        public string ID { get; set; }
 
         [Display(Name = "First Name")]
         [MaxLength(55, ErrorMessage = "First Name shoald not exced 55 char!")]
@@ -55,6 +55,8 @@ namespace TheTop.Classs
         [Required(ErrorMessage = "Phone is required")]
         public string Phone { get; set; }
 
+        public string City { get; set; }
+        public string Country { get; set; }
         public string ImageName { get; set; }
 
     }

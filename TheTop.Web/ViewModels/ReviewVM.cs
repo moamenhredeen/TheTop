@@ -36,7 +36,7 @@ namespace TheTop.ViewModels
 
         public bool Approved { get; set; }
         public int CustomerId { get; set; }
-        public CustomerDTO Customer { get; set; }
+        public CustomerVM Customer { get; set; }
         public string ImageName { get; set; }
 
 

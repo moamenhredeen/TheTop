@@ -6,10 +6,10 @@ using TheTop.Classs;
 
 namespace TheTop.ViewModels
 {
-    public class CustomerDTO : User
+    public class OrderConfirmed 
     {
-       
 
-        
+        public bool Confirm { get; set; }
+
     }
 }

@@ -78,7 +78,7 @@ namespace TheTop.Controllers
             {
                 reviewVMlist.Add(new ReviewVM
                 {
-                    Customer = new CustomerDTO
+                    Customer = new CustomerVM
                     {
                         FirstName = review.User.FirstName,
                         LastName = review.User.LastName,
