@@ -21,7 +21,6 @@ namespace TheTop.Application.Entities
         [Column(TypeName = "nvarchar(255)")]
         public string Massage { get; set; }
         
-        // TODO : change approved usages ( IsActive to Approved ) 
         public bool Approved { get; set; }
         
         public string ApplicationUserId { get; set; }

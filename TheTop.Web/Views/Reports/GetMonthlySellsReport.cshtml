@@ -1,0 +1,30 @@
+﻿@model SellsReportVM
+
+@{
+    ViewBag.Title = "title";
+    Layout = Model.asPdf ? null :  "_LayoutAdmin";
+}
+
+<a asp-controller="Reports" asp-action="GetMonthlySellsReport" asp-route-asPdf="true"  type="submit"  class="btn btn-lg btn-primary">view pdf</a>
+
+<form asp-controller="Reports" asp-action="GetMonthlySellsReport" asp-route-asPdf="true" onsubmit="submitHandler(event)">
+    <button  type="submit"  class="btn btn-lg btn-primary">Generate pdf document</button>
+</form>
+
+<h1 style="padding: 10px; background:pink; text-align: center"> profit : @Model.Profit</h1>
+<p> total price of all orders in one month : @Model.TotalPrice </p>
+<p> sells count in one month : @Model.SellsCount </p>
+@foreach (var order in Model.Orders)
+{
+    <p>Discount : @order.DiscountPrice</p>
+    <p>total price : @order.TotalPrice </p>
+}
+
+
+<script >
+    const submitHandler = (event) => {
+       event.preventDefault(); 
+       console.dir(event);
+        downloadFile(event.target.action)       
+       }
+</script>

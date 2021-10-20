@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
@@ -33,16 +34,17 @@ namespace TheTop.Application.Entities
         public ICollection<Order> Orders { get; set; }
         public ICollection<TaskEntity> TaskEntities { get; set; }
         public ICollection<BankAccount> BankAccounts { get; set; }
+        
+        public ICollection<Work> Works { get; set; }
 
-        public ICollection<IdentityUserRole<string>> Roles { get; set; }
         public ApplicationUser()
         {
             Reviews = new HashSet<Review>();
             Advertisements = new HashSet<Advertisement>();
             Orders = new HashSet<Order>();
             TaskEntities = new HashSet<TaskEntity>();
+            Works = new HashSet<Work>();
         }
-
     }
 }
 

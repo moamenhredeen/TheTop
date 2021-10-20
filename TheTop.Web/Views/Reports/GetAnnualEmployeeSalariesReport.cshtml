@@ -1,0 +1,42 @@
+﻿@model AnnualEmployeeSalariesReportVM
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_LayoutAdmin";
+}
+
+
+<form asp-controller="Reports" asp-action="GetMonthlySellsReportPDF" onsubmit="submitHandler(event)">
+    
+<button  type="submit"  class="btn btn-lg btn-primary">Generate pdf document</button>
+</form>
+
+<h1>@Model.TotalSalaries</h1>
+<h1>@Model.TotalWorkingHours</h1>
+@foreach (var monthlyreport in Model.MonthlyEmployeesSalariesReporrtsVM)
+{
+    <h2>@monthlyreport.TotalSalaries</h2>
+    <h2>@monthlyreport.TotalWorkingHours</h2>
+    @foreach (var employee in monthlyreport.Employees)
+    {
+        <div style="background: lightgray; padding: 100px; margin: 10px">
+            <p> @employee.FirstName</p>
+            <p> @employee.LastName</p>
+            <p> @employee.Email</p>
+            <p> @employee.Salary</p>
+            <p> @employee.ShouldSalary</p>
+            <p> @employee.ShouldWorkingHours</p>
+            <p> @employee.WorkingHours</p>
+            <p> @employee.HourSalary</p>
+        </div>
+    }
+    <hr>
+}
+
+<script >
+    const submitHandler = (event) => {
+       event.preventDefault(); 
+       console.dir(event);
+        downloadFile(event.target.action)       
+       }
+</script>

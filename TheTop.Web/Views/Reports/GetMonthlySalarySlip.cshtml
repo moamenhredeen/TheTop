@@ -1,0 +1,18 @@
+﻿@model EmployeeSalaryVM
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_LayoutAdmin";
+}
+
+<button  class="btn btn-lg btn-primary">Generate pdf document</button>
+<div style="background: lightgray; padding: 100px; margin: 10px">
+<p> @Model.FirstName</p>
+<p> @Model.LastName</p>
+<p> @Model.Email</p>
+<p> @Model.Salary</p>
+<p> @Model.ShouldSalary</p>
+<p> @Model.ShouldWorkingHours</p>
+<p> @Model.WorkingHours</p>
+<p> @Model.HourSalary</p>
+</div>

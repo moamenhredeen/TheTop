@@ -9,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using Rotativa.AspNetCore;
+using TheTop.Utils;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace TheTop
 {
@@ -18,19 +21,14 @@ namespace TheTop
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO : define extension methods ot add the services 
-            // services.AddDbContext<AppDbContext>(
-            //     options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<AppDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options => options.UseSqlServer(Configuration.GetConnectionString("TheTopIdentityDbContextConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddDefaultIdentity<ApplicationUser>(
                 options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
-            // TODO : define extension methods ot add the services 
-            services.AddScoped<AdvertisementService>();
-            services.AddScoped<ReviewService>();
+            services.AddServices();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -60,6 +58,7 @@ namespace TheTop
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=HomePage}/{id?}");
                 endpoints.MapRazorPages();
             });
+            RotativaConfiguration.Setup((IHostingEnvironment) env);
         }
     }
 }

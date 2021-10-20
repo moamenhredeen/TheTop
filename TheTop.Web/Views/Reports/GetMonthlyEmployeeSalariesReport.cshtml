@@ -1,0 +1,25 @@
+﻿@model MonthlyEmployeeSalariesReportVM
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_LayoutAdmin";
+}
+
+
+<button  class="btn btn-lg btn-primary">Generate pdf document</button>
+
+<h1>@Model.TotalSalaries</h1>
+<h1>@Model.TotalWorkingHours</h1>
+@foreach (var employee in Model.Employees)
+{
+    <div style="background: lightgray; padding: 100px; margin: 10px">
+        <p> @employee.FirstName</p>
+        <p> @employee.LastName</p>
+        <p> @employee.Email</p>
+        <p> @employee.Salary</p>
+        <p> @employee.ShouldSalary</p>
+        <p> @employee.ShouldWorkingHours</p>
+        <p> @employee.WorkingHours</p>
+        <p> @employee.HourSalary</p>
+    </div>
+}

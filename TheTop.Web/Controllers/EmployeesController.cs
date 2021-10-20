@@ -17,41 +17,44 @@ namespace TheTop.Controllers
 {
     public class EmployeesController : Controller
     {
-        private UserManager<ApplicationUser> _userManager;
-        private RoleManager<IdentityRole> _roleManager;
-        private readonly ReviewService _service;
-        private readonly AdvertisementService _advertisemenService;
-        public EmployeesController(UserManager<ApplicationUser> userManager,
-                                   RoleManager<IdentityRole> roleManager,
-                                   ReviewService service,
-                                    AdvertisementService advertisemenService)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IWorkService _workService;
+        private readonly IOrderService _orderService;
+
+        public EmployeesController(
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IOrderService orderService, 
+            IWorkService workService
+        )
         {
-            this._userManager = userManager;
-            this._roleManager = roleManager;
-            this._service = service;
-            this._advertisemenService = advertisemenService;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _orderService = orderService;
+            _workService = workService;
         }
-        
+
         public ActionResult Index()
         {
-            List<OrderDTO> orderDTOList = _advertisemenService.GetAllOrders().ToList();
+            List<OrderDTO> orderDTOList = _orderService.GetAllOrders().ToList();
             List<OrderVM> orderVMList = orderDTOList.Select(order => new OrderVM
             {
                 Advertisements = order.Advertisements
-                       .Select(advertisement => new AdvertisementVM
-                       {
-                           ID = advertisement.ID,
-                           Name = advertisement.Name,
-                           Price = advertisement.Price,
-                           Category = advertisement.CategoryName,
-                           CreatedAT = advertisement.CreatedAt,
-                           PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
-                       }).ToList(),
+                    .Select(advertisement => new AdvertisementVM
+                    {
+                        ID = advertisement.ID,
+                        Name = advertisement.Name,
+                        Price = advertisement.Price,
+                        Category = advertisement.CategoryName,
+                        CreatedAT = advertisement.CreatedAt,
+                        PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+                    }).ToList(),
                 CreatedAT = order.CreatedAt,
                 TotalPrice = order.TotalPrice,
                 DiscountPrice = order.DiscountPrice,
                 ID = order.OrderId,
-        }).ToList();
+            }).ToList();
 
             HomeAdminVM homeAdmin = new HomeAdminVM();
             homeAdmin.Orders = orderVMList;
@@ -61,28 +64,26 @@ namespace TheTop.Controllers
 
         public async Task<ActionResult> GetAllEmp()
         {
-
-
             var programmers = await _userManager.GetUsersInRoleAsync("Programmer");
             var accountants = await _userManager.GetUsersInRoleAsync("Accountant");
 
-            List<EmployeeDTO> employeeList = programmers.Select(emp => new EmployeeDTO
+            List<EmployeeVM> employeeList = programmers.Select(emp => new EmployeeVM
             {
-                 FirstName = emp.FirstName,
-                 LastName = emp.LastName,
-                 Email = emp.Email,
-                 BirthDate = emp.BirthDate,
-                 Country = emp.Country,
-                 City = emp.City,
-                 Phone = emp.PhoneNumber,
-                 ID = emp.Id,
-                 RoleName = "Programmer",
-                 Username = emp.UserName,
+                FirstName = emp.FirstName,
+                LastName = emp.LastName,
+                Email = emp.Email,
+                BirthDate = emp.BirthDate,
+                Country = emp.Country,
+                City = emp.City,
+                Phone = emp.PhoneNumber,
+                ID = emp.Id,
+                RoleName = "Programmer",
+                Username = emp.UserName,
             }).ToList();
 
-             foreach(var emp in accountants)
+            foreach (var emp in accountants)
             {
-                employeeList.Add(new EmployeeDTO
+                employeeList.Add(new EmployeeVM
                 {
                     FirstName = emp.FirstName,
                     LastName = emp.LastName,
@@ -96,8 +97,6 @@ namespace TheTop.Controllers
                     Username = emp.UserName,
                 });
             }
-          
-
 
 
             return View(employeeList);
@@ -105,10 +104,8 @@ namespace TheTop.Controllers
 
         public async Task<ActionResult> Details(string empId)
         {
-            
-
             var emp = await _userManager.FindByIdAsync(empId);
-            EmployeeDTO employee = new EmployeeDTO
+            var employee = new EmployeeVM
             {
                 FirstName = emp.FirstName,
                 LastName = emp.LastName,
@@ -126,15 +123,11 @@ namespace TheTop.Controllers
 
         public async Task<ActionResult> Create()
         {
-           
             var roles = await _roleManager.Roles.ToListAsync();
-            List<SelectListItem> roleList = new ();
-            roles.ForEach(e =>
-            {
-                roleList.Add(new SelectListItem { Text = e.Name,Value = e.Name});
-            });
+            var roleList = new List<SelectListItem>();
+            roles.ForEach(e => { roleList.Add(new SelectListItem {Text = e.Name, Value = e.Name}); });
 
-            EmployeeDTO employee = new EmployeeDTO();
+            var employee = new EmployeeVM();
             employee.Roles = roleList;
             return View(employee);
         }
@@ -142,55 +135,49 @@ namespace TheTop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(EmployeeDTO employeeDto)
+        public async Task<ActionResult> Create(EmployeeVM employeeVM)
         {
-            
-                if (! ModelState.IsValid)
-                {
-                return View(employeeDto);            
-                }
-               
+            if (!ModelState.IsValid)
+            {
+                return View(employeeVM);
+            }
+
             var result = await _userManager.CreateAsync(new ApplicationUser
             {
-                FirstName = employeeDto.FirstName,
-                LastName = employeeDto.LastName,
-                BirthDate = employeeDto.BirthDate,
-                Email = employeeDto.Email,
-                Country = employeeDto.Country,
-                City = employeeDto.City,
-                UserName = employeeDto.Username,
-                PhoneNumber =employeeDto.Phone,
-                Contract = new Contract { 
-                HourSalary = employeeDto.HourSalary,
-                MonthlyWorkingHours = employeeDto.MonthlyWorkingHours,
-                CreatedAt  = DateTime.Now,
-                
+                FirstName = employeeVM.FirstName,
+                LastName = employeeVM.LastName,
+                BirthDate = employeeVM.BirthDate,
+                Email = employeeVM.Email,
+                Country = employeeVM.Country,
+                City = employeeVM.City,
+                UserName = employeeVM.Username,
+                PhoneNumber = employeeVM.Phone,
+                Contract = new Contract
+                {
+                    HourSalary = employeeVM.HourSalary,
+                    MonthlyWorkingHours = employeeVM.MonthlyWorkingHours,
+                    CreatedAt = DateTime.Now,
                 },
-            },employeeDto.Password);
+            }, employeeVM.Password);
 
+            // TODO : show user error 
             if (result.Succeeded)
             {
-
-                var user = await _userManager.FindByEmailAsync(employeeDto.Email);
-                await _userManager.AddToRoleAsync(user, employeeDto.RoleName);
-                
+                var user = await _userManager.FindByEmailAsync(employeeVM.Email);
+                await _userManager.AddToRoleAsync(user, employeeVM.RoleName);
             }
-          
-                return RedirectToAction("HomePage", "Home");          
-            
+
+            return RedirectToAction("HomePage", "Home");
         }
 
         public async Task<ActionResult> Edit(string empId)
         {
             var roles = await _roleManager.Roles.ToListAsync();
-            List<SelectListItem> roleList = new();
-            roles.ForEach(e =>
-            {
-                roleList.Add(new SelectListItem { Text = e.Name, Value = e.Name });
-            });
+             var roleList = new List<SelectListItem>();
+            roles.ForEach(e => { roleList.Add(new SelectListItem {Text = e.Name, Value = e.Name}); });
 
             var emp = await _userManager.FindByIdAsync(empId);
-            EmployeeDTO employee = new EmployeeDTO
+            var employee = new EmployeeVM
             {
                 FirstName = emp.FirstName,
                 LastName = emp.LastName,
@@ -201,53 +188,50 @@ namespace TheTop.Controllers
                 Phone = emp.PhoneNumber,
                 ID = emp.Id,
                 Username = emp.UserName,
-                Password = emp.PasswordHash
+                Password = emp.PasswordHash,
+                Roles = roleList
             };
-            employee.Roles = roleList;
             return View(employee);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, EmployeeDTO employeeDto)
+        public async Task<ActionResult> Edit(EmployeeVM employeeVM)
         {
             if (!ModelState.IsValid)
             {
-                return View(employeeDto);
+                return View(employeeVM);
             }
 
-            var emp = await _userManager.FindByIdAsync(employeeDto.ID);
-            emp.FirstName = employeeDto.FirstName;
-            emp.LastName = employeeDto.LastName;
-            emp.BirthDate = employeeDto.BirthDate;
-            emp.Email = employeeDto.Email;
-            emp.Country = employeeDto.Country;
-            emp.City = employeeDto.City;
-            emp.UserName = employeeDto.Username;
-            emp.PhoneNumber = employeeDto.Phone;
+            var emp = await _userManager.FindByIdAsync(employeeVM.ID);
+            emp.FirstName = employeeVM.FirstName;
+            emp.LastName = employeeVM.LastName;
+            emp.BirthDate = employeeVM.BirthDate;
+            emp.Email = employeeVM.Email;
+            emp.Country = employeeVM.Country;
+            emp.City = employeeVM.City;
+            emp.UserName = employeeVM.Username;
+            emp.PhoneNumber = employeeVM.Phone;
             var result = await _userManager.UpdateAsync(emp);
 
             if (result.Succeeded)
             {
-                var user = await _userManager.FindByEmailAsync(employeeDto.Email);
-               
+                var user = await _userManager.FindByEmailAsync(employeeVM.Email);
+
                 var roles = await this._userManager.GetRolesAsync(user);
                 await this._userManager.RemoveFromRolesAsync(user, roles.ToArray());
 
-                await this._userManager.AddToRoleAsync(user, employeeDto.RoleName);
-
+                await this._userManager.AddToRoleAsync(user, employeeVM.RoleName);
             }
 
             return RedirectToAction("GetAllEmp");
-
         }
-
 
 
         public async Task<ActionResult> Delete(string empId)
         {
             var emp = await _userManager.FindByIdAsync(empId);
-            EmployeeDTO employee = new EmployeeDTO
+            var employee = new EmployeeVM
             {
                 FirstName = emp.FirstName,
                 LastName = emp.LastName,
@@ -263,43 +247,26 @@ namespace TheTop.Controllers
             return View(employee);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         public async Task<ActionResult> StartWork()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            _service.StartWork(new WorkDTO
+            _workService.StartWork(new WorkDTO
             {
                 ApplicationUserId = user.Id,
                 StartDate = DateTime.Now
-            }); 
-
-                return RedirectToAction("Index");            
+            });
+            return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> EndWork()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            _service.EndWork(new WorkDTO
+            _workService.EndWork(new WorkDTO
             {
                 ApplicationUserId = user.Id,
                 EndDate = DateTime.Now
             });
-
             return RedirectToAction("Index");
         }
 
@@ -308,99 +275,37 @@ namespace TheTop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Search(SearchVM modelVM)
         {
-
-
-            List<OrderDTO> orderDTOList = _advertisemenService.SearchOrder(
-                new SearchDTO {
+            List<OrderDTO> orderDTOList = _orderService.SearchOrder(
+                new SearchDTO
+                {
                     FromDate = modelVM.FromDate,
                     ToDate = modelVM.ToDate,
                 }
-                ).ToList();
-            List<OrderVM> orderVMList = orderDTOList.Select(order => new OrderVM
+            ).ToList();
+            
+            var orderVMList = orderDTOList.Select(order => new OrderVM
             {
                 Advertisements = order.Advertisements
-                       .Select(advertisement => new AdvertisementVM
-                       {
-                           ID = advertisement.ID,
-                           Name = advertisement.Name,
-                           Price = advertisement.Price,
-                           Category = advertisement.CategoryName,
-                           CreatedAT = advertisement.CreatedAt,
-                           PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
-                       }).ToList(),
+                    .Select(advertisement => new AdvertisementVM
+                    {
+                        ID = advertisement.ID,
+                        Name = advertisement.Name,
+                        Price = advertisement.Price,
+                        Category = advertisement.CategoryName,
+                        CreatedAT = advertisement.CreatedAt,
+                        PhotosNames = advertisement.ImagesNames.Select(img => img).ToList(),
+                    }).ToList(),
                 CreatedAT = order.CreatedAt,
                 TotalPrice = order.TotalPrice,
                 DiscountPrice = order.DiscountPrice,
                 ID = order.OrderId,
             }).ToList();
-
-            HomeAdminVM homeAdmin = new HomeAdminVM();
+            
+            var homeAdmin = new HomeAdminVM();
             homeAdmin.Orders = orderVMList;
             homeAdmin.Search = modelVM;
-
-
             return View("index", homeAdmin);
         }
 
-        public ActionResult ReportMonthlyOfSells()
-        {
-            return View();
-        }
-        public ActionResult ReportAnnualOfSells()
-        {
-            return View();
-        }
-
-        public ActionResult ReportMonthly()
-        {
-            return View();
-        }
-
-        public ActionResult ReportAnnual()
-        {
-            return View();
-        }
-
-       
-       
-
-        //Accountant
-        public ActionResult ReportMonthlyAccountant()
-        {
-            return View("Error");
-        }
-
-        public ActionResult ReportAnnualAccountant()
-        {
-            return View("Error");
-        }
-
-        public ActionResult GetInformationCustomer()
-        {
-            return View();
-        }
-
-        public ActionResult GetInformationEmployees()
-        {
-            return View();
-        }
-
-
-        //Programmer
-        public ActionResult RecordsAttendance()
-        {
-            return View("Error");
-        }
-
-        public ActionResult RecordsExit()
-        {
-            return View("Error");
-        }
-
-
-        public ActionResult GetSalarySlip()
-        {
-            return View("Error");
-        }
     }
 }

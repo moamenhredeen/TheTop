@@ -46,7 +46,7 @@ namespace TheTop.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
-                // TODO : Delete
+                // TODO : Delete  create roles in another place
                 if (!await _roleManager.RoleExistsAsync("Customer"))
                 {
                     await _roleManager.CreateAsync(new IdentityRole("Customer"));

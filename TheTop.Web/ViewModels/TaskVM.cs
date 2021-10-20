@@ -33,7 +33,7 @@ namespace TheTop.ViewModels
 
         [Display(Name = "Employee")]
         public string EmployeeId { get; set; }
-        public EmployeeDTO EmployeeDTO { get; set; }
+        public EmployeeVM EmployeeVm { get; set; }
         public ICollection<SelectListItem> Employees { get; set; }
     }
 }

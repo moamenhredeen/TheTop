@@ -10,12 +10,9 @@ namespace TheTop.Application.Services.DTOs
     {
         public int ID { get; set; }
         public decimal HourSalary { get; set; }
-        public float MonthlyWorkingHours { get; set; }
+        public int MonthlyWorkingHours { get; set; }
         public DateTime CreateAt { get; set; } 
         public DateTime UpdatedAt { get; set; }
         public string ApplicationUserId { get; set; }
-
-        //TODO
-        //public ApplicationUser ApplicationUser { get; set; }
     }
 }

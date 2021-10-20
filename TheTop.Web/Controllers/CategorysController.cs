@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using TheTop.Application.Services;
 using TheTop.Application.Services.DTOs;
 using TheTop.ViewModels;
@@ -12,16 +9,16 @@ namespace TheTop.Controllers
 {
     public class CategorysController : Controller
     {
-        private readonly AdvertisementService _service;
+        private readonly ICategoryService _categoryService;
 
-        public CategorysController(AdvertisementService service)
+        public CategorysController(ICategoryService categoryService)
         {
-            this._service = service;
+            _categoryService = categoryService;
         }
        
         public ActionResult Index()
         {
-            List<CategoryDTO> categoryList = _service.GetAllCategories().ToList();
+            List<CategoryDTO> categoryList = _categoryService.GetAllCategories().ToList();
 
             List<CategoryVM> list = categoryList.Select(category => new CategoryVM
             {
@@ -47,7 +44,7 @@ namespace TheTop.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _service.AddCategory(new CategoryDTO() { Name = viewModel.Name});
+                    _categoryService.AddCategory(new CategoryDTO() { Name = viewModel.Name});
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -64,7 +61,7 @@ namespace TheTop.Controllers
 
         public ActionResult Edit(int id)
         {
-            CategoryDTO category = _service.GetCategoryById(id);
+            CategoryDTO category = _categoryService.GetCategoryById(id);
 
             return View(new CategoryVM { Name = category.Name});
         }
@@ -77,7 +74,7 @@ namespace TheTop.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _service.UpdateCategory(new CategoryDTO() { Name = viewModel.Name ,ID = viewModel.ID });
+                    _categoryService.UpdateCategory(new CategoryDTO() { Name = viewModel.Name ,ID = viewModel.ID });
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -93,22 +90,15 @@ namespace TheTop.Controllers
 
         public ActionResult Delete(int id)
         {
-            CategoryDTO category = _service.GetCategoryById(id);
+            CategoryDTO category = _categoryService.GetCategoryById(id);
 
             return View(new CategoryVM { Name = category.Name,ID= category.ID });
         }       
 
         public ActionResult DeleteCat(int id)
         {
-            try
-            {
-                _service.RemoveCategory(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _categoryService.RemoveCategory(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

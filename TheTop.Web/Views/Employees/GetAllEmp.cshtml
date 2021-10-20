@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EmployeeDTO>
+﻿@model IEnumerable<EmployeeVM>
 
 
 
@@ -32,7 +32,7 @@
         }
         else
         {
-            foreach (EmployeeDTO c in Model)
+            foreach (EmployeeVM c in Model)
             {
     <tr>
         <td>@c.FirstName</td>

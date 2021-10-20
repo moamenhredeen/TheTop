@@ -14,34 +14,38 @@ namespace TheTop.Controllers
 {
     public class OrdersController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICouponService _couponService;
+        private readonly IOrderService _orderService;
+        private readonly IShoppingCartService _shoppingCartService;
 
-        private readonly ReviewService _serviceReview;
-        private UserManager<ApplicationUser> _userManager;
-        private readonly AdvertisementService _service;
-
-        public OrdersController(ReviewService serviceReview,
-                                      UserManager<ApplicationUser> userManager,
-                                      AdvertisementService service)
+        public OrdersController(
+            UserManager<ApplicationUser> userManager,
+            ICouponService couponService,
+            IShoppingCartService shoppingCartService, 
+            IOrderService orderService
+        )
         {
-            this._serviceReview = serviceReview;
-            this._userManager = userManager;
-            this._service = service;
+            _userManager = userManager;
+            _couponService = couponService;
+            _shoppingCartService = shoppingCartService;
+            _orderService = orderService;
         }
 
 
         public async Task<ActionResult> Order()
         {
             var user = await _userManager.GetUserAsync(User);
-            int orderId = _service.AddOreder(user.Id);
-            return RedirectToAction("GetOrder", new { orderId = orderId, flag = false });
+            int orderId = _orderService.AddOreder(user.Id);
+            return RedirectToAction("GetOrder", new {orderId = orderId, flag = false});
         }
 
-        
+
         public async Task<ActionResult> GetOrder(int orderId, bool flag)
         {
             var user = await _userManager.GetUserAsync(User);
             //Coupon
-            CouponDTO couponDTO = _serviceReview.GetValidCoupon();
+            CouponDTO couponDTO = _couponService.GetValidCoupon();
             CouponVM couponVM = new CouponVM
             {
                 Code = couponDTO.Code,
@@ -52,11 +56,12 @@ namespace TheTop.Controllers
             ViewBag.Coupon = couponVM;
 
             //Cart
-            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
+            ViewBag.numItemCart = _shoppingCartService.GetNumItemShoppingCart(user.Id);
 
-            OrderDTO orderDTO = _service.GetOrder(orderId);
+            OrderDTO orderDTO = _orderService.GetOrder(orderId);
 
-            OrderVM orderVM = new OrderVM {
+            OrderVM orderVM = new OrderVM
+            {
                 Advertisements = orderDTO.Advertisements.Select(a => new AdvertisementVM
                 {
                     Name = a.Name,
@@ -73,26 +78,25 @@ namespace TheTop.Controllers
             return View(orderVM);
         }
 
-        public IActionResult ApplyCoupon(string textCoupon , int orderId)
+        public IActionResult ApplyCoupon(string textCoupon, int orderId)
         {
-
             if (textCoupon == null)
             {
-                return RedirectToAction("GetOrder", new { orderId = orderId });
+                return RedirectToAction("GetOrder", new {orderId = orderId});
             }
-            bool flag =  _serviceReview.ApplyCoupon(textCoupon, orderId);
 
-            return RedirectToAction("GetOrder", new { orderId = orderId , flag = flag == true ? false : true });
+            bool flag = _couponService.ApplyCoupon(textCoupon, orderId);
+
+            return RedirectToAction("GetOrder", new {orderId = orderId, flag = flag == true ? false : true});
         }
 
         public async Task<ActionResult> Checkout(int orderId)
         {
-
             var user = await _userManager.GetUserAsync(User);
-            bool Confirmed = _service.CheckoutOrder(user.Id, orderId);
+            bool Confirmed = _orderService.CheckoutOrder(user.Id, orderId);
 
             //Coupon
-            CouponDTO couponDTO = _serviceReview.GetValidCoupon();
+            CouponDTO couponDTO = _couponService.GetValidCoupon();
             CouponVM couponVM = new CouponVM
             {
                 Code = couponDTO.Code,
@@ -102,17 +106,17 @@ namespace TheTop.Controllers
             };
             ViewBag.Coupon = couponVM;
 
-            return View("OrderConfirmed", new OrderConfirmed { Confirm = Confirmed });
+            return View("OrderConfirmed", new OrderConfirmed {Confirm = Confirmed});
         }
 
-        
+
         public async Task<ActionResult> OrderCancel(int orderId)
         {
             var user = await _userManager.GetUserAsync(User);
 
-            _service.RemoveOrder(orderId);
+            _orderService.RemoveOrder(orderId);
 
-            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
+            ViewBag.numItemCart = _shoppingCartService.GetNumItemShoppingCart(user.Id);
 
             return RedirectToAction("GetAllItemToCart", "ShoppingCarts");
         }

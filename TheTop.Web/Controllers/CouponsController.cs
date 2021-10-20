@@ -12,15 +12,15 @@ namespace TheTop.Controllers
 {
     public class CouponsController : Controller
     {
-        private readonly ReviewService _service;
-        public CouponsController(ReviewService service)
+        private readonly ICouponService _couponService;
+        public CouponsController(ICouponService couponService)
         {
-            this._service = service;    
+            _couponService = couponService;    
         }
 
         public ActionResult Index()
         {
-            List<CouponDTO> couponsDtoList = _service.GetAllCoupons().ToList();
+            List<CouponDTO> couponsDtoList = _couponService.GetAllCoupons().ToList();
             List<CouponVM> couponsVMList = new();
             couponsDtoList.ForEach(c => {
                 couponsVMList.Add(new CouponVM
@@ -49,7 +49,7 @@ namespace TheTop.Controllers
                 return View();
             }
 
-            _service.CreateCoupon(new CouponDTO
+            _couponService.CreateCoupon(new CouponDTO
             {
                 Ratio = couponVM.Ratio,
                 ValidityDate = couponVM.ValidityDate,          
@@ -61,7 +61,7 @@ namespace TheTop.Controllers
        
         public ActionResult Edit(int id)
         {
-            CouponDTO couponDTO = _service.GetCouponById(id);
+            CouponDTO couponDTO = _couponService.GetCouponById(id);
             return View(new CouponVM { 
             Code = couponDTO.Code,
             Ratio = couponDTO.Ratio,
@@ -80,7 +80,7 @@ namespace TheTop.Controllers
                 return View();
             }
 
-            _service.UpdateCoupon(new CouponDTO
+            _couponService.UpdateCoupon(new CouponDTO
             {
                 Ratio = couponVM.Ratio,
                 ValidityDate = couponVM.ValidityDate,
@@ -93,7 +93,7 @@ namespace TheTop.Controllers
 
         public ActionResult Delete(int id)
         {
-            CouponDTO couponDTO = _service.GetCouponById(id);
+            CouponDTO couponDTO = _couponService.GetCouponById(id);
             return View(new CouponVM
             {
                 Code = couponDTO.Code,
@@ -107,7 +107,7 @@ namespace TheTop.Controllers
        
         public ActionResult DeleteCoupon(int id)
         {
-            _service.RemoveCoupon(id);
+            _couponService.RemoveCoupon(id);
 
             return RedirectToAction(nameof(Index));
         }

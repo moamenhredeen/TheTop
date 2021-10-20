@@ -13,22 +13,25 @@ namespace TheTop.Controllers
 {
     public class ShoppingCartsController : Controller
     {
-        private readonly ReviewService _serviceReview;
-        private UserManager<ApplicationUser> _userManager;
-        private readonly AdvertisementService _service;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly ICouponService _couponService;
 
-        public ShoppingCartsController(ReviewService serviceReview,
-                                      UserManager<ApplicationUser> userManager,
-                                      AdvertisementService service)
+        public ShoppingCartsController(
+            UserManager<ApplicationUser> userManager,
+            IShoppingCartService shoppingCartService, 
+            ICouponService couponService
+        )
         {
-            this._serviceReview = serviceReview;
-            this._userManager = userManager;
-            this._service = service;
+            _userManager = userManager;
+            _shoppingCartService = shoppingCartService;
+            _couponService = couponService;
         }
+
         public async Task<IActionResult> GetAllItemToCart()
         {
             //Coupon
-            CouponDTO couponDTO = _serviceReview.GetValidCoupon();
+            CouponDTO couponDTO = _couponService.GetValidCoupon();
             CouponVM couponVM = new CouponVM
             {
                 Code = couponDTO.Code,
@@ -39,8 +42,8 @@ namespace TheTop.Controllers
             ViewBag.Coupon = couponVM;
 
             var user = await _userManager.GetUserAsync(User);
-            ViewBag.numItemCart = _service.GetNumItemShoppingCart(user.Id);
-            ShoppingCartDTO shoppingCartDTO = _service.GetAdvertisementsInShoppingCart(user.Id);
+            ViewBag.numItemCart = _shoppingCartService.GetNumItemShoppingCart(user.Id);
+            ShoppingCartDTO shoppingCartDTO = _shoppingCartService.GetAdvertisementsInShoppingCart(user.Id);
 
             ShoppingCartVM ShoppingCartVM = new ShoppingCartVM()
             {
@@ -62,24 +65,19 @@ namespace TheTop.Controllers
         public async Task<IActionResult> AddToCart(int id)
         {
             var user = await _userManager.GetUserAsync(User);
-            _service.AddShoppingCart(id, user.Id);
+            _shoppingCartService.AddShoppingCart(id, user.Id);
 
 
-            return RedirectToAction("HomePage","Home");
+            return RedirectToAction("HomePage", "Home");
         }
 
         public async Task<IActionResult> DeleteFromCart(int AdvId)
         {
             var user = await _userManager.GetUserAsync(User);
-            _service.RemoveFromShoppingCart(AdvId, user.Id);
+            _shoppingCartService.RemoveFromShoppingCart(AdvId, user.Id);
 
 
             return RedirectToAction("GetAllItemToCart");
         }
-
-
-        
-
-       
     }
 }

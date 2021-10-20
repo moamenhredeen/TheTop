@@ -23,7 +23,7 @@
         </div>
         <div class="form-group ">
             <label>Username Emplyee</label>
-            <input value="@Model.EmployeeDTO.Username" class="form-control" readonly />
+            <input value="@Model.EmployeeVm.Username" class="form-control" readonly />
         </div>
         <div class="form-group ">
             <label asp-for="Description"></label>
@@ -47,7 +47,7 @@
 
         <div class="form-group ">
             <label >Email Emplyee</label>
-            <input  value="@Model.EmployeeDTO.Email" class="form-control" readonly />
+            <input  value="@Model.EmployeeVm.Email" class="form-control" readonly />
         </div>
 
         @if (false)
@@ -58,7 +58,7 @@
     </div>}
 
         <div class="form-group mt-5 text-center d-flex justify-content-end">
-            <a asp-action="GetTasksProg" class="btn btn-secondary font-weight-bold w-25" style="font-size: 17px;">Back</a>
+            <a asp-action="GetTasksProgrammer" class="btn btn-secondary font-weight-bold w-25" style="font-size: 17px;">Back</a>
         </div>
     </div>
 

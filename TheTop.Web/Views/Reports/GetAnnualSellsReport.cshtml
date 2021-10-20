@@ -1,0 +1,17 @@
+﻿@model SellsReportVM
+
+@{
+    ViewBag.Title = " b";
+    Layout = null;
+}
+
+
+<button  class="btn btn-lg btn-primary">Generate pdf document</button>
+<p> profit : @Model.Profit</p>
+<p> total price of all orders in one month : @Model.TotalPrice </p>
+<p> sells count in one month : @Model.SellsCount </p>
+@foreach (var order in Model.Orders)
+{
+    <p>Discount : @order.DiscountPrice</p>
+    <p>total price : @order.TotalPrice </p>
+}

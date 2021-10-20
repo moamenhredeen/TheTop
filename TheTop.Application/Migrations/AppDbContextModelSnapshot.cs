@@ -74,6 +74,36 @@ namespace TheTop.Application.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "admin-role-id",
+                            ConcurrencyStamp = "9083cc12-9b42-4570-a8c2-a701c450587a",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "customer-role-id",
+                            ConcurrencyStamp = "0068b780-41eb-49de-a0f5-694d2c36a518",
+                            Name = "Customer",
+                            NormalizedName = "CUSTOMER"
+                        },
+                        new
+                        {
+                            Id = "Programmer-role-id",
+                            ConcurrencyStamp = "21fcb1ff-5aca-470a-b0de-513993fbf92a",
+                            Name = "Programmer",
+                            NormalizedName = "PROGRAMMER"
+                        },
+                        new
+                        {
+                            Id = "accountant-role-id",
+                            ConcurrencyStamp = "db065224-dd12-4f00-b9fc-bf3cf4d485a3",
+                            Name = "Accountant",
+                            NormalizedName = "ACCOUNTANT"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -154,16 +184,18 @@ namespace TheTop.Application.Migrations
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "administrator-user-id",
+                            RoleId = "admin-role-id"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -315,6 +347,23 @@ namespace TheTop.Application.Migrations
                     b.HasIndex("ShoppingCartId");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "administrator-user-id",
+                            AccessFailedCount = 0,
+                            BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "923ef3bb-56c1-40d6-83ed-6a88db2d1079",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMjbML3lnSRLKJKXcQPbONx0LGUqZGnyMypm9SGccQRUcFOfZ9kFUHo4SzCLSo7PUQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "8c2f3b38-ae18-41fa-bf56-376293e152f5",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("TheTop.Application.Entities.BankAccount", b =>
@@ -374,9 +423,6 @@ namespace TheTop.Application.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DisplayValue")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Key")
                         .HasColumnType("nvarchar(max)");
 
@@ -386,6 +432,14 @@ namespace TheTop.Application.Migrations
                     b.HasKey("CompanyInformationId");
 
                     b.ToTable("CompanyInformations");
+
+                    b.HasData(
+                        new
+                        {
+                            CompanyInformationId = 1,
+                            Key = "xxx",
+                            Value = "kenan"
+                        });
                 });
 
             modelBuilder.Entity("TheTop.Application.Entities.Contract", b =>
@@ -401,8 +455,8 @@ namespace TheTop.Application.Migrations
                     b.Property<decimal>("HourSalary")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<float>("MonthlyWorkingHours")
-                        .HasColumnType("real");
+                    b.Property<int>("MonthlyWorkingHours")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -699,10 +753,6 @@ namespace TheTop.Application.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("TheTop.Application.Entities.ApplicationUser", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
@@ -817,7 +867,7 @@ namespace TheTop.Application.Migrations
             modelBuilder.Entity("TheTop.Application.Entities.Work", b =>
                 {
                     b.HasOne("TheTop.Application.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("Works")
                         .HasForeignKey("ApplicationUserId");
 
                     b.Navigation("ApplicationUser");
@@ -838,9 +888,9 @@ namespace TheTop.Application.Migrations
 
                     b.Navigation("Reviews");
 
-                    b.Navigation("Roles");
-
                     b.Navigation("TaskEntities");
+
+                    b.Navigation("Works");
                 });
 
             modelBuilder.Entity("TheTop.Application.Entities.Category", b =>
